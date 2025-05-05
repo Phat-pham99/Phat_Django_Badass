@@ -1,0 +1,23 @@
+[project]
+name = "phat-django-badass"
+version = "1.0.0"
+description = "This is the Django backend to handle all the stuffs in my life"
+authors = [
+    {name = "Phat H. Pham",email = "57822898+Phat-pham99@users.noreply.github.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+django = "^5.2"
+djangorestframework = "^3.16.0"
+duckdb = "^1.2.2"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
