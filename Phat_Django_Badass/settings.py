@@ -26,6 +26,7 @@ SECRET_KEY = "django-insecure-c_vfrc(kfuqfz2*p*4k5t8txuus=$9mx&&xu@yv#+c8d53jvr)
 DEBUG = True
 
 ALLOWED_HOSTS = []
+USE_THOUSAND_SEPARATOR = True
 
 
 # Application definition
@@ -38,8 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "phat_finance"
-    
+    "phat_finance",
+    "phat_investment"
+
 ]
 
 MIDDLEWARE = [
