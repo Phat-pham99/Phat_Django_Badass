@@ -21,10 +21,10 @@ from django.views import debug
 from django.urls import include, path
 from rest_framework import routers
 
-from api import views
+from api.views.Expenses import ExpenseViewSet
 
 router = routers.DefaultRouter()
-router.register(r'expenses', views.ExpenseViewSet)
+router.register(r'expenses', ExpenseViewSet)
 
 urlpatterns = [
     path('', debug.default_urlconf),

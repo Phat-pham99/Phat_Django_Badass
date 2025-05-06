@@ -8,4 +8,3 @@ class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Expenses
         fields = ['date', 'user', 'cash', 'digital' , 'credit', 'category']
-
