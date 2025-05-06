@@ -22,6 +22,12 @@ class Balance(models.Model):
     networth = models.PositiveIntegerField(blank=False,default=0,editable=False)
 
     def save(self, *args, **kwargs):
-        self.networth = -1*self.debt + self.investment + self.asset \
-            + self.cash + self.digital + self.emergency_fund + self.sink_fund
+        self.expense_id = self.expense.id
+        self.debt_id = self.debt.id
+        self.investment_id = self.investment.id
+        self.asset_id = self.asset.id
+        self.emergency_fund_id = self.emergency_fund.id
+        self.sink_fund_id = self.sink_fund.id
+        self.networth = -1*self.debt.amount + self.investment.amount + self.asset.amount \
+            + self.cash + self.digital + self.emergency_fund.amount + self.sink_fund.amount
         super().save(*args, **kwargs)
