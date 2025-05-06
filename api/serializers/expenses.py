@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from phat_finance.models.expenses import Expenses
+from phat_finance.models import Expenses
 from rest_framework import serializers
 
 class ExpenseSerializer(serializers.HyperlinkedModelSerializer):

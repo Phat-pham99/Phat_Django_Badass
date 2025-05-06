@@ -1,8 +1,9 @@
 import sys
 sys.path.append("..")
 
-from phat_finance.models.expenses import Expenses
 from rest_framework import permissions, viewsets
+
+from phat_finance.models import Expenses
 from ..serializers.expenses import ExpenseSerializer
 
 class ExpenseViewSet(viewsets.ModelViewSet):

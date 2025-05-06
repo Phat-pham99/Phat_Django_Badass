@@ -22,9 +22,11 @@ from django.urls import include, path
 from rest_framework import routers
 
 from api.views.Expenses import ExpenseViewSet
+from api.views.TrackInvestment import TrackInvestmentViewSet
 
 router = routers.DefaultRouter()
 router.register(r'expenses', ExpenseViewSet)
+router.register(r'track_investment', TrackInvestmentViewSet)
 
 urlpatterns = [
     path('', debug.default_urlconf),
