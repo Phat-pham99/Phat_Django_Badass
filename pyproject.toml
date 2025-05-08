@@ -11,7 +11,10 @@ requires-python = ">=3.11,<4.0.0"
 dependencies = [
     "posting (>=2.7.0,<3.0.0)",
     "pandas (>=2.2.3,<3.0.0)",
-    "sqlalchemy (>=2.0.40,<3.0.0)"
+    "sqlalchemy (>=2.0.40,<3.0.0)",
+    "ruff (>=0.11.8,<0.12.0)",
+    "pyright (>=1.1.400,<2.0.0)",
+    "mypy (>=1.15.0,<2.0.0)"
 ]
 
 [tool.poetry]
