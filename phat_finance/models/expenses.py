@@ -8,11 +8,12 @@ USER_CHOICES = [
 ]
 
 CATEGORY_CHOICES = [
-    ('food & drinks', 'food & drinks'),
-    ('gas', 'Gas'),
+    ('food&drinks', 'food&drinks'),
+    ('gas', 'gas'),
+    ('dating','dating'),
     ('grocery', 'grocery'),
     ('medical', 'medical'),
-    ('subscription', 'subscription'),
+    ('subscriptions', 'subscriptions'),
     ('utility', 'utility'),
     ('others','others'),
     ('pleasure','pleasure'),

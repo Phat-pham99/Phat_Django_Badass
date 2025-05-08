@@ -19,18 +19,40 @@ def handle_date(date_string:str) -> datetime.date:
     """
     return datetime.strptime(date_string, "%d/%m/%Y").date()
 
-def data_cleaning(df:DataFrame)-> DataFrame:
-    df.drop(df.columns[df.columns.str.contains(
-        'unnamed', case=False)], axis=1, inplace=True)
-    df['date']=data['date'].bfill()
-    data['cash']=data['cash'].fillna("0.0")
-    data['cash']=[int(item.split('.')[0])*1000 for item in data['cash']]
-    data['digital']=data['digital'].fillna("0.0")
-    data['digital']=[int(item.split('.')[0])*1000 for item in data['digital']]
-    data['credit']=data['credit'].fillna("0.0")
-    data['credit']=[int(item.split('.')[0])*1000 for item in data['credit']]
-    df['category']=data['category'].fillna("others")
+def custom_date(df:DataFrame):
+    temp_date_serie = []
+    for item in df['date']:
+        try:
+            temp_date_serie.append(handle_date(item))
+        except Exception as e:
+            print(f"Ooh oh, {item} => {e}")
+    df['date'] = temp_date_serie
     return df
+
+def custom_fillna(df:DataFrame) -> DataFrame:
+    df.drop(df.columns[df.columns.str.contains(
+    'unnamed', case=False)], axis=1, inplace=True)
+    # df.dropna(axis='rows',how='all')
+    df.dropna(axis='rows',how='all',inplace=True)
+    df.dropna(axis='columns',how='all',inplace=True)
+    df['date'].bfill(axis=0,inplace=True)
+    df['cash'].fillna("0.0",inplace=True)
+    df['digital'].fillna("0.0",inplace=True)
+    df['credit'].fillna("0.0",inplace=True)
+    data['category'].fillna("others",inplace=True)
+    return df
+
+def custom_tranform_str2int(df:DataFrame) -> DataFrame:
+    df['cash']=[int(item.split('.')[0])*1000 for item in data['cash']]
+    df['digital']=[int(item.split('.')[0])*1000 for item in data['digital']]
+    df['credit']=[int(item.split('.')[0])*1000 for item in data['credit']]
+    return df
+
+def data_cleaning(df:DataFrame)-> DataFrame:
+    df = custom_fillna(df)
+    df = custom_tranform_str2int(df)
+    df = custom_date(df)
+    return df #Đẹp trai bảnh tỏn ngay
 
 def DF_2_SQL(df:DataFrame,database_name:str,table_name:str) -> None:
     engine = create_engine(database_name, echo=True)
@@ -43,7 +65,7 @@ def DF_2_SQL(df:DataFrame,database_name:str,table_name:str) -> None:
 if __name__ == "__main__":
     data = load_data()
     # data = data_cleaning(data)
-    pprint(data)
+    # data = custom_fillna(data[1000:])
     DF_2_SQL(
     df=data,
     database_name='sqlite:///db.sqlite3',
