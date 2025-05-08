@@ -7,4 +7,4 @@ from rest_framework import serializers
 class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Expenses
-        fields = ['date', 'user', 'cash', 'digital' , 'credit', 'category']
+        fields = ['date', 'cash', 'digital' , 'credit', 'category', 'description']
