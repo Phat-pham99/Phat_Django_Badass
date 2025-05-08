@@ -25,7 +25,7 @@ from api.views.Expenses import ExpenseViewSet
 from api.views.TrackInvestment import TrackInvestmentViewSet
 
 router = routers.DefaultRouter()
-router.register(r'expenses', ExpenseViewSet)
+router.register(r'expenses', ExpenseViewSet, basename='expense')
 router.register(r'track_investment', TrackInvestmentViewSet)
 
 urlpatterns = [
