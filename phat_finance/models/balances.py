@@ -1,6 +1,4 @@
 from django.db import models
-
-from .total_expenses import TotalExpenses
 from .debts import Debts
 from phat_investment.models.investment import Investment
 from .assets import Assets
@@ -11,7 +9,7 @@ class Balance(models.Model):
     current_month = models.DateField(auto_now=True,
                                     verbose_name="Month/Year"
                                     )
-    expense = models.OneToOneField(TotalExpenses, on_delete=models.CASCADE)
+    expense = models.PositiveIntegerField(blank=False,default=0)
     debt = models.OneToOneField(Debts, on_delete=models.CASCADE)
     investment = models.OneToOneField(Investment, on_delete=models.CASCADE)
     asset = models.OneToOneField(Assets, on_delete=models.CASCADE)

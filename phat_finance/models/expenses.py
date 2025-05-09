@@ -1,8 +1,6 @@
 from django.db import models
 from django.db.models import Sum
 
-from .total_expenses import TotalExpenses
-
 USER_CHOICES = [
     ('Phat', "Phat")
 ]
@@ -50,9 +48,4 @@ class Expenses(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs) #Man this shit is important !
-        result = self.get_total()
-        total_expense = TotalExpenses()
-        total_expense.total_cash = result['total_cash']
-        total_expense.total_digital = result['total_digital']
-        total_expense.total_credit = result['total_credit']
-        total_expense.save()
+        # result = self.get_total() #Shall use this later !
