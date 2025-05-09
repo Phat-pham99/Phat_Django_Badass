@@ -1,15 +1,16 @@
 from django.db import models
 
 INVESTMENT_CHOICE =[
-    ('vesaf', 'VESAF'),
-    ('vff', 'VFF'),
-    ('vmeef', 'VMEEF'),
-    ('veof', 'VEOF'),
-    ('vibf', 'VIBF'),
-    ('st', 'stock'),
-    ('dcde', 'DCDE'),
-    ('eth', 'ETH'),
-    ('btc', 'BTC'),
+    ('VESAF', 'VESAF'),
+    ('VFF', 'VFF'),
+    ('VMEEF', 'VMEEF'),
+    ('VEOF', 'VEOF'),
+    ('VIBF', 'VIBF'),
+    ('stock', 'stock'),
+    ('DCDE', 'DCDE'),
+    ('ETH', 'ETH'),
+    ('BTC', 'BTC'),
+    ('XAUt','XAUt')
 
 ]
 # Create your models here.
