@@ -64,10 +64,10 @@ def DF_2_SQL(df:DataFrame,database_name:str,table_name:str) -> None:
 
 if __name__ == "__main__":
     data = load_data()
-    # data = data_cleaning(data)
-    # data = custom_fillna(data[1000:])
-    DF_2_SQL(
-    df=data,
-    database_name='sqlite:///db.sqlite3',
-    table_name="phat_finance_expenses"
-    )
+    data = data_cleaning(data)
+    data = custom_fillna(data[1000:])
+    # DF_2_SQL(
+    # df=data,
+    # database_name='sqlite:///db.sqlite3',
+    # table_name="phat_finance_expenses"
+    # )
