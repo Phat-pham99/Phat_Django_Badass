@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from datetime import date
 
 USER_CHOICES = [
     ('Phat', "Phat")
@@ -23,7 +24,8 @@ CATEGORY_CHOICES = [
 ]
 
 class Expenses(models.Model):
-    date = models.DateField(auto_now=True)
+    # date = models.DateField(auto_now=True)
+    date = models.DateField(default=date.today)  # Use date.today() as the default
     user = models.CharField(max_length=50,choices=USER_CHOICES,blank=True,
     null=True,default='Phat')
     cash = models.PositiveIntegerField(blank=True,default=0)

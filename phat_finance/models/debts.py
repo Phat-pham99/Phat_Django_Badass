@@ -8,7 +8,7 @@ DEBT_CHOICES = [
 
 class Debts(models.Model):
     start_date = models.DateField(auto_now=True,blank=False)
-    due_date = models.DateField(blank=True,default=timezone.now())
+    due_date = models.DateField(blank=True)
     type = models.CharField(choices=DEBT_CHOICES,default='lend')
     amount = models.PositiveIntegerField(blank=False,default=0)
     client = models.CharField(max_length=30,blank=True)

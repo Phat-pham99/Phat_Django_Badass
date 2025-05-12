@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 INVESTMENT_CHOICE =[
     ('VESAF', 'VESAF'),
@@ -15,6 +16,6 @@ INVESTMENT_CHOICE =[
 ]
 # Create your models here.
 class Investment(models.Model):
-    date = models.DateField(auto_now=True)
+    date = models.DateField(default=date.today)
     investment_type = models.CharField(max_length=15,choices=INVESTMENT_CHOICE)
     amount = models.PositiveIntegerField(blank=True,default=0)

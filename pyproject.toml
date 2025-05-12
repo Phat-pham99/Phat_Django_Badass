@@ -15,7 +15,8 @@ dependencies = [
     "ruff (>=0.11.8,<0.12.0)",
     "pyright (>=1.1.400,<2.0.0)",
     "mypy (>=1.15.0,<2.0.0)",
-    "drf-restwind (>=0.1.6,<0.2.0)"
+    "drf-restwind (>=0.1.6,<0.2.0)",
+    "django-cf (>=0.0.17,<0.0.18)"
 ]
 
 [tool.poetry]
