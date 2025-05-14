@@ -1,20 +1,42 @@
 # `python-base` sets up all our shared environment variables
-FROM python:3.10
+# FROM python:3.11-buster as builder
+# FROM patrickhuber/sqlite:3.31.0 as builder
+# # 
+# # RUN  pip install --upgrade sqlite3
+# # RUN sqlite3 --version
 
-RUN apt update
-RUN pip install "poetry===2.1.3"
-RUN pip install "gunicorn===20.1.0"
+# WORKDIR .
 
-COPY poetry.lock pyproject.toml ./
-COPY . ./
+# # COPY pyproject.toml poetry.lock ./
+# COPY requirements.txt ./
 
-# quicker install as runtime deps are already installed
-# RUN poetry install --no-root
+# RUN  pip install -r requirements.txt
 
-# will become mountpoint of our code
+# Stage 1: SQLite
+# FROM patrickhuber/sqlite:3.31.0 AS sqlite_stage
+
+# Stage 2: Python with SQLite
+FROM python:3.13.3-alpine3.21
+
+# Copy SQLite from the first stage
+# COPY --from=sqlite_stage / /
+
+# RUN apt update -y
+# RUN apt upgrade -y
+# RUN apt install -f libc6 
+# Set working directory
 WORKDIR .
 
-EXPOSE 8000
-CMD ["gunicorn", "--reload", "Phat_Django_Badass.wsgi:app"]
+# Copy your Python application
+COPY . ./
 
-#Activate poetry env, bruh
+COPY requirements.txt ./
+
+# Install any Python dependencies
+RUN pip install -r requirements.txt
+
+ENV PYTHONUNBUFFERED=1
+
+EXPOSE 8000
+# ENTRYPOINT ["gunicorn", "--reload", "Phat_Django_Badass.wsgi:app"]
+ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
