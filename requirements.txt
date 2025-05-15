@@ -9,7 +9,7 @@ Django==5.2.1
 django-cf==0.0.17
 django-cors-headers==4.7.0
 djangorestframework==3.16.0
-drf-restwind==0.1.6
+drf-restwind==0.1.8
 duckdb==1.2.2
 greenlet==3.2.1
 h11==0.16.0
