@@ -7,8 +7,9 @@ from .models.emergency_funds import EmergencyFund
 from .models.sinking_funds import SinkingFund
 class ExpenseAdmin(admin.ModelAdmin):
     list_display = ('date','user','cash','digital','credit','category', 'description')
-    search_fields = ('date', 'category')
+    search_fields = ('date', 'category', 'description')
     list_filter = ('date', 'category')
+    ordering = ('-date',)
 
 class TotalExpensesAdmin(admin.ModelAdmin):
     readonly_fields = ('current_month','total_cash','total_digital','total_credit','total_expense')
