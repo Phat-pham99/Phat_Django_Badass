@@ -21,7 +21,8 @@ dependencies = [
     "wsgid (>=0.9,<0.10)",
     "gunicorn (>=23.0.0,<24.0.0)",
     "hypercorn (>=0.17.3,<0.18.0)",
-    "whitenoise (>=6.9.0,<7.0.0)"
+    "whitenoise (>=6.9.0,<7.0.0)",
+    "django-admin-logs (>=1.4.0,<2.0.0)"
 ]
 
 [tool.poetry]
