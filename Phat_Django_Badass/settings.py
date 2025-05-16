@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_wind',
     "rest_framework",
-    'corsheaders',
+    "corsheaders",
+    "django_admin_logs",
     "phat_finance",
     "phat_investment"
 
@@ -134,3 +135,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = True
+
+DJANGO_ADMIN_LOGS_ENABLED = False

@@ -387,6 +387,24 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-logs"
+version = "1.4.0"
+description = "View, delete or disable Django admin log entries."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_admin_logs-1.4.0-py3-none-any.whl", hash = "sha256:cef527b5405d362f192083ab8d856b556c45028c7b388d29692079313dc4f932"},
+    {file = "django_admin_logs-1.4.0.tar.gz", hash = "sha256:1b3d59f72e36d3d2376c62b5b7966f516f85fe0a70a2a826e112f91bdcfca8d5"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+
+[package.extras]
+dev = ["Django", "black", "build", "coverage", "pre-commit", "pytest", "pytest-cov", "pytest-django", "ruff", "tox", "twine"]
+
+[[package]]
 name = "django-cf"
 version = "0.0.17"
 description = "Django backend for Cloudflare D1 and Durable Objects"
@@ -2263,4 +2281,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0.0"
-content-hash = "b975f7e794ee506038f22f2b25b7a8ca75ef3dade8f544494cd8644ae05a0574"
+content-hash = "8e12e9935ae7364ecbb613884f94c1e156309dcd76a1ea4bedb28e76a79a7746"
