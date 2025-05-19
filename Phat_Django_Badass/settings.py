@@ -10,20 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
 from pathlib import Path
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-c_vfrc(kfuqfz2*p*4k5t8txuus=$9mx&&xu@yv#+c8d53jvr)"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 USE_THOUSAND_SEPARATOR = True
@@ -43,7 +47,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_admin_logs",
     "phat_finance",
-    "phat_investment"
+    "phat_investment",
+    "phat_fitness",
 
 ]
 
@@ -88,9 +93,11 @@ WSGI_APPLICATION = "Phat_Django_Badass.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': os.getenv('ENGINE'),
+        'CLOUDFLARE_DATABASE_ID': os.getenv('CLOUDFLARE_DATABASE_ID'),
+        'CLOUDFLARE_ACCOUNT_ID': os.getenv('CLOUDFLARE_ACCOUNT_ID'),
+        'CLOUDFLARE_TOKEN': os.getenv('CLOUDFLARE_TOKEN'),
     }
 }
 
