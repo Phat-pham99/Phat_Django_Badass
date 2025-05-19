@@ -27,7 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = False
+
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 USE_THOUSAND_SEPARATOR = True
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "django_admin_logs",
+    "Home",
     "phat_finance",
     "phat_investment",
     "phat_fitness",
@@ -74,7 +77,7 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "Home/templates"],  # new
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -133,6 +136,8 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+LOGIN_REDIRECT_URL = "/home"
 
 STATIC_URL = "static/"
 STATIC_ROOT = "static/"

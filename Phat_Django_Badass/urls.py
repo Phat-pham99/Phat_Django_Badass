@@ -16,14 +16,15 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-from django.views import debug
+# from django.views import debug
 from django.urls import include, path
 from rest_framework import routers
+from django.conf.urls import handler404,handler500
 
 from api.views.Expenses import ExpenseViewSet
 from api.views.Investment import InvestmentViewSet
 from api.views.TrackInvestment import TrackInvestmentViewSet
+import Home
 
 router = routers.DefaultRouter()
 router.register(r"expenses",ExpenseViewSet, basename="expense")
@@ -31,8 +32,13 @@ router.register(r"investment",InvestmentViewSet,basename="investment")
 router.register(r'track_investment', TrackInvestmentViewSet)
 
 urlpatterns = [
-    path('', debug.default_urlconf),
+    # path('', debug.default_urlconf),
+    path('', include(Home.urls), name='Home'),  # Include the URLs from the Home app
     path("admin/", admin.site.urls),
+    path("accounts/", include("django.contrib.auth.urls")),  # Authentication
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
+
+handler404 = 'Home.Views.home.custom_404'
+handler500 = 'Home.Views.home.custom_500'
