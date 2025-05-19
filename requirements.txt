@@ -8,13 +8,18 @@ click-default-group==1.2.4
 Django==5.2.1
 django-cf==0.0.17
 django-cors-headers==4.7.0
+django-extensions==4.1
 djangorestframework==3.16.0
 drf-restwind==0.1.8
 duckdb==1.2.2
 greenlet==3.2.2
 h11==0.16.0
+h2==4.2.0
+hpack==4.1.0
 httpcore==1.0.9
 httpx==0.28.1
+Hypercorn==0.17.3
+hyperframe==6.1.0
 idna==3.10
 linkify-it-py==2.0.3
 markdown-it-py==3.0.0
@@ -25,9 +30,11 @@ mypy_extensions==1.1.0
 nodeenv==1.9.1
 numpy==2.2.5
 openapi-pydantic==0.5.1
+packaging==25.0
 pandas==2.2.3
 platformdirs==4.3.8
 posting==2.7.0
+priority==2.0.0
 pydantic==2.11.4
 pydantic-settings==2.9.1
 pydantic_core==2.33.2
@@ -69,4 +76,6 @@ uc-micro-py==1.0.3
 watchfiles==1.0.5
 websocket-client==1.8.0
 whitenoise==6.9.0
+wsgid==0.9
+wsproto==1.2.0
 xdg-base-dirs==6.0.2
