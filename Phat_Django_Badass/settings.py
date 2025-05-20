@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_wind',
     "rest_framework",
+    'rest_framework_simplejwt',
     "corsheaders",
     "django_admin_logs",
     "phat_finance",
@@ -69,7 +70,12 @@ ROOT_URLCONF = "Phat_Django_Badass.urls"
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
+    'PAGE_SIZE': 100,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    # 'rest_framework.authentication.BasicAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework_simplejwt.authentication.JWTAuthentication', # Introduce JWT
+    ]
 }
 
 TEMPLATES = [
