@@ -73,8 +73,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': [
     # 'rest_framework.authentication.BasicAuthentication',
-    'rest_framework.authentication.SessionAuthentication',
     'rest_framework_simplejwt.authentication.JWTAuthentication', # Introduce JWT
+    'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
@@ -153,7 +153,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 DJANGO_ADMIN_LOGS_ENABLED = False
 
 # Session settings
-SESSION_EXPIRE_SECONDS = 30  # 1 hour
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_EXPIRE_SECONDS = 3600  # 1 hour
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_TIMEOUT_REDIRECT = '/'
+
+APPEND_SLASH=False

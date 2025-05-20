@@ -1,8 +1,9 @@
 import sys
 sys.path.append("..")
 
+from rest_framework.views import APIView
 from django.db.models import Sum
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -55,3 +56,40 @@ class ExpenseViewSet(viewsets.ModelViewSet):
                 "total_digital":total_digital,
                 "total_credit":total_credit}
                 )
+
+    @action(detail=False, methods=['put'])
+    def change(self, request):
+        """
+        Update an existing expense item.
+        """
+        date = self.request.data.get('date')
+        user = self.request.data.get('user')
+        category = self.request.data.get('category')
+        print(self.request.data)
+        try:
+            expense = Expenses.objects.get(date=date, user=user, category=category)
+            print("expense", expense)
+        except Expenses.DoesNotExist:
+            print({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ExpenseSerializer(expense, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['delete'])
+    def delete(self, request):
+        """
+        Delete an existing expense item.
+        """
+        date = self.request.data.get('date')
+        user = self.request.data.get('user')
+        category = self.request.data.get('category')
+        try:
+            expense = Expenses.objects.get(date=date, user=user, category=category)
+        except Expenses.DoesNotExist:
+            return Response({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
+        expense.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

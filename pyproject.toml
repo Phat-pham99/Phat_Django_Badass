@@ -9,7 +9,6 @@ license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.11,<4.0.0"
 dependencies = [
-    "posting (>=2.7.0,<3.0.0)",
     "pandas (>=2.2.3,<3.0.0)",
     "sqlalchemy (>=2.0.40,<3.0.0)",
     "ruff (>=0.11.8,<0.12.0)",
@@ -25,7 +24,8 @@ dependencies = [
     "django-admin-logs (>=1.4.0,<2.0.0)",
     "django-session-timeout (>=0.1.0,<0.2.0)",
     "requests (>=2.32.3,<3.0.0)",
-    "djangorestframework-simplejwt (>=5.5.0,<6.0.0)"
+    "djangorestframework-simplejwt (>=5.5.0,<6.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
 ]
 
 [tool.poetry]
