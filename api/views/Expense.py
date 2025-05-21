@@ -1,15 +1,14 @@
 import sys
 sys.path.append("..")
 
-from rest_framework.views import APIView
 from django.db.models import Sum
 from rest_framework import permissions, viewsets, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from phat_finance.models import Expenses
-from ..serializers.expenses import ExpenseSerializer
+from phat_finance.models import Expense
+from ..serializers.expense import ExpenseSerializer
 
 class ExpensesPagination(PageNumberPagination):
     page_size = 30
@@ -23,14 +22,14 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     serializer_class = ExpenseSerializer
     pagination_class = ExpensesPagination
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Expenses.objects.all().order_by('date')
+    queryset = Expense.objects.all().order_by('date')
 
     def get_queryset(self):
         """
         This is a manually overwriten get_queryset method \n
         Ain't nobody got time for that 🥱😴
         """
-        queryset = Expenses.objects.all().order_by('date')
+        queryset = Expense.objects.all().order_by('date')
         date = self.request.query_params.get('date')
         user = self.request.query_params.get('user')
         category = self.request.query_params.get('category')
@@ -65,11 +64,10 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         date = self.request.data.get('date')
         user = self.request.data.get('user')
         category = self.request.data.get('category')
-        print(self.request.data)
         try:
-            expense = Expenses.objects.get(date=date, user=user, category=category)
+            expense = Expense.objects.get(date=date, user=user, category=category)
             print("expense", expense)
-        except Expenses.DoesNotExist:
+        except Expense.DoesNotExist:
             print({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
             return Response({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -88,8 +86,8 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         user = self.request.data.get('user')
         category = self.request.data.get('category')
         try:
-            expense = Expenses.objects.get(date=date, user=user, category=category)
-        except Expenses.DoesNotExist:
+            expense = Expense.objects.get(date=date, user=user, category=category)
+        except Expense.DoesNotExist:
             return Response({"error": "Expense not found."}, status=status.HTTP_404_NOT_FOUND)
         expense.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

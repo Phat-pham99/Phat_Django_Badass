@@ -23,7 +23,7 @@ CATEGORY_CHOICES = [
     ('donation','donation'),
 ]
 
-class Expenses(models.Model):
+class Expense(models.Model):
     # date = models.DateField(auto_now=True)
     date = models.DateField(default=date.today)  # Use date.today() as the default
     user = models.CharField(max_length=50,choices=USER_CHOICES,blank=True,
@@ -47,7 +47,7 @@ class Expenses(models.Model):
         result['total_credit'] = cls.objects.aggregate(total_credit=Sum('credit')).get('total_credit')
         print("result",result)
         return result or 0  # Returns 0 if there are no records
-    
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs) #Man this shit is important !
         # result = self.get_total() #Shall use this later !

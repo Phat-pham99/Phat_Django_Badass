@@ -7,4 +7,4 @@ from rest_framework import serializers
 class TrackInvestmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TrackInvestment
-        fields = ['date','acbs','mio','dragon','idle_cash','crypto','total'] #Gotta make SSI hidden for now
+        fields = ['id','date','acbs','mio','dragon','idle_cash','crypto','total'] #Gotta make SSI hidden for now

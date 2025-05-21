@@ -1,6 +1,6 @@
 # from .balances import Balance
 from .assets import Assets
-from .expenses import Expenses
+from .expense import Expense
 from .in_out_flows import InOutFlow
 from .conversions import Conversion
 from .emergency_funds import EmergencyFund

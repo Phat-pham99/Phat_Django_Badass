@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.expenses import Expenses
+from .models.expense import Expense
 from .models.debts import Debts
 from .models.assets import Assets
 from .models.balances import Balance
@@ -30,7 +30,7 @@ class BalanceAdmin(admin.ModelAdmin):
     fields = [('cash','digital'),('debt','asset'),'investment',
             ('emergency_fund','sink_fund')]
     readonly_fields = ['current_month','expense','networth']
-admin.site.register(Expenses, ExpenseAdmin)
+admin.site.register(Expense, ExpenseAdmin)
 # admin.site.register(Debts,DebtAdmin)
 # admin.site.register(EmergencyFund,EmergencyFundAdmin)
 # admin.site.register(SinkingFund,SinkingFundAdmin)

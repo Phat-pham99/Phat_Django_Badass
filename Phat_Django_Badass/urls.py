@@ -25,20 +25,22 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from api.views.Expenses import ExpenseViewSet
+from api.views.Expense import ExpenseViewSet
 from api.views.Investment import InvestmentViewSet
 from api.views.TrackInvestment import TrackInvestmentViewSet
+from api.views.TrackGym import TrackGymViewSet
 
 router = routers.DefaultRouter()
-router.register(r"expenses",ExpenseViewSet, basename="expense")
+router.register(r"expense",ExpenseViewSet, basename="expense")
 router.register(r"investment",InvestmentViewSet,basename="investment")
-router.register(r'track_investment', TrackInvestmentViewSet)
+router.register(r'track_investment', TrackInvestmentViewSet, basename="track_investment")
+router.register(r'track_gym', TrackGymViewSet)
 
 urlpatterns = [
     path('', debug.default_urlconf),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
     path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
 ]
