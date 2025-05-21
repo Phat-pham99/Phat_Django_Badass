@@ -1,1 +1,1 @@
-from .gym_track import GymTrack
+from .track_gym import TrackGym
