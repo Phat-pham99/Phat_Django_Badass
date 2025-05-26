@@ -36,6 +36,8 @@ USE_THOUSAND_SEPARATOR = True
 # Application definition
 
 INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -141,6 +143,7 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+X_FRAME_OPTIONS = "SAMEORIGIN"
 STATIC_URL = "static/"
 STATIC_ROOT = "static/"
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
