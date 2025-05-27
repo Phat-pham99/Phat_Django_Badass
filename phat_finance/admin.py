@@ -2,6 +2,8 @@
 from django.contrib import admin, messages
 from django.shortcuts import render, redirect
 from django.db import transaction
+from upstash_redis import Redis
+
 # Import Data models
 from .models.expense import Expense
 from .models.debts import Debts
@@ -12,6 +14,8 @@ from .models.emergency_funds import EmergencyFund
 from .models.sinking_funds import SinkingFund
 from .models.in_out_flows import InOutFlow
 
+#Initialize Redis
+redis = Redis.from_env()
 #
 #-----Start Action section-----
 @transaction.atomic
@@ -22,17 +26,17 @@ def convert(modeladmin, request, queryset):
     type_conversion = queryset[0].type_conversion
     convert_amount = queryset[0].amount
     try:
-        # Get or create the single Balance instance
-        balance, _ = Balance.objects.get_or_create()
         if type_conversion == "digital_cash":
-            balance.digital -= convert_amount
-            balance.cash += convert_amount
-            balance.save()
+            pipeline = redis.multi()
+            pipeline.incrby('balance_cash', convert_amount)
+            pipeline.decrby('balance_digital', convert_amount)
+            pipeline.exec()
             modeladmin.message_user(request, f"Successfully convert {"{:,.0f}".format(float(convert_amount))} digital -> cash", level='SUCCESS')
         else:
-            balance.digital += convert_amount
-            balance.cash -= convert_amount
-            balance.save()
+            pipeline = redis.multi()
+            pipeline.incrby('balance_digital', convert_amount)
+            pipeline.decrby('balance_cash', convert_amount)
+            pipeline.exec()
             modeladmin.message_user(request, f"Successfully convert {"{:,.0f}".format(float(convert_amount))} cash -> digital", level='SUCCESS')
     except Exception as e:
         modeladmin.message_user(request,f"Error processing payment: {e}", level='ERROR')
@@ -43,16 +47,13 @@ def salary_paid(modeladmin, request, queryset):
     """
     Digital money 💵💻 enter the system. Increase balance.digital by amount
     """
-    type = queryset[0]._type
     amount = queryset[0].placeholder
     try:
-        # Get or create the single Balance instance
-        balance, _ = Balance.objects.get_or_create()
-        balance.digital += amount
-        balance.save()
-        modeladmin.message_user(request, f"Successfully receive salary {"{:,.0f}".format(float(amount))} ", level='SUCCESS')
+        redis.incrby('balance_digital', amount)
+        modeladmin.message_user(request, f"Successfully receive salary {"{:,.0f}".format(float(amount))}, \n new balance_digital is {redis.get('balance_digital')} ", level='SUCCESS')
     except Exception as e:
         modeladmin.message_user(request,f"Error while receive salary: {e}", level='ERROR')
+    salary_paid.short_description = "Digital money 💵💻 enter the system. Increase balance.digital by amount"
 
 #-----End Action section-----
 @admin.register(Expense)

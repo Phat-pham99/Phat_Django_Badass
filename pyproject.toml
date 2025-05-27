@@ -27,7 +27,7 @@ dependencies = [
     "djangorestframework-simplejwt (>=5.5.0,<6.0.0)",
     "dotenv (>=0.9.9,<0.10.0)",
     "django-admin-interface (>=0.30.0,<0.31.0)",
-    "upstash-redis (>=1.4.0,<2.0.0)"
+    "upstash-redis (>=1.4.0,<2.0.0)",
 ]
 
 [tool.poetry]
