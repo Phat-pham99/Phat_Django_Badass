@@ -83,14 +83,11 @@ class SinkingFundAdmin(admin.ModelAdmin):
 
 @admin.register(InOutFlow)
 class InOutFlowAdmin(admin.ModelAdmin):
-    list_display = ['date','placeholder','amount']
-    actions = [salary_paid]
+    list_display = ['date','type','amount']
 
 @admin.register(Conversion)
 class ConversionAdmin(admin.ModelAdmin):
     list_display = ['date','type_conversion','amount']
-    readonly_fields = ['conversion_amount']
-    actions = [convert]
 
 @admin.register(Balance)
 class BalanceAdmin(admin.ModelAdmin):
