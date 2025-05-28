@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="GymTrack",
+            name="TrackGym",
             fields=[
                 (
                     "id",
@@ -51,6 +51,7 @@ class Migration(migrations.Migration):
                         null=True,
                     ),
                 ),
+            ("duration", models.CharField(default="0", editable=False)),
             ],
         ),
     ]

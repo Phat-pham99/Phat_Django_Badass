@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="Expenses",
+            name="Expense",
             fields=[
                 (
                     "id",
