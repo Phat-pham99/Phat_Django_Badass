@@ -26,13 +26,16 @@ class Investment(models.Model):
     amount = models.PositiveIntegerField(blank=True,default=0)
 
     @transaction.atomic
-    def save(self, *args, **kwargs):
+    def invest(self, investment_type, amount):
         """
         Invest into assets 🪙💹. Deduct balance.digital accordingly
         """
         pipeline = redis.multi()
-        pipeline.decrby('balance_digital', self.amount)
+        pipeline.decrby('balance_digital', amount)
         pipeline.set('last_changes',str(datetime.now()))
-        pipeline.set('last_changes_log',f"Invest to {self.investment_type}")
+        pipeline.set('last_changes_log',f"Invest to {investment_type}")
         pipeline.exec()
+
+    def save(self, *args, **kwargs):
+        self.invest(self.investment_type, self.amount)
         super().save(*args, **kwargs)

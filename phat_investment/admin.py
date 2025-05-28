@@ -5,7 +5,6 @@ from django.contrib import admin
 
 from .models.investment import Investment
 from .models.track_investment import TrackInvestment
-from phat_finance.models.balances import Balance
 
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):

@@ -7,8 +7,8 @@ from upstash_redis import Redis
 redis = Redis.from_env()
 
 CONVERSION_CHOICES = [
-    ('digital_cash','digital_cash'),
-    ('cash_digital','cash_digital')
+    ('digital📲_cash💵','digital📲_cash💵'),
+    ('cash💵_digital📲','cash💵_digital📲')
 ]
 
 class Conversion(models.Model):
@@ -17,22 +17,25 @@ class Conversion(models.Model):
     amount = models.PositiveIntegerField(blank=False,default=0)
 
     @transaction.atomic
-    def save(self, *args, **kargs):
+    def convert(self,type_conversion,amount):
         """
         Convert digital 📱 -> cash 💵 and vice versa
         """
-        if self.type_conversion == "digital_cash":
+        if type_conversion == "digital_cash":
             pipeline = redis.multi()
-            pipeline.incrby('balance_cash', self.amount)
-            pipeline.decrby('balance_digital', self.amount)
+            pipeline.incrby('balance_cash', amount)
+            pipeline.decrby('balance_digital', amount)
             pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"{self.type_conversion} : {'{:,.0f}'.format(float(self.amount))}")
+            pipeline.set('last_changes_log',f"{type_conversion} : {'{:,.0f}'.format(float(amount))}")
             pipeline.exec()
         else:
             pipeline = redis.multi()
-            pipeline.incrby('balance_digital', self.amount)
-            pipeline.decrby('balance_cash', self.amount)
+            pipeline.incrby('balance_digital', amount)
+            pipeline.decrby('balance_cash', amount)
             pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"{self.type_conversion} : {'{:,.0f}'.format(float(self.amount))}")
+            pipeline.set('last_changes_log',f"{type_conversion} : {'{:,.0f}'.format(float(amount))}")
             pipeline.exec()
+
+    def save(self, *args, **kargs):
+        self.convert(self.type_conversion, self.amount)
         super().save(*args, **kargs)
