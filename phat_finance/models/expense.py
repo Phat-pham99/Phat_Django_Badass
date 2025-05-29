@@ -58,5 +58,5 @@ class Expense(models.Model):
                         credit:  {'{:,.0f}'.format(float(credit_amount))} ")
             pipeline.exec()
 
-        spend(self.cash, self.digital)
+        spend(self.cash, self.digital, self.credit)
         super().save(*args, **kwargs) #Man this shit is important !

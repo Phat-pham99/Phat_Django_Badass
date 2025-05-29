@@ -64,8 +64,7 @@ class ExpenseAdmin(admin.ModelAdmin):
 
 @admin.register(Debts)
 class DebtAdmin(admin.ModelAdmin):
-    list_display = ('start_date','due_date','type','amount','client')
-    readonly_fields = ['total']
+    list_display = ('start_date','due_date','type','amount','lender', 'borrower')
 
 @admin.register(Assets)
 class AssetAdmin(admin.ModelAdmin):
