@@ -4,9 +4,6 @@ from datetime import date,datetime
 from django.db import transaction
 from upstash_redis import Redis
 
-#Initialize Redis
-redis = Redis.from_env()
-
 USER_CHOICES = [
     ('Phat', "Phat")
 ]
@@ -41,21 +38,25 @@ class Expense(models.Model):
     def __str__(self):
         return f"{self.date} - {self.user} - {self.category} - Cash: {self.cash}"
 
-    @transaction.atomic
-    def spend(self,cash_amount,digital_amount):
-        """
-        Updates the cash 💶💷 and digital 🏧 balance in Redis when cash is spent.
-        """
-        pipeline = redis.multi()
-        if cash_amount > 0:
-            pipeline.decrby('balance_cash', cash_amount)
-        elif digital_amount > 0:
-            pipeline.decrby('balance_digital', digital_amount)
-        pipeline.set('last_changes', str(datetime.now()))
-        pipeline.set('last_changes_log', f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))} \
-                    digital: {'{:,.0f}'.format(float(digital_amount))} ")
-        pipeline.exec()
-
     def save(self, *args, **kwargs):
-        self.spend(self.cash, self.digital)
+        #Initialize Redis
+        redis = Redis.from_env()
+
+        @transaction.atomic
+        def spend(cash_amount,digital_amount, credit_amount):
+            """
+            Updates the cash 💶💷 and digital 🏧 balance in Redis when cash is spent.
+            """
+            pipeline = redis.multi()
+            if cash_amount > 0:
+                pipeline.decrby('balance_cash', cash_amount)
+            elif digital_amount > 0:
+                pipeline.decrby('balance_digital', digital_amount)
+            pipeline.set('last_changes', str(datetime.now()))
+            pipeline.set('last_changes_log', f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))} \
+                        digital: {'{:,.0f}'.format(float(digital_amount))} \
+                        credit:  {'{:,.0f}'.format(float(credit_amount))} ")
+            pipeline.exec()
+
+        spend(self.cash, self.digital)
         super().save(*args, **kwargs) #Man this shit is important !

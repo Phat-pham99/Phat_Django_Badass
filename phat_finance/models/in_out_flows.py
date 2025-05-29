@@ -4,9 +4,6 @@ from datetime import date,datetime
 from django.db import transaction
 from upstash_redis import Redis
 
-#Initialize Redis
-redis = Redis.from_env()
-
 IN_OUTCHOICES = [
     ("IN","IN"),
     ("OUT","OUT"),
@@ -20,8 +17,12 @@ class InOutFlow(models.Model):
                             null=False,default='IN')
     amount = models.PositiveIntegerField(blank=False,default=0)
 
-    @transaction.atomic
-    def salary_paid(self,amount):
+    def save(self, *args, **kwargs):
+        #Initialize Redis
+        redis = Redis.from_env()
+
+        @transaction.atomic
+        def salary_paid(self,amount):
             """
             Digital money 💵💻 enter the system. Increase balance.digital by amount
             """
@@ -31,9 +32,8 @@ class InOutFlow(models.Model):
             pipeline.set('last_changes_log',f"Salary added: {'{:,.0f}'.format(float(amount))}")
             pipeline.exec()
 
-    def save(self, *args, **kwargs):
         if self.type == "SALARY 💵💻":
-            self.salary_paid(self.amount)
+            salary_paid(self.amount)
         elif self.type == "OUT":
             pass
         super().save(*args, **kwargs) #Man this shit is important !

@@ -69,7 +69,7 @@ class DebtAdmin(admin.ModelAdmin):
 
 @admin.register(Assets)
 class AssetAdmin(admin.ModelAdmin):
-    list_display = ('name','bought_price','amount')
+    list_display = ('name','price','amount','transac_type')
     readonly_fields = ['date']
 
 @admin.register(EmergencyFund)
