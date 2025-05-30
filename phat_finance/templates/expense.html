@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-color: rgb(255, 255, 255);
+            }
+            h1 {
+                color: navy;
+                margin-left: 20px;
+            }
+            table,
+            tr,
+            th,
+            td {
+                width: 30%;
+                height: 30%;
+                padding: 10px;
+                text-align: center;
+                border-collapse: collapse;
+                background-color: rgb(255, 255, 255);
+                border: 2px solid black;
+            }
+        </style>
+        <title>Phat Expenses Dashboard</title>
+    </head>
+    <body>
+        <h1>Phat Expenses Dashboard</h1>
+        <p>Welcome to your expenses dashboard!</p>
+
+        <table style="align-self: center">
+            <tr>
+                <th>date</th>
+                <th>cash ({{total_cash}})</th>
+                <th>digital ({{total_digital}})</th>
+                <th>credit ({{total_credit}})</th>
+                <th>category</th>
+                <th>description</th>
+            </tr>
+            {% for item in json_data %}
+            <tr>
+                <th>{{ item.fields.date }}</th>
+                <th style="background: indianred">{{ item.fields.cash }}</th>
+                <th style="background: lightgreen">
+                    {{ item.fields.digital }}
+                </th>
+                <th style="background: lightskyblue">
+                    {{ item.fields.credit }}
+                </th>
+                {% if item.fields.category == 'dating' %}
+                <th style="background: palevioletred">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'food&drinks' %}
+                <th style="background: orangered">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'grocery' %}
+                <th style="background: green">{{ item.fields.category }}</th>
+                {% elif item.fields.category == 'medical' %}
+                <th style="background: lightskyblue">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'bikecare' %}
+                <th style="background: deepskyblue">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'gas' %}
+                <th style="background: mediumpurple">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'subscriptions' %}
+                <th style="background: purple">{{ item.fields.category }}</th>
+                {% elif item.fields.category == 'utility' %}
+                <th style="background: yellow">{{ item.fields.category }}</th>
+                {% elif item.fields.category == 'insurance' %}
+                <th style="background: sandybrown">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'donation' %}
+                <th style="background: darkslategrey">
+                    {{ item.fields.category }}
+                </th>
+                {% elif item.fields.category == 'gift' %}
+                <th style="background: salmon">{{ item.fields.category }}</th>
+                {% else %}
+                <th style="background: grey">Others</th>
+                {% endif %}
+                <th>{{ item.fields.description }}</th>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+    <footer>
+        <a href="/">Home</a>
+        <a href="/phat_finance/dashboard">Dashboard</a>
+        <p>&copy; 2025 Phat Finance</p>
+    </footer>
+</html>

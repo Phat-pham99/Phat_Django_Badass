@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 from django.template.loader import render_to_string
@@ -24,7 +25,7 @@ def dashboard(request):
     last_changes = redis.get('last_changes')
     last_changes_log = redis.get('last_changes_log')
 
-    rendered = render_to_string("dashboard/index.html", {
+    rendered = render_to_string("dashboard.html", {
         "balance_cash": '{:,.0f}'.format(float(balance_cash))
         , "balance_digital": '{:,.0f}'.format(float(balance_digital))
         , "total_expense": '{:,.0f}'.format(float(total_expense))
@@ -40,13 +41,36 @@ def dashboard(request):
 @login_required
 def expense(request):
     # expenses = Expense.objects.all().order_by('-date').filter(date="2025-05-30")
-    expenses = Expense.objects.all().order_by('-date')
+    date = request.GET.get('date', None)
+    date_start = request.GET.get('date_start', None)
+    date_end = request.GET.get('date_end', None)
+    category = request.GET.get('category', None)
+    expense_origin = Expense.objects.all().order_by('-date')
+    expenses = None
+    if date:
+        expenses = expense_origin.filter(date=date)
+    elif date_start and date_end:
+        expenses = expense_origin.filter(date__range=(date_start,date_end))
+    if expenses and category:
+        expenses = expenses.filter(category=category)
+    else:
+        expenses = expense_origin.filter(category=category)
+    total_cash = expenses.aggregate(total=Sum('cash'))['total'] or 0
+    total_digital = expenses.aggregate(total=Sum('digital'))['total'] or 0
+    total_credit = expenses.aggregate(total=Sum('credit'))['total'] or 0
+    print(expense_origin)
+    # print("total_cash",total_cash)
+    # print("total_digital",total_digital)
+    # print("total_credit",total_credit)
     json_data = json.loads(serializers.serialize('json', expenses))
     print(type(json_data))
     print(json_data)
     try:
-        # rendered = loader.get_template("expenses/index.html").render()
-        return render(request, 'expenses/index.html', {'json_data': json_data})
-        # return HttpResponse(rendered)
+        return render(request, 'expense.html',
+            {'json_data': json_data,
+            'total_cash': total_cash,
+            'total_digital': total_digital,
+            'total_credit': total_credit,
+            })
     except loader.TemplateDoesNotExist:
         return HttpResponseNotFound("Expense template not found.")
