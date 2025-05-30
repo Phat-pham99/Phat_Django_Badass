@@ -9,6 +9,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <style>
         body {
+            margin-top:2%;
+            margin-left: 2%;
+            margin-right: 2%;
             background-color: rgb(255, 255, 255);
             font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
         }
@@ -26,11 +29,18 @@
         table, th, td  {
             width: 8%;
             height: 10%;
-            padding: 8px;
+            padding: 5px;
             text-align: center;
             border-collapse: collapse;
             background-color: rgb(250, 255, 253);
             border:1px solid black;
+        }
+        canvas{
+            border: none;
+            width: 100%;
+        }
+        .row{
+            display: flex
         }
         </style>
         <title>Phat Finance Dashboard</title>
@@ -39,8 +49,8 @@
     <h1>Phat Finance Dashboard</h1>
     <p>Welcome to your personal finance dashboard!</p>
     <div>
-        <div>
-            <table style="width:100%">
+        <div class="row table-container">
+            <table class="dashboard-table" style="width:90%">
                 <tr>
                     <td><h3>expense_cash : </h3> {{ expense_cash|floatformat:0|intcomma }}</td>
                     <td><h3>expense_digital : </h3> {{ expense_digital|floatformat:0|intcomma }}</td>
@@ -66,11 +76,19 @@
                     <th><h3>last_changes_log : </h3> {{ last_changes_log }}</th>
                 </tr>
             </table>
-        </div style="margin-top:20px, width:50%">
-        <canvas id="PieExpense" style="width:25%"></canvas>
-        <canvas id="PieBudget" style="width:25%"></canvas>
+        <div class="UIA-cat"style="width:10%">
+            <img style="width:100%" src="https://media.tenor.com/sbfBfp3FeY8AAAAj/oia-uia.gif">
+        </div>
     </div>
-    <footer>
+        <div style="width:100%;" class="row">
+            <div class="col" style="width:50%;" >
+                <canvas id="PieExpense" style="width:100%"></canvas>
+            </div>
+            <div class="col" style="width:50%;" >
+                <canvas id="PieBudget" style="width:100%"></canvas>
+            </div>
+        </div>
+    <footer style="text-align: center; margin-top: 20px;">
         <a href="/"> Home</a>
         <a href="/phat_finance/expense">Expense</a>
         <p>&copy; 2025 Phat Finance</p>
@@ -130,7 +148,7 @@
                         }
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                         label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        "(" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + "%)";
+                        "(" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + " %)";
                         return label;
                     }
                 }
@@ -168,7 +186,7 @@
                         }
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                         label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        "(" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + "%)";
+                        "(" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + " %)";
                         return label;
                     }
                 }

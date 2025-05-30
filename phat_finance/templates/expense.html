@@ -57,43 +57,43 @@
                     {{ item.fields.credit }}
                 </th>
                 {% if item.fields.category == 'dating' %}
-                <th style="background: palevioletred">
+                <th style="background: rgb(255, 104, 155)">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'food&drinks' %}
-                <th style="background: orangered">
+                <th style="background: rgb(255, 98, 41)">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'grocery' %}
-                <th style="background: green">{{ item.fields.category }}</th>
+                <th style="background: rgb(0, 119, 0)">{{ item.fields.category }}</th>
                 {% elif item.fields.category == 'medical' %}
                 <th style="background: lightskyblue">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'bikecare' %}
-                <th style="background: deepskyblue">
+                <th style="background: rgb(36, 95, 115)">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'gas' %}
-                <th style="background: mediumpurple">
+                <th style="background: rgb(134, 74, 255)">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'subscriptions' %}
                 <th style="background: purple">{{ item.fields.category }}</th>
                 {% elif item.fields.category == 'utility' %}
-                <th style="background: yellow">{{ item.fields.category }}</th>
+                <th style="background: rgb(255, 255, 192)">{{ item.fields.category }}</th>
                 {% elif item.fields.category == 'insurance' %}
-                <th style="background: sandybrown">
+                <th style="background:rgb(109, 53, 83)">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'donation' %}
-                <th style="background: darkslategrey">
+                <th style="background: rgb(255, 223, 195)">
                     {{ item.fields.category }}
                 </th>
                 {% elif item.fields.category == 'gift' %}
-                <th style="background: salmon">{{ item.fields.category }}</th>
+                <th style="background: rgb(255, 115, 99)">{{ item.fields.category }}</th>
                 {% else %}
-                <th style="background: grey">Others</th>
+                <th style="background: rgb(202, 202, 202)">Others</th>
                 {% endif %}
                 <th>{{ item.fields.description }}</th>
             </tr>
@@ -101,7 +101,7 @@
             {% endif %}
         </table>
     </body>
-    <footer>
+    <footer style="text-align: center; margin-top: 20px;">
         <a href="/">Home</a>
         <a href="/phat_finance/dashboard">Dashboard</a>
         <p>&copy; 2025 Phat Finance</p>
