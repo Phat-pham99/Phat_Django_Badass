@@ -1,0 +1,17 @@
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    color: navy;
+    margin-left: 20px;
+}
+table, th, td  {
+    width: 100%;
+    border-collapse: collapse;
+    border:1px solid black;border:1px solid black;
+}
+
+table, th, td {
+    border:1px solid rgb(0, 4, 255);
+}

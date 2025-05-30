@@ -1,0 +1,61 @@
+<html>
+<head>
+<style>
+body {
+    background-color: rgb(255, 255, 255);
+}
+h1 {
+    color: navy;
+    margin-left: 20px;
+}
+table, th, td  {
+    width: 10%;
+    height: 10%;
+    padding: 10px;
+    text-align: center;
+    border-collapse: collapse;
+    background-color: rgb(233, 255, 240);
+    border:1px solid black;
+}
+
+</style>
+    <title>Phat Finance Dashboard</title>
+</head>
+<body>
+    <h1>Phat Finance Dashboard</h1>
+    <p>Welcome to your personal finance dashboard!</p>
+    <div>
+    <table style="width:100%">
+        <tr class="base-table">
+            <th class="base-table total-expense">total_expense</th>
+            <th class="balance_cash">balance_cash</th>
+            <th class="balance_digital">balance_digital</th>
+            <th>emergency_fund</th>
+            <th>sinking_fund</th>
+            <th>total_investment</th>
+            <th>total_debt</th>
+            <th>last_changes</th>
+            <th>last_changes_log</th>
+        </tr>
+        <tr>
+            <td>{{ total_expense }}</td>
+            <td>{{ balance_cash }}</td>
+            <td>{{ balance_digital }}</td>
+            <td>{{ emergency_fund }}</td>
+            <td>{{ sinking_fund }}</td>
+            <td>{{ total_investment }}</td>
+            <td>{{ total_debt }}</td>
+            <td>{{ last_changes }}</td>
+            <td>{{ last_changes_log }}</td>
+    </table>
+</div>
+    <footer>
+        <a href="/">Home</a> |
+        <p>&copy; 2023 Phat Finance</p>
+    </footer>
+    <script>
+        // You can add JavaScript here for interactivity
+        console.log("Phat Finance Dashboard loaded");
+    </script>
+</body>
+</html>
