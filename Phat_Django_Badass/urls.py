@@ -29,7 +29,8 @@ from api.views.Expense import ExpenseViewSet
 from api.views.Investment import InvestmentViewSet
 from api.views.TrackInvestment import TrackInvestmentViewSet
 from api.views.TrackGym import TrackGymViewSet
-from phat_finance.views import index as phat_finance_index
+from phat_finance.views import dashboard as phat_finance_dashboard
+from phat_finance.views import expense as phat_finance_expense
 
 router = routers.DefaultRouter()
 router.register(r"expense",ExpenseViewSet, basename="expense")
@@ -39,7 +40,8 @@ router.register(r'track_gym', TrackGymViewSet)
 
 urlpatterns = [
     path('', debug.default_urlconf),
-    path("phat_finance/", phat_finance_index, name="index"),
+    path("phat_finance/dashboard", phat_finance_dashboard, name="index"),
+    path("phat_finance/expense", phat_finance_expense, name="index"),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
