@@ -22,7 +22,7 @@ class InOutFlow(models.Model):
         redis = Redis.from_env()
 
         @transaction.atomic
-        def salary_paid(self,amount):
+        def salary_paid(amount):
             """
             Digital money 💵💻 enter the system. Increase balance.digital by amount
             """

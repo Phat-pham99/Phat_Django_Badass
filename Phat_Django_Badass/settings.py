@@ -31,7 +31,7 @@ DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 USE_THOUSAND_SEPARATOR = True
-
+USE_L10N = False
 
 # Application definition
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_wind',
+    'django_humanize',
     "rest_framework",
     'rest_framework_simplejwt',
     "corsheaders",

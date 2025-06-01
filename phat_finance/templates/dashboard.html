@@ -1,5 +1,12 @@
+{% load humanizelib %}
 <html>
     <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <style>
         body {
             background-color: rgb(255, 255, 255);
@@ -7,16 +14,33 @@
         h1 {
             color: navy;
             margin-left: 20px;
+            size: 50px;
+        }
+        h3 {
+            color: rgb(249, 0, 124);
+        }
+        p {
+            text-size-adjust: 10px;
         }
         table, th, td  {
-            width: 10%;
+            width: 8%;
             height: 10%;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             border-collapse: collapse;
-            background-color: rgb(233, 255, 240);
+            background-color: rgb(238, 255, 243);
             border:1px solid black;
         }
+        .piechart {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background-image: conic-gradient(
+                    pink 70deg,
+                    lightblue 0 235deg,
+                    orange 0
+                );
+            }
         </style>
         <title>Phat Finance Dashboard</title>
     </head>
@@ -24,29 +48,35 @@
     <h1>Phat Finance Dashboard</h1>
     <p>Welcome to your personal finance dashboard!</p>
     <div>
-        <table style="width:100%">
-            <tr class="base-table">
-                <th class="base-table total-expense">total_expense</th>
-                <th class="balance_cash">balance_cash</th>
-                <th class="balance_digital">balance_digital</th>
-                <th>emergency_fund</th>
-                <th>sinking_fund</th>
-                <th>total_investment</th>
-                <th>total_debt</th>
-                <th>last_changes</th>
-                <th>last_changes_log</th>
-            </tr>
-            <tr>
-                <td>{{ total_expense }}</td>
-                <td>{{ balance_cash }}</td>
-                <td>{{ balance_digital }}</td>
-                <td>{{ emergency_fund }}</td>
-                <td>{{ sinking_fund }}</td>
-                <td>{{ total_investment }}</td>
-                <td>{{ total_debt }}</td>
-                <td>{{ last_changes }}</td>
-                <td>{{ last_changes_log }}</td>
-        </table>
+        <div>
+            <table style="width:100%">
+                <tr>
+                    <td><h3>expense_cash : </h3> {{ expense_cash|floatformat:0|intcomma }}</td>
+                    <td><h3>expense_digital : </h3> {{ expense_digital|floatformat:0|intcomma }}</td>
+                    <td><h3>expense_credit : </h3> {{ expense_credit|floatformat:0|intcomma }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><h3>balance_cash : </h3> {{ balance_cash|floatformat:0|intcomma }}</td>
+                    <td><h3>balance_digital : </h3> {{ balance_digital|floatformat:0|intcomma }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="base-table">
+                    <td><h3>emergency_fund : </h3> {{ emergency_fund|floatformat:0|intcomma }}</td>
+                    <td><h3>sinking_fund : </h3> {{ sinking_fund|floatformat:0|intcomma }}</td>
+                    <td><h3>total_investment : </h3> {{ total_investment|floatformat:0|intcomma }}</td>
+                    <td><h3>total_debt : </h3> {{ total_debt|floatformat:0|intcomma }}</td>
+                </tr>
+                <tr class="base-table">
+                    <td><h3>last_changes : </h3> {{ last_changes }}</td>
+                    <td><h3>last_changes_log : </h3> {{ last_changes_log }}</td>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </table>
+        </div style="margin-top:20px">
+        <canvas id="PieExpense" style="width:100%;max-width:700px"></canvas> 
     </div>
     <footer>
         <a href="/">Home</a>
@@ -54,8 +84,20 @@
         <p>&copy; 2025 Phat Finance</p>
     </footer>
     <script>
-        // You can add JavaScript here for interactivity
-        console.log("Phat Finance Dashboard loaded");
+        const xPieExpense = ["expense_cash", "expense_digital", "expense_credit"];
+        const yPieExpense = [ '{{ expense_cash | safe }}','{{ expense_digital | safe }}','{{ expense_digital | safe }}'];
+        const PieExpenseColors = ["red", "green","blue"];
+        new Chart("PieExpense", {
+        type: "pie",
+        data: {
+            labels: xPieExpense,
+            datasets: [{
+            backgroundColor: PieExpenseColors,
+            data: yPieExpense
+            }]
+        },
+        options: {}
+        });
     </script>
 </body>
 </html>

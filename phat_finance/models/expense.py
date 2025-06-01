@@ -23,6 +23,7 @@ CATEGORY_CHOICES = [
     ('insurance','insurance'),
     ('gift','gift'),
     ('donation','donation'),
+    ('haircut','haircut')
 ]
 
 class Expense(models.Model):
@@ -50,8 +51,14 @@ class Expense(models.Model):
             pipeline = redis.multi()
             if cash_amount > 0:
                 pipeline.decrby('balance_cash', cash_amount)
+                pipeline.incrby('expense_cash', cash_amount)
             elif digital_amount > 0:
                 pipeline.decrby('balance_digital', digital_amount)
+                pipeline.incrby('expense_digital', digital_amount)
+            elif credit_amount > 0:
+                pipeline.incrby('expense_credit', credit_amount)
+            else:
+                pass
             pipeline.set('last_changes', str(datetime.now()))
             pipeline.set('last_changes_log', f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))} \
                         digital: {'{:,.0f}'.format(float(digital_amount))} \

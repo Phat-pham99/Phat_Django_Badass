@@ -17,7 +17,9 @@ def dashboard(request):
     redis = Redis.from_env()
     balance_cash = redis.get('balance_cash')
     balance_digital = redis.get('balance_digital')
-    total_expense = redis.get('total_expense')
+    expense_cash = redis.get('expense_cash')
+    expense_digital = redis.get('expense_digital')
+    expense_credit = redis.get('expense_credit')
     emergency_fund = redis.get('emergency_fund')
     sinking_fund = redis.get('sinking_fund')
     total_investment = redis.get('total_investment')
@@ -26,13 +28,15 @@ def dashboard(request):
     last_changes_log = redis.get('last_changes_log')
 
     rendered = render_to_string("dashboard.html", {
-        "balance_cash": '{:,.0f}'.format(float(balance_cash))
-        , "balance_digital": '{:,.0f}'.format(float(balance_digital))
-        , "total_expense": '{:,.0f}'.format(float(total_expense))
-        , "emergency_fund": '{:,.0f}'.format(float(emergency_fund))
-        , "sinking_fund": '{:,.0f}'.format(float(sinking_fund))
-        , "total_debt": '{:,.0f}'.format(float(total_debt))
-        , "total_investment": '{:,.0f}'.format(float(total_investment))
+        "balance_cash": balance_cash
+        , "balance_digital": balance_digital
+        , "expense_cash": expense_cash
+        , "expense_digital": expense_digital
+        , "expense_credit": expense_credit
+        , "emergency_fund": emergency_fund
+        , "sinking_fund": sinking_fund
+        , "total_debt": total_debt
+        , "total_investment": total_investment
         , "last_changes": last_changes
         , "last_changes_log": last_changes_log
     })
@@ -54,7 +58,7 @@ def expense(request):
     if expenses and category:
         expenses = expenses.filter(category=category)
     else:
-        expenses = expense_origin.filter(category=category)
+        expenses = expense_origin
     total_cash = expenses.aggregate(total=Sum('cash'))['total'] or 0
     total_digital = expenses.aggregate(total=Sum('digital'))['total'] or 0
     total_credit = expenses.aggregate(total=Sum('credit'))['total'] or 0
