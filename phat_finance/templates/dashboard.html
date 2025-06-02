@@ -31,16 +31,6 @@
             background-color: rgb(238, 255, 243);
             border:1px solid black;
         }
-        .piechart {
-                width: 200px;
-                height: 200px;
-                border-radius: 50%;
-                background-image: conic-gradient(
-                    pink 70deg,
-                    lightblue 0 235deg,
-                    orange 0
-                );
-            }
         </style>
         <title>Phat Finance Dashboard</title>
     </head>
@@ -59,7 +49,7 @@
                 <tr>
                     <td><h3>balance_cash : </h3> {{ balance_cash|floatformat:0|intcomma }}</td>
                     <td><h3>balance_digital : </h3> {{ balance_digital|floatformat:0|intcomma }}</td>
-                    <td></td>
+                    <td><h3>asset: </h3> {{ asset|floatformat:0|intcomma }}</td>
                     <td></td>
                 </tr>
                 <tr class="base-table">
@@ -76,7 +66,8 @@
                 </tr>
             </table>
         </div style="margin-top:20px">
-        <canvas id="PieExpense" style="width:100%;max-width:700px"></canvas> 
+        <canvas id="PieExpense" style="width:10%;max-width:max-content"></canvas>
+        <canvas id="PieBudget" style="width:10%;max-width: max-content"></canvas> >
     </div>
     <footer>
         <a href="/">Home</a>
@@ -85,8 +76,21 @@
     </footer>
     <script>
         const xPieExpense = ["expense_cash", "expense_digital", "expense_credit"];
-        const yPieExpense = [ '{{ expense_cash | safe }}','{{ expense_digital | safe }}','{{ expense_digital | safe }}'];
+        const yPieExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}","{{ expense_credit | safe }}"];
         const PieExpenseColors = ["red", "green","blue"];
+        const xPieBudget = ["necessity", "pleasure","saving_month", "investment_month", 
+                            "rent", "vacation", "funds", "cashflow"]
+        const yPieBudget = [
+            "{{ necessity | safe }}", 
+            "{{ pleasure | safe }}",
+            "{{ saving_month | safe }}",
+            "{{ investment_month | safe }}",
+            "{{ rent | safe }}",
+            "{{ vacation | safe }}",
+            "{{ funds | safe }}",
+            "{{ cashflow | safe }}"
+            ]
+        const PieBudgetColors = ["indianred", "#69ff7a","#701345", "pink", "#ffa142", "#8000ff", "#7af589", "#cbd453"];
         new Chart("PieExpense", {
         type: "pie",
         data: {
@@ -98,6 +102,16 @@
         },
         options: {}
         });
+        new Chart("PieBudget", {
+        type: "pie",
+        data: {
+            labels: xPieBudget,
+            datasets: [{
+            backgroundColor: PieBudgetColors,
+            data: yPieBudget
+            }]
+        }
+        })
     </script>
 </body>
 </html>

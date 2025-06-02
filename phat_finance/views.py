@@ -15,30 +15,41 @@ from api.serializers.expense import ExpenseSerializer
 def dashboard(request):
     #Initialize Redis
     redis = Redis.from_env()
-    balance_cash = redis.get('balance_cash')
-    balance_digital = redis.get('balance_digital')
-    expense_cash = redis.get('expense_cash')
-    expense_digital = redis.get('expense_digital')
-    expense_credit = redis.get('expense_credit')
-    emergency_fund = redis.get('emergency_fund')
-    sinking_fund = redis.get('sinking_fund')
-    total_investment = redis.get('total_investment')
-    total_debt = redis.get('total_debt')
-    last_changes = redis.get('last_changes')
-    last_changes_log = redis.get('last_changes_log')
-
+    
+    expensable = int(redis.get("expensable"))
+    necessity = round(0.4 * expensable,-3)
+    pleasure = round(0.1 * expensable,-3)
+    rent = int(redis.get("rent"))
+    vacation = int(redis.get("vacation"))
+    funds =  int(redis.get("funds"))
+    saving_month = int(redis.get("saving_month"))
+    investment_month = int(redis.get("investment_month"))
+    cashflow =  expensable - (
+        necessity + pleasure + rent + vacation
+        + funds + saving_month + investment_month)
+    
     rendered = render_to_string("dashboard.html", {
-        "balance_cash": balance_cash
-        , "balance_digital": balance_digital
-        , "expense_cash": expense_cash
-        , "expense_digital": expense_digital
-        , "expense_credit": expense_credit
-        , "emergency_fund": emergency_fund
-        , "sinking_fund": sinking_fund
-        , "total_debt": total_debt
-        , "total_investment": total_investment
-        , "last_changes": last_changes
-        , "last_changes_log": last_changes_log
+        "balance_cash": redis.get('balance_cash')
+        , "balance_digital": redis.get('balance_digital')
+        , "expense_cash": redis.get('expense_cash')
+        , "expense_digital": redis.get('expense_digital')
+        , "expense_credit": redis.get('expense_credit')
+        , "emergency_fund": redis.get('emergency_fund')
+        , "sinking_fund": redis.get('sinking_fund')
+        , "asset": redis.get('asset')
+        , "total_debt": redis.get('total_debt')
+        , "total_investment": redis.get('total_investment')
+        , "last_changes": redis.get('last_changes')
+        , "last_changes_log": redis.get('last_changes_log')
+        , "expensable": expensable
+        , "necessity": necessity
+        , "pleasure": pleasure
+        , "saving_month": saving_month
+        , "investment_month": investment_month
+        , "rent": rent
+        , "vacation": vacation
+        , "funds": funds
+        , "cashflow" : cashflow
     })
     return HttpResponse(rendered)
 
@@ -62,10 +73,6 @@ def expense(request):
     total_cash = expenses.aggregate(total=Sum('cash'))['total'] or 0
     total_digital = expenses.aggregate(total=Sum('digital'))['total'] or 0
     total_credit = expenses.aggregate(total=Sum('credit'))['total'] or 0
-    print(expense_origin)
-    # print("total_cash",total_cash)
-    # print("total_digital",total_digital)
-    # print("total_credit",total_credit)
     json_data = json.loads(serializers.serialize('json', expenses))
     print(type(json_data))
     print(json_data)
