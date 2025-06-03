@@ -10,6 +10,7 @@
         <style>
         body {
             background-color: rgb(255, 255, 255);
+            font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
         }
         h1 {
             color: navy;
@@ -28,7 +29,7 @@
             padding: 8px;
             text-align: center;
             border-collapse: collapse;
-            background-color: rgb(238, 255, 243);
+            background-color: rgb(250, 255, 253);
             border:1px solid black;
         }
         </style>
@@ -65,19 +66,19 @@
                     <th></th>
                 </tr>
             </table>
-        </div style="margin-top:20px">
-        <canvas id="PieExpense" style="width:10%;max-width:max-content"></canvas>
-        <canvas id="PieBudget" style="width:10%;max-width: max-content"></canvas> >
+        </div style="margin-top:20px, width:50%">
+        <canvas id="PieExpense" style="width:25%"></canvas>
+        <canvas id="PieBudget" style="width:25%"></canvas>
     </div>
     <footer>
-        <a href="/">Home</a>
+        <a href="/"> Home</a>
         <a href="/phat_finance/expense">Expense</a>
         <p>&copy; 2025 Phat Finance</p>
     </footer>
     <script>
         const xPieExpense = ["expense_cash", "expense_digital", "expense_credit"];
         const yPieExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}","{{ expense_credit | safe }}"];
-        const PieExpenseColors = ["red", "green","blue"];
+        const PieExpenseColors = ["#ff96a4", "#ccffcc","#96bfff"];
         const xPieBudget = ["necessity", "pleasure","saving_month", "investment_month", 
                             "rent", "vacation", "funds", "cashflow"]
         const yPieBudget = [
@@ -90,7 +91,8 @@
             "{{ funds | safe }}",
             "{{ cashflow | safe }}"
             ]
-        const PieBudgetColors = ["indianred", "#69ff7a","#701345", "pink", "#ffa142", "#8000ff", "#7af589", "#cbd453"];
+        const PieBudgetColors = ["#ff2929", "#0047c9","#69ff7a", "pink",
+            "#ff8e4d", "#73e3ff", "#9e3dff", "#fff878"];
         new Chart("PieExpense", {
         type: "pie",
         data: {
@@ -100,8 +102,34 @@
             data: yPieExpense
             }]
         },
-        options: {}
+        options: {
+            title: {
+                display: true,
+                text: "Expense This month Overview",
+                fontSize: 20,
+                fontColor: "black",
+                fontFamily: "Consolas, monospace"
+            },
+            legend: {
+                display: true,
+                position: "right"
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index] || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        return label;
+                    }
+                }
+            }
+        }
         });
+
         new Chart("PieBudget", {
         type: "pie",
         data: {
@@ -110,8 +138,35 @@
             backgroundColor: PieBudgetColors,
             data: yPieBudget
             }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Budget Allocation Overview",
+                fontSize: 20,
+                fontColor: "black",
+                fontFamily: "Consolas, monospace"
+            },
+            legend: {
+                display: true,
+                position: "right"
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index] || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        return label;
+                    }
+                }
+            }
         }
-        })
+        });
+
     </script>
 </body>
 </html>

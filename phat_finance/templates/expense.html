@@ -3,6 +3,7 @@
         <style>
             body {
                 background-color: rgb(255, 255, 255);
+                font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
             }
             h1 {
                 color: navy;
@@ -27,6 +28,15 @@
         <h1>Phat Expenses Dashboard</h1>
         <p>Welcome to your expenses dashboard!</p>
 
+        {% if start_date and end_date %}
+        <p>Expenses from {{ start_date }} to {{ end_date }}</p>
+        {% elif date %}
+        <p>Expenses for {{ date }}</p>
+        {% else %}
+        <p>All expenses</p>
+        {% endif %}
+
+        {% if json_data %}
         <table style="align-self: center">
             <tr>
                 <th>date</th>
@@ -39,11 +49,11 @@
             {% for item in json_data %}
             <tr>
                 <th>{{ item.fields.date }}</th>
-                <th style="background: indianred">{{ item.fields.cash }}</th>
-                <th style="background: lightgreen">
+                <th style="background: #ffc4c4">{{ item.fields.cash }}</th>
+                <th style="background: #c7ffd8">
                     {{ item.fields.digital }}
                 </th>
-                <th style="background: lightskyblue">
+                <th style="background: #d1e3ff">
                     {{ item.fields.credit }}
                 </th>
                 {% if item.fields.category == 'dating' %}
@@ -88,6 +98,7 @@
                 <th>{{ item.fields.description }}</th>
             </tr>
             {% endfor %}
+            {% endif %}
         </table>
     </body>
     <footer>

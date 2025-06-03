@@ -25,7 +25,7 @@ class SinkingFund(models.Model):
             pipeline.decrby('balance_digital', amount)
             pipeline.incrby('emergency_fund', amount)
             pipeline.set('last_changes', str(datetime.now()))
-            pipeline.set('last_changes_log', f"Emergency fund deposited : \
+            pipeline.set('last_changes_log', f"Sinking fund deposited : \
                         {'{:,.0f}'.format(float(amount))}")
             pipeline.exec()
 

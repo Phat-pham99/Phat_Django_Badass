@@ -3,9 +3,6 @@ from datetime import date, datetime
 from django.db import transaction
 from upstash_redis import Redis
 
-#Initialize Redis
-redis = Redis.from_env()
-
 INVESTMENT_CHOICE =[
     ('VESAF', 'VESAF'),
     ('VFF', 'VFF'),
@@ -30,8 +27,11 @@ class Investment(models.Model):
         """
         Invest into assets 🪙💹. Deduct balance.digital accordingly
         """
+        #Initialize Redis
+        redis = Redis.from_env()
         pipeline = redis.multi()
         pipeline.decrby('balance_digital', amount)
+        pipeline.incrby('total_investment', amount)
         pipeline.set('last_changes',str(datetime.now()))
         pipeline.set('last_changes_log',f"Invest to {investment_type}")
         pipeline.exec()

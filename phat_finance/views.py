@@ -17,8 +17,8 @@ def dashboard(request):
     redis = Redis.from_env()
     
     expensable = int(redis.get("expensable"))
-    necessity = round(0.4 * expensable,-3)
-    pleasure = round(0.1 * expensable,-3)
+    necessity = int(round(0.4 * expensable,-3))
+    pleasure = int(round(0.1 * expensable,-3))
     rent = int(redis.get("rent"))
     vacation = int(redis.get("vacation"))
     funds =  int(redis.get("funds"))
@@ -55,18 +55,17 @@ def dashboard(request):
 
 @login_required
 def expense(request):
-    # expenses = Expense.objects.all().order_by('-date').filter(date="2025-05-30")
     date = request.GET.get('date', None)
-    date_start = request.GET.get('date_start', None)
-    date_end = request.GET.get('date_end', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
     category = request.GET.get('category', None)
     expense_origin = Expense.objects.all().order_by('-date')
     expenses = None
     if date:
         expenses = expense_origin.filter(date=date)
-    elif date_start and date_end:
-        expenses = expense_origin.filter(date__range=(date_start,date_end))
-    if expenses and category:
+    elif start_date and end_date:
+        expenses = expense_origin.filter(date__range=(start_date,end_date))
+    elif category:
         expenses = expenses.filter(category=category)
     else:
         expenses = expense_origin
@@ -82,6 +81,9 @@ def expense(request):
             'total_cash': total_cash,
             'total_digital': total_digital,
             'total_credit': total_credit,
+            'start_date': start_date,
+            'end_date': end_date,
+            'date': date,
             })
     except loader.TemplateDoesNotExist:
         return HttpResponseNotFound("Expense template not found.")
