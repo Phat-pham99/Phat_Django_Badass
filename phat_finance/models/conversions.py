@@ -17,7 +17,7 @@ class Conversion(models.Model):
         #Initialize Redis
         redis = Redis.from_env()
         @transaction.atomic
-        def convert(self,type_conversion,amount):
+        def convert(type_conversion,amount):
             """
             Convert digital 📱 -> cash 💵 and vice versa
             """
@@ -35,5 +35,6 @@ class Conversion(models.Model):
                 pipeline.set('last_changes',str(datetime.now()))
                 pipeline.set('last_changes_log',f"{type_conversion} : {'{:,.0f}'.format(float(amount))}")
                 pipeline.exec()
+
         convert(self.type_conversion, self.amount)
         super().save(*args, **kargs)
