@@ -50,7 +50,7 @@
                 <tr>
                     <td><h3>balance_cash : </h3> {{ balance_cash|floatformat:0|intcomma }}</td>
                     <td><h3>balance_digital : </h3> {{ balance_digital|floatformat:0|intcomma }}</td>
-                    <td><h3>asset: </h3> {{ asset|floatformat:0|intcomma }}</td>
+                    <td><h3>assets: </h3> {{ assets|floatformat:0|intcomma }}</td>
                     <td></td>
                 </tr>
                 <tr class="base-table">
@@ -60,10 +60,10 @@
                     <td><h3>total_debt : </h3> {{ total_debt|floatformat:0|intcomma }}</td>
                 </tr>
                 <tr class="base-table">
-                    <td><h3>last_changes : </h3> {{ last_changes }}</td>
-                    <td><h3>last_changes_log : </h3> {{ last_changes_log }}</td>
-                    <th></th>
-                    <th></th>
+                    <td><h3>Expensable this month:</h3>{{ expensable|floatformat:0|intcomma }}</td>
+                    <td><h3>Salary this month:</h3>{{ budget|floatformat:0|intcomma }}</td>
+                    <th><h3>last_changes : </h3> {{ last_changes }}</th>
+                    <th><h3>last_changes_log : </h3> {{ last_changes_log }}</th>
                 </tr>
             </table>
         </div style="margin-top:20px, width:50%">
@@ -76,8 +76,14 @@
         <p>&copy; 2025 Phat Finance</p>
     </footer>
     <script>
-        const xPieExpense = ["expense_cash", "expense_digital", "expense_credit"];
-        const yPieExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}","{{ expense_credit | safe }}"];
+        const remaining = parseInt("{{ expensable | safe }}") -
+        (parseInt("{{ expense_cash | safe }}") + parseInt("{{ expense_digital | safe }}") + parseInt("{{ expense_credit | safe }}"));
+        if (remaining < 0) {
+            window.alert("Expensable exceeded");
+        }
+        const xPieExpense = ["expense_cash", "expense_digital", "expense_credit", "remaining"];
+        const yPieExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}",
+                            "{{ expense_credit | safe }}", remaining];
         const PieExpenseColors = ["#ff96a4", "#ccffcc","#96bfff"];
         const xPieBudget = ["necessity", "pleasure","saving_month", "investment_month", 
                             "rent", "vacation", "funds", "cashflow"]
@@ -93,6 +99,7 @@
             ]
         const PieBudgetColors = ["#ff2929", "#0047c9","#69ff7a", "pink",
             "#ff8e4d", "#73e3ff", "#9e3dff", "#fff878"];
+
         new Chart("PieExpense", {
         type: "pie",
         data: {
@@ -106,7 +113,7 @@
             title: {
                 display: true,
                 text: "Expense This month Overview",
-                fontSize: 20,
+                fontSize: 30,
                 fontColor: "black",
                 fontFamily: "Consolas, monospace"
             },
@@ -122,7 +129,8 @@
                             label += ': ';
                         }
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+                        "(" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + "%)";
                         return label;
                     }
                 }
@@ -143,7 +151,7 @@
             title: {
                 display: true,
                 text: "Budget Allocation Overview",
-                fontSize: 20,
+                fontSize: 30,
                 fontColor: "black",
                 fontFamily: "Consolas, monospace"
             },
@@ -159,7 +167,8 @@
                             label += ': ';
                         }
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+                        "(" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + "%)";
                         return label;
                     }
                 }

@@ -16,15 +16,15 @@ def dashboard(request):
     #Initialize Redis
     redis = Redis.from_env()
     
-    expensable = int(redis.get("expensable"))
-    necessity = int(round(0.4 * expensable,-3))
-    pleasure = int(round(0.1 * expensable,-3))
+    budget = int(redis.get("budget"))
+    necessity = int(round(0.4 * budget,-3))
+    pleasure = int(round(0.1 * budget,-3))
     rent = int(redis.get("rent"))
     vacation = int(redis.get("vacation"))
     funds =  int(redis.get("funds"))
     saving_month = int(redis.get("saving_month"))
     investment_month = int(redis.get("investment_month"))
-    cashflow =  expensable - (
+    cashflow =  budget - (
         necessity + pleasure + rent + vacation
         + funds + saving_month + investment_month)
     
@@ -36,12 +36,12 @@ def dashboard(request):
         , "expense_credit": redis.get('expense_credit')
         , "emergency_fund": redis.get('emergency_fund')
         , "sinking_fund": redis.get('sinking_fund')
-        , "asset": redis.get('asset')
+        , "assets": redis.get('assets')
         , "total_debt": redis.get('total_debt')
         , "total_investment": redis.get('total_investment')
         , "last_changes": redis.get('last_changes')
         , "last_changes_log": redis.get('last_changes_log')
-        , "expensable": expensable
+        , "expensable": necessity+pleasure
         , "necessity": necessity
         , "pleasure": pleasure
         , "saving_month": saving_month
@@ -49,6 +49,7 @@ def dashboard(request):
         , "rent": rent
         , "vacation": vacation
         , "funds": funds
+        , "budget": budget
         , "cashflow" : cashflow
     })
     return HttpResponse(rendered)
