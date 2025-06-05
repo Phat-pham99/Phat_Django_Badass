@@ -47,7 +47,7 @@
     </head>
 <body>
     <h1>Phat Finance Dashboard</h1>
-    <p>Welcome to your personal finance dashboard!</p>
+    <p>Welcome to my personal finance dashboard!</p>
     <div>
         <div class="row table-container">
             <table class="dashboard-table" style="width:90%">
@@ -82,16 +82,17 @@
     </div>
         <div style="width:100%;" class="row">
             <div class="col" style="width:50%;" >
-                <canvas id="PieExpense" style="width:100%"></canvas>
+                <canvas id="DoughnutExpense" style="width:100%"></canvas>
             </div>
             <div class="col" style="width:50%;" >
-                <canvas id="PieBudget" style="width:100%"></canvas>
+                <canvas id="DoughnutBudget" style="width:100%"></canvas>
             </div>
         </div>
     <footer style="text-align: center; margin-top: 20px;">
         <a href="/"> Home</a>
         <a href="/phat_finance/expense">Expense</a>
-        <p>&copy; 2025 Phat Finance</p>
+        <a href="/phat_investment/portfolio">Investment Portfolio</a>
+        <p>&copy; Phat's Django</p>
     </footer>
     <script>
         const remaining = parseInt("{{ expensable | safe }}") -
@@ -99,13 +100,13 @@
         if (remaining < 0) {
             window.alert("Expensable exceeded");
         }
-        const xPieExpense = ["expense_cash", "expense_digital", "expense_credit", "remaining"];
-        const yPieExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}",
+        const xDoughnutExpense = ["expense_cash", "expense_digital", "expense_credit", "remaining"];
+        const yDoughnutExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}",
                             "{{ expense_credit | safe }}", remaining];
-        const PieExpenseColors = ["#ff96a4", "#ccffcc","#96bfff"];
-        const xPieBudget = ["necessity", "pleasure","saving_month", "investment_month", 
+        const DoughnutExpenseColors = ["#ff96a4", "#ccffcc","#96bfff"];
+        const xDoughnutBudget = ["necessity", "pleasure","saving_month", "investment_month",
                             "rent", "vacation", "funds", "cashflow"]
-        const yPieBudget = [
+        const yDoughnutBudget = [
             "{{ necessity | safe }}", 
             "{{ pleasure | safe }}",
             "{{ saving_month | safe }}",
@@ -115,16 +116,16 @@
             "{{ funds | safe }}",
             "{{ cashflow | safe }}"
             ]
-        const PieBudgetColors = ["#ff2929", "#0047c9","#69ff7a", "pink",
+        const DoughnutBudgetColors = ["#ff2929", "#0047c9","#69ff7a", "pink",
             "#ff8e4d", "#73e3ff", "#9e3dff", "#fff878"];
 
-        new Chart("PieExpense", {
-        type: "pie",
+        new Chart("DoughnutExpense", {
+        type: "doughnut",
         data: {
-            labels: xPieExpense,
+            labels: xDoughnutExpense,
             datasets: [{
-            backgroundColor: PieExpenseColors,
-            data: yPieExpense
+            backgroundColor: DoughnutExpenseColors,
+            data: yDoughnutExpense
             }]
         },
         options: {
@@ -148,7 +149,7 @@
                         }
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                         label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        "(" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + " %)";
+                        " (" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + " %)";
                         return label;
                     }
                 }
@@ -156,13 +157,13 @@
         }
         });
 
-        new Chart("PieBudget", {
-        type: "pie",
+        new Chart("DoughnutBudget", {
+        type: "doughnut",
         data: {
-            labels: xPieBudget,
+            labels: xDoughnutBudget,
             datasets: [{
-            backgroundColor: PieBudgetColors,
-            data: yPieBudget
+            backgroundColor: DoughnutBudgetColors,
+            data: yDoughnutBudget
             }]
         },
         options: {
@@ -186,7 +187,7 @@
                         }
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                         label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        "(" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + " %)";
+                        " (" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + " %)";
                         return label;
                     }
                 }
