@@ -14,5 +14,5 @@ class InvestmentAdmin(admin.ModelAdmin):
 
 @admin.register(TrackInvestment)
 class TrackInvestmentAdmin(admin.ModelAdmin):
-    list_display = ('date', 'acbs', 'mio', 'total')
-    list_filter = ('date', 'acbs')
+    list_display = ('date', 'acbs', 'mio', 'dragon', 'ssi', 'idle_cash', 'crypto',  'total')
+    list_filter = ('date',)
