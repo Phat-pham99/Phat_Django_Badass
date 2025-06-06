@@ -21,7 +21,7 @@ class Conversion(models.Model):
             """
             Convert digital 📱 -> cash 💵 and vice versa
             """
-            if type_conversion == "digital_cash":
+            if type_conversion == "digital📲_cash💵":
                 pipeline = redis.multi()
                 pipeline.incrby('balance_cash', amount)
                 pipeline.decrby('balance_digital', amount)
