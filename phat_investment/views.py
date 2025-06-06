@@ -17,7 +17,10 @@ def portfolio_history(request):
     """
     Render the portfolio page with investment data.
     """
-    portfolio_history = TrackInvestment.objects.all()
+    date = request.GET.get('date', None)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    portfolio_history = TrackInvestment.objects.all()('-date')
     json_data = json.loads(serializers.serialize('json', portfolio_history))
     portfolio_data = {'date':[],'total':[],'acbs':[],'mio':[],'dragon':[],'ssi':[],'idle_cash':[],'crypto':[]}
     for item in json_data:
