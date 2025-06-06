@@ -36,11 +36,11 @@
     console.log(typeof portfolio_data);
     console.log(portfolio_data['date']);
     const data = {
-    labels: portfolio_data['date'].reverse(),
+    labels: portfolio_data['date'],
     datasets: [
         {
         label: 'acbs',
-        data: portfolio_data['acbs'].reverse(),
+        data: portfolio_data['acbs'],
         borderColor: "#86ff36",
         pointStyle: 'circle',
         pointRadius: 1,
@@ -49,7 +49,7 @@
         },
         {
         label: 'mio',
-        data: portfolio_data['mio'].reverse(),
+        data: portfolio_data['mio'],
         borderColor: "#969696",
         pointStyle: 'circle',
         pointRadius: 1,
@@ -58,7 +58,7 @@
         },
         {
         label: 'dragon',
-        data: portfolio_data['dragon'].reverse(),
+        data: portfolio_data['dragon'],
         borderColor: "#005709",
         pointStyle: 'circle',
         pointRadius: 1,
@@ -67,7 +67,7 @@
         },
         {
         label: 'ssi',
-        data: portfolio_data['ssi'].reverse(),
+        data: portfolio_data['ssi'],
         borderColor: "#ff0000",
         pointStyle: 'circle',
         pointRadius: 1,
@@ -76,7 +76,7 @@
         },
         {
         label: 'idle_cash',
-        data: portfolio_data['idle_cash'].reverse(),
+        data: portfolio_data['idle_cash'],
         borderColor: "#b08e07",
         pointStyle: 'circle',
         pointRadius: 1,
@@ -85,7 +85,7 @@
         },
         {
         label: 'crypto',
-        data: portfolio_data['crypto'].reverse(),
+        data: portfolio_data['crypto'],
         borderColor: "#49047a",
         pointStyle: 'circle',
         pointRadius: 1,

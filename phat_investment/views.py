@@ -20,8 +20,14 @@ def portfolio_history(request):
     date = request.GET.get('date', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
-    portfolio_history = TrackInvestment.objects.all()('-date')
-    json_data = json.loads(serializers.serialize('json', portfolio_history))
+    portfolio_history = TrackInvestment.objects.all().order_by('-date')
+    portfolio = None
+    if start_date and end_date:
+        portfolio = portfolio_history.filter(date__range=(start_date,end_date))
+    else:
+        portfolio = portfolio_history
+        
+    json_data = json.loads(serializers.serialize('json', portfolio))
     portfolio_data = {'date':[],'total':[],'acbs':[],'mio':[],'dragon':[],'ssi':[],'idle_cash':[],'crypto':[]}
     for item in json_data:
         portfolio_data['date'].append(item['fields']['date'])
