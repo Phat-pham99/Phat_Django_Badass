@@ -23,7 +23,7 @@ class SinkingFund(models.Model):
             """
             pipeline = redis.multi()
             pipeline.decrby('balance_digital', amount)
-            pipeline.incrby('emergency_fund', amount)
+            pipeline.incrby('sinking_fund', amount)
             pipeline.set('last_changes', str(datetime.now()))
             pipeline.set('last_changes_log', f"Sinking fund deposited : \
                         {'{:,.0f}'.format(float(amount))}")
@@ -36,7 +36,7 @@ class SinkingFund(models.Model):
             """
             pipeline = redis.multi()
             pipeline.incrby('balance_digital', amount)
-            pipeline.decrby('emergency_fund', amount)
+            pipeline.decrby('sinking_fund', amount)
             pipeline.set('last_changes', str(datetime.now()))
             pipeline.set('last_changes_log', f"Emergency fund withdrawn : \
                         {'{:,.0f}'.format(float(amount))}")
