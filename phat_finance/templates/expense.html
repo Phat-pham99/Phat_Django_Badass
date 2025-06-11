@@ -1,5 +1,10 @@
 <html>
     <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
         <style>
             body {
                 background-color: rgb(255, 255, 255);
@@ -21,6 +26,23 @@
                 background-color: rgb(255, 255, 255);
                 border: 2px solid black;
             }
+        .row{
+            display: flex
+        }
+        form {
+            position: sticky;
+            bottom: 20px; /* Adjust as needed - distance from the bottom */
+            left: 20px; /* Or right: 20px; for the other side */
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #000000;
+            line-height: 170%;
+            text-size-adjust: 12px;
+            background-color: #d1ffd9;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px
+        }
         </style>
         <title>Phat Expenses Dashboard</title>
     </head>
@@ -37,6 +59,8 @@
         {% endif %}
 
         {% if json_data %}
+    <div style="width:100%;" class="row">
+        <div class="col" style="width:50%;" >
         <table style="align-self: center">
             <tr>
                 <th>date</th>
@@ -100,6 +124,18 @@
             {% endfor %}
             {% endif %}
         </table>
+        </div>
+        <div class="col" style="width:50%;" >
+            <form method="post" style="width:50%;">
+            {% csrf_token %}
+            {{ date_filter }}
+            <input type="submit" value="Submit" style="
+            padding: 5px; background-color: #4CAF50; color: white;
+            border: none;
+            ">
+            </form>
+        </div>
+    </div>
     </body>
     <footer style="text-align: center; margin-top: 20px;">
         <a href="/">Home</a>

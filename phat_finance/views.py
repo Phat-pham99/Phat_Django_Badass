@@ -1,11 +1,12 @@
 from django.db.models import Sum
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 import json
+from .forms.forms import DateFilterForm
 from upstash_redis import Redis
 
 from .models.expense import Expense
@@ -27,7 +28,6 @@ def dashboard(request):
     cashflow =  budget - (
         necessity + pleasure + rent + vacation
         + funds + saving_month + investment_month)
-    
     rendered = render_to_string("dashboard.html", {
         "balance_cash": redis.get('balance_cash')
         , "balance_digital": redis.get('balance_digital')
@@ -56,6 +56,15 @@ def dashboard(request):
 
 @login_required
 def expense(request):
+    date_filter = DateFilterForm(request.POST)
+    start_date_form = None
+    end_date_form = None
+    if request.method == "POST":
+        if date_filter.is_valid():
+            start_date_form = date_filter.cleaned_data['start_date']
+            end_date_form = date_filter.cleaned_data['end_date']
+            print(date_filter["start_date"].value())
+            print(date_filter["end_date"].value())
     date = request.GET.get('date', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
@@ -66,6 +75,8 @@ def expense(request):
         expenses = expense_origin.filter(date=date)
     elif start_date and end_date:
         expenses = expense_origin.filter(date__range=(start_date,end_date))
+    elif start_date_form and end_date_form:
+        expenses = expense_origin.filter(date__range=(start_date_form,end_date_form))
     elif category:
         expenses = expenses.filter(category=category)
     else:
@@ -74,11 +85,10 @@ def expense(request):
     total_digital = expenses.aggregate(total=Sum('digital'))['total'] or 0
     total_credit = expenses.aggregate(total=Sum('credit'))['total'] or 0
     json_data = json.loads(serializers.serialize('json', expenses))
-    print(type(json_data))
-    print(json_data)
     try:
         return render(request, 'expense.html',
             {'json_data': json_data,
+            'date_filter': date_filter,
             'total_cash': total_cash,
             'total_digital': total_digital,
             'total_credit': total_credit,
