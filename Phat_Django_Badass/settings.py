@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     "corsheaders",
     "django_admin_logs",
+    "Home",
     "phat_finance",
     "phat_investment",
     "phat_fitness",

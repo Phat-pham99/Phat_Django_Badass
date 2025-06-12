@@ -1,4 +1,4 @@
-<!-- {% load humanizelib %} -->
+{% load humanizelib %}
 <html>
 <head>
     <meta charset="UTF-8" />
@@ -29,9 +29,39 @@
             cursor: pointer;
             border-radius: 5px
         }
+        .topnav {
+        background-color: #092e20;
+        overflow: hidden;
+        margin-left: 2%;
+        margin-right: 2%;
+        margin-top: None;
+        position: sticky;
+        }
+        .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        }
+        .topnav a:hover {
+        background-color: #aecfb9;
+        color: black;
+        }
+        .topnav a.active {
+        background-color: #04AA6D;
+        color: white;
+        }
     </style>
 </head>
 <body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/phat_finance/dashboard">Dashboard</a>
+        <a href="/phat_finance/expense">Expense History</a>
+        <a href="/phat_investment/portfolio">Investment Portfolio</a>
+    </div>
     <h1>Phat Portfolio track Dashboard</h1>
         <div>
             <canvas id="portfolioChart" style="width: 100%; height: 800px;"></canvas>
@@ -46,12 +76,17 @@
             </form>
         </div>
     <footer style="text-align: center; margin-top: 20px;">
-        <a href="/"> Home</a>
+        <!-- <a href="/"> Home</a>
         <a href="/phat_finance/expense">Expense</a>
-        <a href="/phat_finance/dashboard">Finance Dashboard</a>
+        <a href="/phat_finance/dashboard">Finance Dashboard</a> -->
         <p>&copy; Phat's Django</p>
     </footer>
     <script>
+    document.querySelectorAll('.topnav a').forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('active');
+        }
+    });
     let portfolio_data1 = "{{ portfolio_data|safe }}";
     portfolio_data1 = portfolio_data1.replace(/'/g, '"');
     let portfolio_data = JSON.parse(portfolio_data1);

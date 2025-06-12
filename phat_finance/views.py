@@ -18,7 +18,7 @@ from api.serializers.expense import ExpenseSerializer
 def dashboard(request):
     #Initialize Redis
     redis = Redis.from_env()
-    
+
     budget = int(redis.get("budget"))
     necessity = int(round(0.4 * budget,-3))
     pleasure = int(round(0.1 * budget,-3))
@@ -70,18 +70,18 @@ def expense(request):
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
     category = request.GET.get('category', None)
-    expense_origin = Expense.objects.all().order_by('-date')
+    # expense_origin = Expense.objects.all().order_by('-date')
     expenses = None
     if date:
-        expenses = expense_origin.filter(date=date)
+        expenses = Expense.objects.all().order_by('-date').filter(date=date)
     elif start_date and end_date:
-        expenses = expense_origin.filter(date__range=(start_date,end_date))
+        expenses = Expense.objects.all().order_by('-date').filter(date__range=(start_date,end_date))
     elif start_date_form and end_date_form:
-        expenses = expense_origin.filter(date__range=(start_date_form,end_date_form))
+        expenses = Expense.objects.all().order_by('-date').filter(date__range=(start_date_form,end_date_form))
     elif category:
         expenses = expenses.filter(category=category)
     else:
-        expenses = expense_origin
+        expenses = Expense.objects.all().order_by('-date')
     total_cash = expenses.aggregate(total=Sum('cash'))['total'] or 0
     total_digital = expenses.aggregate(total=Sum('digital'))['total'] or 0
     total_credit = expenses.aggregate(total=Sum('credit'))['total'] or 0

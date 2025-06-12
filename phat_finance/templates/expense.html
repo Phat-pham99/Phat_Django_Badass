@@ -1,3 +1,4 @@
+{% load humanizelib %}
 <html>
     <head>
         <meta charset="UTF-8" />
@@ -31,6 +32,7 @@
         }
         form {
             position: sticky;
+            top: 10px;
             bottom: 20px; /* Adjust as needed - distance from the bottom */
             left: 20px; /* Or right: 20px; for the other side */
             margin: 20px;
@@ -43,10 +45,41 @@
             cursor: pointer;
             border-radius: 5px
         }
+        .topnav {
+            background-color: #092e20;
+            overflow: hidden;
+            margin-left: 2%;
+            margin-right: 2%;
+            margin-top: None;
+            position: sticky;
+            top: 0;
+        }
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .topnav a:hover {
+            background-color: #aecfb9;
+            color: black;
+        }
+        .topnav a.active {
+            background-color: #04AA6D;
+            color: white;
+        }
         </style>
         <title>Phat Expenses Dashboard</title>
     </head>
     <body>
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/phat_finance/dashboard">Dashboard</a>
+            <a href="/phat_finance/expense">Expense History</a>
+            <a href="/phat_investment/portfolio">Investment Portfolio</a>
+        </div>
         <h1>Phat Expenses Dashboard</h1>
         <p>Welcome to your expenses dashboard!</p>
 
@@ -137,8 +170,15 @@
     </div>
     </body>
     <footer style="text-align: center; margin-top: 20px;">
-        <a href="/">Home</a>
-        <a href="/phat_finance/dashboard">Dashboard</a>
+        <!-- <a href="/">Home</a>
+        <a href="/phat_finance/dashboard">Dashboard</a> -->
         <p>&copy; Phat's Django</p>
     </footer>
+    <script>
+    document.querySelectorAll('.topnav a').forEach(link => {
+        if (link.href === window.location.href) {
+            link.classList.add('active');
+        }
+    });
+    </script>
 </html>

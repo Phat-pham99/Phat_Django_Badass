@@ -42,10 +42,40 @@
         .row{
             display: flex
         }
+        .topnav {
+        background-color: #092e20;
+        overflow: hidden;
+        margin-left: 2%;
+        margin-right: 2%;
+        margin-top: None;
+        position: sticky;
+        }
+        .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        }
+        .topnav a:hover {
+        background-color: #aecfb9;
+        color: black;
+        }
+        .topnav a.active {
+        background-color: #04AA6D;
+        color: white;
+        }
         </style>
         <title>Phat Finance Dashboard</title>
     </head>
 <body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/phat_finance/dashboard">Dashboard</a>
+        <a href="/phat_finance/expense">Expense History</a>
+        <a href="/phat_investment/portfolio">Investment Portfolio</a>
+    </div>
     <h1>Phat Finance Dashboard</h1>
     <p>Welcome to my personal finance dashboard!</p>
     <div>
@@ -89,12 +119,19 @@
             </div>
         </div>
     <footer style="text-align: center; margin-top: 20px;">
-        <a href="/"> Home</a>
-        <a href="/phat_finance/expense">Expense</a>
-        <a href="/phat_investment/portfolio">Investment Portfolio</a>
         <p>&copy; Phat's Django</p>
     </footer>
     <script>
+        document.querySelectorAll('.topnav a').forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });    document.querySelectorAll('.topnav a').forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });
+
         const remaining = parseInt("{{ expensable | safe }}") -
         (parseInt("{{ expense_cash | safe }}") + parseInt("{{ expense_digital | safe }}") + parseInt("{{ expense_credit | safe }}"));
         if (remaining < 0) {

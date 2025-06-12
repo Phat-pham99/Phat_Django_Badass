@@ -1,20 +1,3 @@
-"""
-URL configuration for Phat_Django_Badass project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-
 from django.contrib import admin
 from django.urls import path
 from django.views import debug
@@ -24,13 +7,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.views.generic.base import TemplateView
 
 from api.views.Expense import ExpenseViewSet
 from api.views.Investment import InvestmentViewSet
 from api.views.TrackInvestment import TrackInvestmentViewSet
 from api.views.TrackGym import TrackGymViewSet
-from phat_finance.views import dashboard as phat_finance_dashboard
-from phat_finance.views import expense as phat_finance_expense
+from Home.views import home as Homepage
 from phat_finance.views import dashboard,expense
 
 from phat_investment.views import portfolio_history
@@ -42,7 +25,8 @@ router.register(r'track_investment', TrackInvestmentViewSet, basename="track_inv
 router.register(r'track_gym', TrackGymViewSet)
 
 urlpatterns = [
-    path('', debug.default_urlconf),
+    # path('', debug.default_urlconf),
+    path('', Homepage, name="home"),
     path("phat_finance/dashboard", dashboard, name="index"),
     path("phat_finance/expense", expense, name="index"),
     path("phat_investment/portfolio", portfolio_history, name="portfolio_history"),
