@@ -4,15 +4,17 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.template import loader
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.core import serializers
 import json
-from .forms.forms import DateFilterForm
+from forms.forms import DateFilterForm
 from upstash_redis import Redis
 
 from .models.expense import Expense
 from api.serializers.expense import ExpenseSerializer
 
 @login_required
+@csrf_exempt
 def dashboard(request):
     #Initialize Redis
     redis = Redis.from_env()
@@ -55,6 +57,7 @@ def dashboard(request):
     return HttpResponse(rendered)
 
 @login_required
+@csrf_exempt
 def expense(request):
     date_filter = DateFilterForm(request.POST)
     start_date_form = None
@@ -63,8 +66,6 @@ def expense(request):
         if date_filter.is_valid():
             start_date_form = date_filter.cleaned_data['start_date']
             end_date_form = date_filter.cleaned_data['end_date']
-            print(date_filter["start_date"].value())
-            print(date_filter["end_date"].value())
     date = request.GET.get('date', None)
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
