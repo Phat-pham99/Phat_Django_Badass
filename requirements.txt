@@ -37,7 +37,7 @@ posting==2.7.0
 priority==2.0.0
 pydantic==2.11.5
 pydantic-settings==2.9.1
-pydantic_core==2.34.1
+pydantic_core==2.35.1
 Pygments==2.19.1
 pyperclip==1.9.0
 pyright==1.1.401
