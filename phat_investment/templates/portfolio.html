@@ -16,9 +16,9 @@
             font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
         }
         form {
-            position: sticky;
-            bottom: 20px; /* Adjust as needed - distance from the bottom */
-            left: 20px; /* Or right: 20px; for the other side */
+            position: sticky; /* Needed for sticcky position*/
+            bottom: 20px; /* Needed for sticcky position*/
+            left: 20px;
             margin: 20px;
             padding: 10px;
             border: 1px solid #000000;
@@ -76,9 +76,6 @@
             </form>
         </div>
     <footer style="text-align: center; margin-top: 20px;">
-        <!-- <a href="/"> Home</a>
-        <a href="/phat_finance/expense">Expense</a>
-        <a href="/phat_finance/dashboard">Finance Dashboard</a> -->
         <p>&copy; Phat's Django</p>
     </footer>
     <script>
@@ -159,7 +156,7 @@
         responsive: true,
         scales: {
             y: {
-                stacked: false  // Enable stacking on the y-axis
+                stacked: false
             }
         },
         plugins: {
