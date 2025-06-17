@@ -1,0 +1,21 @@
+INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    'rest_wind',
+    'django_humanize',
+    "rest_framework",
+    'rest_framework_simplejwt',
+    "corsheaders",
+    "django_admin_logs",
+    "Home",
+    "phat_finance",
+    "phat_investment",
+    "phat_fitness",
+
+]
