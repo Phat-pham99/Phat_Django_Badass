@@ -9,21 +9,20 @@ USER_CHOICES = [
 ]
 
 CATEGORY_CHOICES = [
-    ('food&drinks', 'food&drinks'),
-    ('gas', 'gas'),
-    ('dating','dating'),
-    ('grocery', 'grocery'),
-    ('medical', 'medical'),
-    ('subscriptions', 'subscriptions'),
-    ('utility', 'utility'),
-    ('others','others'),
-    ('pleasure','pleasure'),
-    ('inbody','inbody'),
-    ('bikecare','bikecare'),
+    ('food_drink 🍔🍜☕', 'food_drink 🍔🍜☕'),
+    ('gas ⛽⚡🚛', 'gas ⛽⚡🚛'),
+    ('dating 😘😻💌','dating 😘😻💌'),
+    ('grocery 🛒🥦🥩', 'grocery 🛒🥦🥩'),
+    ('medical 💊🧑‍⚕️🩺', 'medical 💊🧑‍⚕️🩺'),
+    ('subscriptions💳💸🏦', 'subscriptions💳💸🏦'),
+    ('utility ⚙️🪒🪠', 'utility ⚙️🪒🪠'),
+    ('others🙄😏','others🙄😏'),
+    ('pleasure🥳🎉🪩','pleasure🥳🎉🪩'),
+    ('bikecare 🏍️🛣️🧑‍🔧','bikecare 🏍️🛣️🧑‍🔧'),
     ('insurance','insurance'),
-    ('gift','gift'),
-    ('donation','donation'),
-    ('haircut','haircut')
+    ('gifts🎁💌💐','gifts🎁💌💐'),
+    ('donation 🧧💸🫂','donation 🧧💸🫂'),
+    ('haircut 💇‍♂️💈👱','haircut 💇‍♂️💈👱')
 ]
 
 class Expense(models.Model):
