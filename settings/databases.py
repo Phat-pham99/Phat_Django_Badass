@@ -12,3 +12,14 @@ DATABASES = {
         'CLOUDFLARE_TOKEN': os.getenv('CLOUDFLARE_TOKEN'),
     }
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"rediss://{os.getenv('UPSTASH_REDIS_USERNAME')}@{os.getenv('UPSTASH_REDIS_ENDPOINT')}:{os.getenv('UPSTASH_REDIS_PORT')}/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": os.getenv('UPSTASH_REDIS_PASSWORD'),
+        }
+    }
+}
