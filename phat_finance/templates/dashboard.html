@@ -83,28 +83,74 @@
         <div class="row table-container">
             <table class="dashboard-table" style="width:90%">
                 <tr>
-                    <td><h3>expense_cash : </h3> {{ expense_cash|floatformat:0|intcomma }}</td>
-                    <td><h3>expense_digital : </h3> {{ expense_digital|floatformat:0|intcomma }}</td>
-                    <td><h3>expense_credit : </h3> {{ expense_credit|floatformat:0|intcomma }}</td>
-                    <td></td>
+                    <td><h3>expense_cash : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ expense_cash|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>expense_digital : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ expense_digital|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>expense_credit : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ expense_credit|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><button onclick="toggleText('hidden-text')",
+                        style="background-color: #04AA6D; color: white;
+                        border: none; cursor: pointer; padding: 10px;">
+                        <i class="fa fa-eye"></i>
+                        <span>Toggle hide</span>
+                    </button></td>
                 </tr>
                 <tr>
-                    <td><h3>balance_cash : </h3> {{ balance_cash|floatformat:0|intcomma }}</td>
-                    <td><h3>balance_digital : </h3> {{ balance_digital|floatformat:0|intcomma }}</td>
-                    <td><h3>assets: </h3> {{ assets|floatformat:0|intcomma }}</td>
+                    <td><h3>balance_cash : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ balance_cash|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>balance_digital : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ balance_digital|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>assets: </h3>
+                        <p class="hidden-text"
+                        data-original="{{ assets|floatformat:0|intcomma }}">*********</p>
+                    </td>
                     <td></td>
                 </tr>
                 <tr class="base-table">
-                    <td><h3>emergency_fund : </h3> {{ emergency_fund|floatformat:0|intcomma }}</td>
-                    <td><h3>sinking_fund : </h3> {{ sinking_fund|floatformat:0|intcomma }}</td>
-                    <td><h3>total_investment : </h3> {{ total_investment|floatformat:0|intcomma }}</td>
-                    <td><h3>total_debt : </h3> {{ total_debt|floatformat:0|intcomma }}</td>
+                    <td><h3>emergency_fund : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ emergency_fund|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>sinking_fund : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ sinking_fund|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>total_investment : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ total_investment|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td><h3>total_debt : </h3>
+                        <p class="hidden-text"
+                        data-original="{{ total_debt|floatformat:0|intcomma }}">*********</p>
+                    </td>
                 </tr>
                 <tr class="base-table">
-                    <td><h3>Expensable this month:</h3>{{ expensable|floatformat:0|intcomma }}</td>
-                    <td><h3>Salary this month:</h3>{{ budget|floatformat:0|intcomma }}</td>
-                    <th><h3>last_changes : </h3> {{ last_changes }}</th>
-                    <th><h3>last_changes_log : </h3> {{ last_changes_log }}</th>
+                    <td><h3>Expensable this month:</h3>
+                        <p class="hidden-text"
+                        data-original="{{ expensable|floatformat:0|intcomma }}">*********</p>
+                    </td>
+                    <td>
+                        <h3>Salary this month:</h3>
+                        <p class="hidden-text" data-original="{{ budget|floatformat:0|intcomma }}">*********</p>
+                    </td>
+
+                    <th><h3>last_changes : </h3>
+                        <p class="hidden-text" data-original="{{ last_changes }}">*********</p>
+                    </th>
+                    <th><h3>last_changes_log : </h3>
+                        <p class="hidden-text" data-original="{{ last_changes_log }}">*********</p>
+                    </th>
                 </tr>
             </table>
         <div class="UIA-cat"style="width:10%">
@@ -123,6 +169,7 @@
         <p>&copy; Phat's Django</p>
     </footer>
     <script>
+
         document.querySelectorAll('.topnav a').forEach(link => {
             if (link.href === window.location.href) {
                 link.classList.add('active');
@@ -232,6 +279,18 @@
             }
         }
         });
+
+        function toggleText(elementId) {
+        const els = document.getElementsByClassName(elementId);
+        Object.entries(els).forEach(([ _, value]) => {
+            if (!value.dataset.original) return;
+            if (value.textContent === '*********') {
+                value.textContent = value.dataset.original;
+            } else {
+                value.textContent = '*********';
+            }
+        });
+        }
 
     </script>
 </body>
