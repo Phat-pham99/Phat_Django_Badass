@@ -13,13 +13,16 @@ from django.core.cache import cache
 
 from .models.expense import Expense
 from api.serializers.expense import ExpenseSerializer
+import logging
 
-@login_required
+logger = logging.getLogger(__name__)
+
+@login_required(login_url="/admin/login")
 @csrf_exempt
 def dashboard(request):
     #Initialize Redis
     redis = Redis.from_env()
-
+    logger.debug("Hello from Financial dashboard")
     budget = int(redis.get("budget"))
     necessity = int(round(0.4 * budget,-3))
     pleasure = int(round(0.1 * budget,-3))
@@ -57,7 +60,7 @@ def dashboard(request):
     })
     return HttpResponse(rendered)
 
-@login_required
+@login_required(login_url="/admin/login")
 @csrf_exempt
 def expense(request):
     date_filter = DateFilterForm(request.POST)

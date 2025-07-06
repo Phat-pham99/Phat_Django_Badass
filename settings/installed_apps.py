@@ -7,6 +7,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_logging",
     'rest_wind',
     'django_humanize',
     "rest_framework",
