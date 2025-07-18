@@ -20,7 +20,7 @@ django-session-timeout==0.1.0
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 dotenv==0.9.9
-drf-restwind==0.1.9
+drf-restwind==0.2.6
 duckdb==1.3.0
 greenlet==3.2.3
 gunicorn==23.0.0
