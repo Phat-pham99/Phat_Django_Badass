@@ -45,7 +45,7 @@ class Expense(models.Model):
         @transaction.atomic
         def spend(cash_amount,digital_amount, credit_amount):
             """
-            Updates the cash 💶💷 and digital 🏧 balance in Redis when cash is spent.
+            Decrease cash 💶💷 or digital 🏧 balance by {_amount} on Redis when cash is spent.
             """
             pipeline = redis.multi()
             if cash_amount > 0:
