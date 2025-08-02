@@ -1,15 +1,18 @@
-FROM python:3.13.5-alpine3.21
+FROM python:3.12-slim
 
-WORKDIR .
+WORKDIR /app
 
-COPY . ./
+# Install system dependencies (if needed)
+# RUN apt-get update && apt-get install -y --no-install-recommends ...
 
-COPY requirements.txt ./
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any Python dependencies
-RUN pip install -r requirements.txt
+COPY .env .
 
-ENV PYTHONUNBUFFERED=1
+COPY . .
 
 EXPOSE 8000
-ENTRYPOINT ["python3","-m","hypercorn", "--reload", "Phat_Django_Badass.asgi:application", "--bind", "0.0.0.0:8000",]
+
+CMD ["python3", "-m", "hypercorn", "Phat_Django_Badass.asgi:application", "--bind", "0.0.0.0:8000"]
