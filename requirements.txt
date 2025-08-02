@@ -50,7 +50,7 @@ platformdirs==4.3.8
 posting==2.7.0
 priority==2.0.0
 pydantic==2.11.7
-pydantic-settings==2.9.1
+pydantic-settings==2.10.1
 pydantic_core==2.33.2
 Pygments==2.19.1
 PyJWT==2.10.1
