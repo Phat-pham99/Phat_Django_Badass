@@ -1,7 +1,11 @@
+from django.apps import apps
 from django.db import models
 from datetime import date, datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_finance').redis_client
 
 CONVERSION_CHOICES = [
     ('digital📲_cash💵','digital📲_cash💵'),
@@ -14,8 +18,6 @@ class Conversion(models.Model):
     amount = models.PositiveIntegerField(blank=False,default=0)
 
     def save(self, *args, **kargs):
-        #Initialize Redis
-        redis = Redis.from_env()
         @transaction.atomic
         def convert(type_conversion,amount):
             """
@@ -25,15 +27,19 @@ class Conversion(models.Model):
                 pipeline = redis.multi()
                 pipeline.incrby('balance_cash', amount)
                 pipeline.decrby('balance_digital', amount)
-                pipeline.set('last_changes',str(datetime.now()))
-                pipeline.set('last_changes_log',f"{type_conversion} : {'{:,.0f}'.format(float(amount))}")
+                pipeline.mset({
+                    "last_changes":str(datetime.now()),
+                    "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
+                })
                 pipeline.exec()
             else:
                 pipeline = redis.multi()
                 pipeline.incrby('balance_digital', amount)
                 pipeline.decrby('balance_cash', amount)
-                pipeline.set('last_changes',str(datetime.now()))
-                pipeline.set('last_changes_log',f"{type_conversion} : {'{:,.0f}'.format(float(amount))}")
+                pipeline.mset({
+                    "last_changes":str(datetime.now()),
+                    "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
+                })
                 pipeline.exec()
 
         convert(self.type_conversion, self.amount)

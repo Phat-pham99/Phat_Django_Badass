@@ -1,7 +1,11 @@
+from django.apps import apps
 from django.db import models
 from datetime import date,datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_finance').redis_client
 
 ASSET_TRANSAC = [
     ('buy','buy'),
@@ -16,8 +20,6 @@ class Assets(models.Model):
     transac_type = models.CharField(choices=ASSET_TRANSAC,max_length=10,blank=True)
 
     def save(self, *args, **kwargs):
-        #Initialize Redis
-        redis = Redis.from_env()
         @transaction.atomic
         def buy_asset(amount,bought_price):
             """
@@ -26,9 +28,11 @@ class Assets(models.Model):
             pipeline = redis.multi()
             pipeline.incrby('assets', amount * bought_price)
             pipeline.decrby('balance_digital', amount * bought_price)
-            pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"Asset bought: {self.name} \
-                        {'{:,.0f}'.format(float(amount * bought_price))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Asset bought: {self.name} \
+                        {'{:,.0f}'.format(float(amount * bought_price))}"
+            })
             pipeline.exec()
 
         @transaction.atomic
@@ -39,9 +43,11 @@ class Assets(models.Model):
             pipeline = redis.multi()
             pipeline.decrby('assets', amount * sold_price)
             pipeline.incrby('balance_digital', amount * sold_price)
-            pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"Asset sold: {self.name} \
-                        {'{:,.0f}'.format(float(amount * sold_price))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Asset sold: {self.name} \
+                        {'{:,.0f}'.format(float(amount * sold_price))}"
+            })
             pipeline.exec()
 
         if self.transac_type == "buy":

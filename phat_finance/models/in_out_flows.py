@@ -1,8 +1,12 @@
 
+from django.apps import apps
 from django.db import models
 from datetime import date,datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_finance').redis_client
 
 IN_OUTCHOICES = [
     ("IN","IN"),
@@ -21,17 +25,16 @@ class InOutFlow(models.Model):
         return f"{self.date}-Tiền {self.type}-{'{:,.0f}'.format(float(self.amount))} VND"
 
     def save(self, *args, **kwargs):
-        #Initialize Redis
-        redis = Redis.from_env()
-
         def in_(amount):
             """
             Digital money 🏧💷 enter the system. Increase balance.digital by amount
             """
             pipeline = redis.multi()
             pipeline.incrby('balance_digital', amount)
-            pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"Receive: {'{:,.0f}'.format(float(amount))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))}"
+                })
             pipeline.exec()
 
         def out_(amount):
@@ -40,8 +43,10 @@ class InOutFlow(models.Model):
             """
             pipeline = redis.multi()
             pipeline.decrby('balance_digital', amount)
-            pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"Sent: {'{:,.0f}'.format(float(amount))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))}"
+                })
             pipeline.exec()
 
         @transaction.atomic
@@ -51,8 +56,10 @@ class InOutFlow(models.Model):
             """
             pipeline = redis.multi()
             pipeline.incrby('balance_digital', amount)
-            pipeline.set('last_changes',str(datetime.now()))
-            pipeline.set('last_changes_log',f"Salary added: {'{:,.0f}'.format(float(amount))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Salary added: {'{:,.0f}'.format(float(amount))}"
+                })
             pipeline.exec()
 
         if self.type == "SALARY 💵💻":

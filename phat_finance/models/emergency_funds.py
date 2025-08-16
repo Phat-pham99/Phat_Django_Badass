@@ -1,7 +1,11 @@
+from django.apps import apps
 from django.db import models
 from datetime import date,datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_finance').redis_client
 
 TYPE_FUND = [
     ('deposite','deposite'),
@@ -13,8 +17,6 @@ class EmergencyFund(models.Model):
     amount = models.PositiveIntegerField(blank=False,default=0)
 
     def save(self, *args, **kwargs):
-        #Initialize Redis
-        redis = Redis.from_env() #Who's your daddy? Redis is your daddy!
 
         @transaction.atomic
         def fund_deposit(amount):
@@ -24,9 +26,11 @@ class EmergencyFund(models.Model):
             pipeline = redis.multi()
             pipeline.decrby('balance_digital', amount)
             pipeline.incrby('emergency_fund', amount)
-            pipeline.set('last_changes', str(datetime.now()))
-            pipeline.set('last_changes_log', f"Emergency fund deposited : \
-                        {'{:,.0f}'.format(float(amount))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Emergency fund deposited : \
+                        {'{:,.0f}'.format(float(amount))}"
+            })
             pipeline.exec()
 
         @transaction.atomic
@@ -37,9 +41,11 @@ class EmergencyFund(models.Model):
             pipeline = redis.multi()
             pipeline.incrby('balance_digital', amount)
             pipeline.decrby('emergency_fund', amount)
-            pipeline.set('last_changes', str(datetime.now()))
-            pipeline.set('last_changes_log', f"Emergency fund withdrawn : \
-                        {'{:,.0f}'.format(float(amount))}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Emergency fund withdrawn : \
+                        {'{:,.0f}'.format(float(amount))}"
+            })
             pipeline.exec()
 
         if self.type == "deposite":

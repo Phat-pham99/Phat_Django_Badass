@@ -1,8 +1,12 @@
+from django.apps import apps
 from django.db import models
 from django.db.models import Sum
 from datetime import date,datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_finance').redis_client
 
 CARD_CHOICES = [
     ('VISA Platinum', 'VISA Platinum'),
@@ -19,9 +23,6 @@ class CreditCardPayment(models.Model):
         return f"Credit card payment - {self.term}: {self.amount} VND💸"
 
     def save(self, *args, **kwargs):
-        #Initialize Redis
-        redis = Redis.from_env()
-
         @transaction.atomic
         def pay_creditCard(amount):
             """
@@ -29,9 +30,10 @@ class CreditCardPayment(models.Model):
             """
             pipeline = redis.multi()
             pipeline.decrby("balance_digital", amount)
-            pipeline.set('last_changes', str(datetime.now()))
-            pipeline.set('last_changes_log', f"Pay credit card 💳 bill: \
-                        {amount}")
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Pay credit card 💳 bill: {amount}"
+            })
             pipeline.exec()
 
         pay_creditCard(self.amount)
