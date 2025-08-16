@@ -1,7 +1,11 @@
+from django.apps import apps
 from django.db import models
 from datetime import date, datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_investment').redis_client
 
 INVESTMENT_CHOICE =[
     ('VESAF', 'VESAF'),
@@ -14,9 +18,8 @@ INVESTMENT_CHOICE =[
     ('ETH', 'ETH'),
     ('BTC', 'BTC'),
     ('XAUt','XAUt')
-
 ]
-# Create your models here.
+
 class Investment(models.Model):
     date = models.DateField(default=date.today)
     investment_type = models.CharField(max_length=15,choices=INVESTMENT_CHOICE)
@@ -27,13 +30,13 @@ class Investment(models.Model):
         """
         Invest into assets 🪙💹. Deduct balance.digital accordingly
         """
-        #Initialize Redis
-        redis = Redis.from_env()
         pipeline = redis.multi()
         pipeline.decrby('balance_digital', amount)
         pipeline.incrby('total_investment', amount)
-        pipeline.set('last_changes',str(datetime.now()))
-        pipeline.set('last_changes_log',f"Invest to {investment_type}")
+        pipeline.mset({
+            "last_changes": str(datetime.now()),
+            "last_changes_log": f"Invest to {investment_type}"
+            })
         pipeline.exec()
 
     def save(self, *args, **kwargs):

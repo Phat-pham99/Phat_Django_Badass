@@ -2,7 +2,6 @@
 from django.contrib import admin, messages
 from django.shortcuts import render, redirect
 from django.db import transaction
-from upstash_redis import Redis
 
 # Import Data models
 from .models.expense import Expense
@@ -13,9 +12,6 @@ from .models.emergency_funds import EmergencyFund
 from .models.sinking_funds import SinkingFund
 from .models.in_out_flows import InOutFlow
 from .models.creditcard_payment import CreditCardPayment
-
-#Initialize Redis
-redis = Redis.from_env()
 
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
