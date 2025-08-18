@@ -3,7 +3,10 @@ from django.db import models
 from django.db.models import Sum
 from datetime import date,datetime
 from django.db import transaction
-from upstash_redis import Redis
+import logging
+
+logger = logging.getLogger(__name__)
+redis = apps.get_app_config('phat_finance').redis_client
 
 USER_CHOICES = [
     ('Phat', "Phat")
@@ -40,9 +43,6 @@ class Expense(models.Model):
         return f"{self.date} - {self.user} - {self.category} - Cash: {self.cash}"
 
     def save(self, *args, **kwargs):
-        #Initialize Redis
-        redis = Redis.from_env()
-
         @transaction.atomic
         def spend(cash_amount,digital_amount, credit_amount):
             """
@@ -59,10 +59,12 @@ class Expense(models.Model):
                 pipeline.incrby('expense_credit', credit_amount)
             else:
                 pass
-            pipeline.set('last_changes', str(datetime.now()))
-            pipeline.set('last_changes_log', f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))} \
+            pipeline.mset({
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))} \
                         digital: {'{:,.0f}'.format(float(digital_amount))} \
-                        credit:  {'{:,.0f}'.format(float(credit_amount))} ")
+                        credit:  {'{:,.0f}'.format(float(credit_amount))} "
+                })
             pipeline.exec()
 
         spend(self.cash, self.digital, self.credit)

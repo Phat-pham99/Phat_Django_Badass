@@ -1,16 +1,15 @@
+from django.apps import apps
 from django.db.models import Sum
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 from forms.forms import DateFilterForm
-from upstash_redis import Redis
 from django.core.cache import cache
-from django.apps import apps
 
 from .models.expense import Expense
 import logging
