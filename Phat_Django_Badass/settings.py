@@ -9,6 +9,7 @@ from settings.sessions import *
 from settings.databases import *
 from settings.humanizers import *
 from settings.security import *
+from settings.logging import LOGGING
 
 # Load environment variables from .env file
 load_dotenv()
@@ -57,3 +58,6 @@ SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY
 SESSION_EXPIRE_AT_BROWSER_CLOSE
 SESSION_TIMEOUT_REDIRECT
+
+# Logging -> settings/logging.py
+LOGGING

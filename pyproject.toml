@@ -22,7 +22,6 @@ dependencies = [
     "hypercorn (>=0.17.3,<0.18.0)",
     "whitenoise (>=6.9.0,<7.0.0)",
     "django-admin-logs (>=1.4.0,<2.0.0)",
-    "django-session-timeout (>=0.1.0,<0.2.0)",
     "requests (>=2.32.3,<3.0.0)",
     "djangorestframework-simplejwt (>=5.5.0,<6.0.0)",
     "dotenv (>=0.9.9,<0.10.0)",

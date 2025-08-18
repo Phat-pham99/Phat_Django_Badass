@@ -10,7 +10,7 @@ class PhatInvestmentConfig(AppConfig):
 
     def ready(self):
         if PhatInvestmentConfig.redis_client is None:
-            logging.info("Initilized phat_finance Redis")
+            logging.info("Initilized phat_investment Redis")
             PhatInvestmentConfig.redis_client = Redis(
                 url=os.environ.get("UPSTASH_REDIS_REST_URL"),
                 token=os.environ.get("UPSTASH_REDIS_REST_TOKEN")
