@@ -6,6 +6,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config('phat_investment').redis_client
+if redis is None:
+    apps.get_app_config('phat_finance').ready() #Important, bruh
+    redis = apps.get_app_config('phat_investment').redis_client
+else:
+    print("Redis client initialized in phat_investment app config")
 
 INVESTMENT_CHOICE =[
     ('VESAF', 'VESAF'),

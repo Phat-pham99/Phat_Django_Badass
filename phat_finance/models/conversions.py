@@ -6,6 +6,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config('phat_finance').redis_client
+if redis is None:
+    apps.get_app_config('phat_finance').ready() #Important, bruh
+    redis = apps.get_app_config('phat_finance').redis_client
+else:
+    print("Redis client initialized in phat_finance app config")
 
 CONVERSION_CHOICES = [
     ('digital📲_cash💵','digital📲_cash💵'),
