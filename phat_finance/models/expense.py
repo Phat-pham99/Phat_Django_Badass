@@ -6,7 +6,13 @@ from django.db import transaction
 import logging
 
 logger = logging.getLogger(__name__)
+
+apps.get_app_config('phat_finance').ready() #Important, bruh
 redis = apps.get_app_config('phat_finance').redis_client
+if redis is None:
+    raise ValueError("Redis client is not initialized in phat_finance app config")
+else:
+    print("Redis client initialized in phat_finance app config")
 
 USER_CHOICES = [
     ('Phat', "Phat")
