@@ -19,6 +19,8 @@ class ExpenseAdmin(admin.ModelAdmin):
     search_fields = ('date', 'category', 'description')
     list_filter = ('date', 'category')
     ordering = ('-date',)
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(Debts)
 class DebtAdmin(admin.ModelAdmin):

@@ -17,12 +17,16 @@ class InvestmentAdmin(admin.ModelAdmin):
 class TrackInvestmentAdmin(admin.ModelAdmin):
     list_display = ('date', 'acbs', 'mio', 'dragon', 'ssi', 'idle_cash', 'crypto',  'total')
     list_filter = ('date',)
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(Dividend_new)
 class DividendAdmin(admin.ModelAdmin):
     list_display = ('secCd','rightType','ownQty','recAmt','recQty','ownerFixDate','expectedExcDate')
     list_filter = ('ownerFixDate','rightType','secCd')
-    
+    list_per_page = 20
+    list_max_show_all = 100
+
     @admin.display(empty_value=0)
     def recAmt(self, obj):
         return obj.recAmt
