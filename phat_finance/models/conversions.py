@@ -1,7 +1,8 @@
 from django.apps import apps
 from django.db import models
-from datetime import date, datetime
+from datetime import datetime
 from django.db import transaction
+from types import NoneType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -22,30 +23,32 @@ class Conversion(models.Model):
     type_conversion = models.CharField(choices=CONVERSION_CHOICES,default='digital_cash')
     amount = models.PositiveIntegerField(blank=False,default=0)
 
-    def save(self, *args, **kargs):
-        @transaction.atomic
-        def convert(type_conversion,amount):
-            """
-            Convert digital 📱 -> cash 💵 and vice versa
-            """
-            if type_conversion == "digital📲_cash💵":
-                pipeline = redis.multi()
-                pipeline.incrby('balance_cash', amount)
-                pipeline.decrby('balance_digital', amount)
-                pipeline.mset({
-                    "last_changes":str(datetime.now()),
-                    "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
-                })
-                pipeline.exec()
-            else:
-                pipeline = redis.multi()
-                pipeline.incrby('balance_digital', amount)
-                pipeline.decrby('balance_cash', amount)
-                pipeline.mset({
-                    "last_changes":str(datetime.now()),
-                    "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
-                })
-                pipeline.exec()
+    @transaction.atomic
+    def convert(type_conversion:str,amount:int) -> None:
+        """
+        Convert digital 📱 -> cash 💵 and vice versa
+        """
+        if type_conversion == "digital📲_cash💵":
+            pipeline = redis.multi()
+            pipeline.incrby('balance_cash', amount)
+            pipeline.decrby('balance_digital', amount)
+            pipeline.mset({
+                "last_changes":str(datetime.now()),
+                "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
+            })
+            pipeline.exec()
+        else:
+            pipeline = redis.multi()
+            pipeline.incrby('balance_digital', amount)
+            pipeline.decrby('balance_cash', amount)
+            pipeline.mset({
+                "last_changes":str(datetime.now()),
+                "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
+            })
+            pipeline.exec()
 
-        convert(self.type_conversion, self.amount)
+    def save(self, *args, **kargs):
+        if type(self.cash) == NoneType:
+            self.amount = 0
+        self.convert(self.type_conversion, self.amount)
         super().save(*args, **kargs)

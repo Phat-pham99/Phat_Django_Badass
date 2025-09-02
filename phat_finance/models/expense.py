@@ -1,12 +1,12 @@
 from django.apps import apps
 from django.db import models
-from django.db.models import Sum
+# from django.db.models import Sum
 from datetime import date,datetime
 from django.db import transaction
+from types import NoneType
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 redis = apps.get_app_config('phat_finance').redis_client
 if redis is None:
@@ -47,32 +47,42 @@ class Expense(models.Model):
     description = models.CharField(max_length=200,blank=True,null=True)
 
     def __str__(self):
-        return f"{self.date} - {self.user} - {self.category} - Cash: {self.cash}"
+        return f"{self.date} - {self.user} - {self.category}"
+
+    @transaction.atomic
+    def spend(self,
+            cash_amount:int,
+            digital_amount:int,
+            credit_amount:int) -> None:
+        """
+        Decrease cash 💶💷 or digital 🏧 balance by {_amount} on Redis when cash is spent.
+        """
+        pipeline = redis.multi()
+        if cash_amount > 0:
+            pipeline.decrby('balance_cash', cash_amount)
+            pipeline.incrby('expense_cash', cash_amount)
+        elif digital_amount > 0:
+            pipeline.decrby('balance_digital', digital_amount)
+            pipeline.incrby('expense_digital', digital_amount)
+        elif credit_amount > 0:
+            pipeline.incrby('expense_credit', credit_amount)
+        else:
+            pass
+        pipeline.mset({
+            "last_changes": str(datetime.now()),
+            "last_changes_log": f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))}\
+                    digital: {'{:,.0f}'.format(float(digital_amount))}\
+                    credit:  {'{:,.0f}'.format(float(credit_amount))} "
+            })
+        pipeline.exec()
 
     def save(self, *args, **kwargs):
-        @transaction.atomic
-        def spend(cash_amount,digital_amount, credit_amount):
-            """
-            Decrease cash 💶💷 or digital 🏧 balance by {_amount} on Redis when cash is spent.
-            """
-            pipeline = redis.multi()
-            if cash_amount > 0:
-                pipeline.decrby('balance_cash', cash_amount)
-                pipeline.incrby('expense_cash', cash_amount)
-            elif digital_amount > 0:
-                pipeline.decrby('balance_digital', digital_amount)
-                pipeline.incrby('expense_digital', digital_amount)
-            elif credit_amount > 0:
-                pipeline.incrby('expense_credit', credit_amount)
-            else:
-                pass
-            pipeline.mset({
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))} \
-                        digital: {'{:,.0f}'.format(float(digital_amount))} \
-                        credit:  {'{:,.0f}'.format(float(credit_amount))} "
-                })
-            pipeline.exec()
+        if type(self.cash) == NoneType:
+            self.cash = 0
+        if type(self.digital) == NoneType:
+            self.digital = 0
+        if type(self.credit) == NoneType:
+            self.credit = 0
 
-        spend(self.cash, self.digital, self.credit)
+        self.spend(self.cash, self.digital, self.credit)
         super().save(*args, **kwargs) #Man this shit is important !

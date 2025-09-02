@@ -31,7 +31,7 @@ class Investment(models.Model):
     amount = models.PositiveIntegerField(blank=True,default=0)
 
     @transaction.atomic
-    def invest(self, investment_type, amount):
+    def invest(self, investment_type:str, amount:int) -> None:
         """
         Invest into assets 🪙💹. Deduct balance.digital accordingly
         """

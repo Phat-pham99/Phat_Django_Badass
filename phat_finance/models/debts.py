@@ -19,7 +19,7 @@ class Debts(models.Model):
 
     def save(self, *args, **kwargs):
         #Initialize Redis
-        redis = Redis.from_env() #Who's your daddy? Redis is your daddy!
+        redis = Redis.from_env()
 
         """
         Let's say these functions are "After-effects" of the saving an object
