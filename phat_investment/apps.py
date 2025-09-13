@@ -8,7 +8,7 @@ class PhatInvestmentConfig(AppConfig):
     name = "phat_investment"
     redis_client = None
 
-    def ready(self):
+    def ready(self) -> None :
         if PhatInvestmentConfig.redis_client is None:
             logging.info("Initilized phat_investment Redis")
             PhatInvestmentConfig.redis_client = Redis(

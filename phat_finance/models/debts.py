@@ -17,24 +17,24 @@ class Debts(models.Model):
     lender = models.CharField(max_length=30,blank=True)
     borrower = models.CharField(max_length=30,blank=True)
 
-    def save(self, *args, **kwargs):
+    """
+    Let's say these functions are "After-effects" of the saving an object
+    So you need to route these functions according to the type of debt
+    """
+    def I_lend_money(self, redis_client:Redis, amount, borrower) -> None:
+        """
+        I Lend money to a borrower, decrease balance.digital by amount.
+        """
+        pipeline = redis_client.multi()
+        pipeline.decrby('balance_digital', amount)
+        pipeline.set('last_changes', str(datetime.now()))
+        pipeline.set('last_changes_log', f"I lent money to {borrower} : \
+                    {'{:,.0f}'.format(float(amount))}")
+        pipeline.exec()
+
+    def save(self, *args, **kwargs) -> None:
         #Initialize Redis
         redis = Redis.from_env()
-
-        """
-        Let's say these functions are "After-effects" of the saving an object
-        So you need to route these functions according to the type of debt
-        """
-        def I_lend_money(amount,borrower):
-            """
-            I Lend money to a borrower, decrease balance.digital by amount.
-            """
-            pipeline = redis.multi()
-            pipeline.decrby('balance_digital', amount)
-            pipeline.set('last_changes', str(datetime.now()))
-            pipeline.set('last_changes_log', f"I lent money to {borrower} : \
-                        {'{:,.0f}'.format(float(amount))}")
-            pipeline.exec()
 
         def they_pay_debt(amount,borrower):
             """
@@ -73,7 +73,7 @@ class Debts(models.Model):
             pipeline.exec()
 
         if self.type == "lend" and self.lender == "Me":
-            I_lend_money(self.amount,self.borrower)
+            self.I_lend_money(redis, self.amount,self.borrower)
         elif self.type == "debt" and self.borrower == "Me":
             I_own_money(self.amount,self.borrower)
         elif self.type == "pay" and self.borrower == "Me":

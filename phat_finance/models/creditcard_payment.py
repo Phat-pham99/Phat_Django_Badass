@@ -30,7 +30,7 @@ class CreditCardPayment(models.Model):
         return f"Credit card payment - {self.term}: {self.amount} VND💸"
 
     @transaction.atomic
-    def pay_creditCard(amount:int) -> None:
+    def pay_creditCard(self, amount:int) -> None:
         """
         Decrease digital 🏧 balance by {amount} on Redis
         """
@@ -42,7 +42,7 @@ class CreditCardPayment(models.Model):
         })
         pipeline.exec()
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         if type(self.amount) == NoneType:
             self.amount = 0
         self.pay_creditCard(self.amount)
