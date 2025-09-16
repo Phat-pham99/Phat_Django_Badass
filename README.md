@@ -64,4 +64,4 @@ The main database is hosted using Clouflare D1, this is the most suitable SQL cl
 Redis is a exellent key-value based database, suitable for rapidly update value like balances, expenses and my real-time financial dashboard
 
 ## Docker
-I included a Dockerfile right here
+> sudo docker build . --tag <image:version>
