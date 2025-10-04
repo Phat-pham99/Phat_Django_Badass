@@ -1,7 +1,5 @@
 #Import Django libs
 from django.contrib import admin, messages
-from django.shortcuts import render, redirect
-from django.db import transaction
 
 # Import Data models
 from .models.expense import Expense

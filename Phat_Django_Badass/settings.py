@@ -41,7 +41,7 @@ AUTH_PASSWORD_VALIDATORS
 # Django REST Framework -> settings/rest_framework.py
 REST_FRAMEWORK
 
-#Databases -> settings/databases.py
+# Databases -> settings/databases.py
 DATABASES
 
 # Humanizing -> settings/humanizers.py

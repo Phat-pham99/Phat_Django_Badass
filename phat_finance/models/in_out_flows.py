@@ -1,70 +1,78 @@
-
 from django.apps import apps
 from django.db import models
-from datetime import date,datetime
+from datetime import date, datetime
 from django.db import transaction
 from types import NoneType
 import logging
 
 logger = logging.getLogger(__name__)
-redis = apps.get_app_config('phat_finance').redis_client
+redis = apps.get_app_config("phat_finance").redis_client
 if redis is None:
-    apps.get_app_config('phat_finance').ready() #Important, bruh
-    redis = apps.get_app_config('phat_finance').redis_client
+    apps.get_app_config("phat_finance").ready()  # Important, bruh
+    redis = apps.get_app_config("phat_finance").redis_client
 else:
     print("Redis client initialized in phat_finance app config")
 
 IN_OUTCHOICES = [
-    ("IN","IN"),
-    ("OUT","OUT"),
-    ("SALARY 💵💻","SALARY 💵💻"),
+    ("IN", "IN"),
+    ("OUT", "OUT"),
+    ("SALARY 💵💻", "SALARY 💵💻"),
 ]
+
 
 class InOutFlow(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
-    type = models.CharField(max_length=10,
-                            choices=IN_OUTCHOICES,blank=False,
-                            null=False,default='IN')
-    amount = models.PositiveIntegerField(blank=False,default=0)
+    type = models.CharField(
+        max_length=10, choices=IN_OUTCHOICES, blank=False, null=False, default="IN"
+    )
+    amount = models.PositiveIntegerField(blank=False, default=0)
 
     def __str__(self):
-        return f"{self.date}-Tiền {self.type}-{'{:,.0f}'.format(float(self.amount))} VND"
+        return (
+            f"{self.date}-Tiền {self.type}-{'{:,.0f}'.format(float(self.amount))} VND"
+        )
 
-    def in_(self, amount:int) -> None:
+    def in_(self, amount: int) -> None:
         """
         Digital money 🏧💷 enter the system. Increase balance.digital by amount
         """
         pipeline = redis.multi()
-        pipeline.incrby('balance_digital', amount)
-        pipeline.mset({
-            "last_changes": str(datetime.now()),
-            "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))}"
-            })
+        pipeline.incrby("balance_digital", amount)
+        pipeline.mset(
+            {
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))}",
+            }
+        )
         pipeline.exec()
 
-    def out_(self, amount:int) -> None:
+    def out_(self, amount: int) -> None:
         """
         Digital money 🏧💷 leave the system. Decrease balance.digital by amount
         """
         pipeline = redis.multi()
-        pipeline.decrby('balance_digital', amount)
-        pipeline.mset({
-            "last_changes": str(datetime.now()),
-            "last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))}"
-            })
+        pipeline.decrby("balance_digital", amount)
+        pipeline.mset(
+            {
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))}",
+            }
+        )
         pipeline.exec()
 
     @transaction.atomic
-    def salary_paid(self, amount:int) -> None:
+    def salary_paid(self, amount: int) -> None:
         """
         Digital money 💵💻 enter the system. Increase balance.digital by amount
         """
         pipeline = redis.multi()
-        pipeline.incrby('balance_digital', amount)
-        pipeline.mset({
-            "last_changes": str(datetime.now()),
-            "last_changes_log": f"Salary added: {'{:,.0f}'.format(float(amount))}"
-            })
+        pipeline.incrby("balance_digital", amount)
+        pipeline.mset(
+            {
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Salary added: {'{:,.0f}'.format(float(amount))}",
+            }
+        )
         pipeline.exec()
 
     def save(self, *args, **kwargs):
@@ -76,4 +84,4 @@ class InOutFlow(models.Model):
             self.out_(self.amount)
         else:
             self.in_(self.amount)
-        super().save(*args, **kwargs) #Man this shit is important !
+        super().save(*args, **kwargs)  # Man this shit is important !

@@ -2,14 +2,12 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>
             body {
                 background-color: rgb(255, 255, 255);
-                font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+                font-family:
+                    Consolas, "Liberation Mono", Menlo, Courier, monospace;
             }
             h1 {
                 color: navy;
@@ -27,49 +25,49 @@
                 background-color: rgb(255, 255, 255);
                 border: 2px solid black;
             }
-        .row{
-            display: flex
-        }
-        form {
-            position: sticky;
-            top: 10px;
-            bottom: 20px; /* Adjust as needed - distance from the bottom */
-            left: 20px; /* Or right: 20px; for the other side */
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #000000;
-            line-height: 170%;
-            text-size-adjust: 12px;
-            background-color: #d1ffd9;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px
-        }
-        .topnav {
-            background-color: #092e20;
-            overflow: hidden;
-            margin-left: 2%;
-            margin-right: 2%;
-            margin-top: None;
-            position: sticky;
-            top: 0;
-        }
-        .topnav a {
-            float: left;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-        .topnav a:hover {
-            background-color: #aecfb9;
-            color: black;
-        }
-        .topnav a.active {
-            background-color: #04AA6D;
-            color: white;
-        }
+            .row {
+                display: flex;
+            }
+            form {
+                position: sticky;
+                top: 10px;
+                bottom: 20px; /* Adjust as needed - distance from the bottom */
+                left: 20px; /* Or right: 20px; for the other side */
+                margin: 20px;
+                padding: 10px;
+                border: 1px solid #000000;
+                line-height: 170%;
+                text-size-adjust: 12px;
+                background-color: #d1ffd9;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+            .topnav {
+                background-color: #092e20;
+                overflow: hidden;
+                margin-left: 2%;
+                margin-right: 2%;
+                margin-top: None;
+                position: sticky;
+                top: 0;
+            }
+            .topnav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .topnav a:hover {
+                background-color: #aecfb9;
+                color: black;
+            }
+            .topnav a.active {
+                background-color: #04aa6d;
+                color: white;
+            }
         </style>
         <title>Phat Expenses Dashboard</title>
     </head>
@@ -79,7 +77,7 @@
             <a href="/phat_finance/dashboard">Dashboard</a>
             <a href="/phat_finance/expense">Expense History</a>
             <a href="/phat_investment/portfolio">Investment Portfolio</a>
-            <a href="/admin/" style="float: right;">Admin board</a>
+            <a href="/admin/" style="float: right">Admin board</a>
         </div>
         <h1>Phat Expenses Dashboard</h1>
         <p>Welcome to your expenses dashboard!</p>
@@ -90,100 +88,115 @@
         <p>Expenses for {{ date }}</p>
         {% else %}
         <p>All expenses</p>
-        {% endif %}
-
-        {% if json_data %}
-    <div style="width:100%;" class="row">
-        <div class="col" style="width:50%;" >
-        <table style="align-self: center">
-            <tr>
-                <th>date</th>
-                <th>cash ({{total_cash}})</th>
-                <th>digital ({{total_digital}})</th>
-                <th>credit ({{total_credit}})</th>
-                <th>category</th>
-                <th>description</th>
-            </tr>
-            {% for item in json_data %}
-            <tr>
-                <th>{{ item.fields.date }}</th>
-                <th style="background: #ffc4c4">{{ item.fields.cash }}</th>
-                <th style="background: #c7ffd8">
-                    {{ item.fields.digital }}
-                </th>
-                <th style="background: #d1e3ff">
-                    {{ item.fields.credit }}
-                </th>
-                {% if item.fields.category == 'dating 😘😻💌' %}
-                <th style="background: rgb(255, 104, 155)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'food_drink 🍔🍜☕' %}
-                <th style="background: rgb(255, 98, 41)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'grocery 🛒🥦🥩' %}
-                <th style="background: rgb(0, 119, 0)">{{ item.fields.category }}</th>
-                {% elif item.fields.category == 'medical 💊🧑‍⚕️🩺' %}
-                <th style="background: lightskyblue">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'bikecare 🏍️🛣️🧑‍🔧' %}
-                <th style="background: rgb(36, 95, 115)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'haircut 💇‍♂️💈👱' %}
-                <th style="background: rgb(146, 198, 185)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'gas ⛽⚡🚛' %}
-                <th style="background: rgb(134, 74, 255)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'subscriptions💳💸🏦' %}
-                <th style="background: purple">{{ item.fields.category }}</th>
-                {% elif item.fields.category == 'utility' %}
-                <th style="background: rgb(255, 255, 192)">{{ item.fields.category }}</th>
-                {% elif item.fields.category == 'insurance' %}
-                <th style="background:rgb(109, 53, 83)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'donation 🧧💸🫂' %}
-                <th style="background: rgb(255, 223, 195)">
-                    {{ item.fields.category }}
-                </th>
-                {% elif item.fields.category == 'gifts🎁💌💐' %}
-                <th style="background: rgb(255, 115, 99)">{{ item.fields.category }}</th>
-                {% else %}
-                <th style="background: rgb(202, 202, 202)">others🙄😏</th>
-                {% endif %}
-                <th>{{ item.fields.description }}</th>
-            </tr>
-            {% endfor %}
-            {% endif %}
-        </table>
+        {% endif %} {% if json_data %}
+        <div style="width: 100%" class="row">
+            <div class="col" style="width: 50%">
+                <table style="align-self: center">
+                    <tr>
+                        <th>date</th>
+                        <th>cash ({{total_cash}})</th>
+                        <th>digital ({{total_digital}})</th>
+                        <th>credit ({{total_credit}})</th>
+                        <th>category</th>
+                        <th>description</th>
+                    </tr>
+                    {% for item in json_data %}
+                    <tr>
+                        <th>{{ item.fields.date }}</th>
+                        <th style="background: #ffc4c4">
+                            {{ item.fields.cash }}
+                        </th>
+                        <th style="background: #c7ffd8">
+                            {{ item.fields.digital }}
+                        </th>
+                        <th style="background: #d1e3ff">
+                            {{ item.fields.credit }}
+                        </th>
+                        {% if item.fields.category == 'dating 😘😻💌' %}
+                        <th style="background: rgb(255, 104, 155)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'food_drink 🍔🍜☕' %}
+                        <th style="background: rgb(255, 98, 41)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'grocery 🛒🥦🥩' %}
+                        <th style="background: rgb(0, 119, 0)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'medical 💊🧑‍⚕️🩺' %}
+                        <th style="background: lightskyblue">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'bikecare 🏍️🛣️🧑‍🔧' %}
+                        <th style="background: rgb(36, 95, 115)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'haircut 💇‍♂️💈👱' %}
+                        <th style="background: rgb(146, 198, 185)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'gas ⛽⚡🚛' %}
+                        <th style="background: rgb(134, 74, 255)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'subscriptions💳💸🏦' %}
+                        <th style="background: purple">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'utility' %}
+                        <th style="background: rgb(255, 255, 192)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'insurance' %}
+                        <th style="background: rgb(109, 53, 83)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'donation 🧧💸🫂' %}
+                        <th style="background: rgb(255, 223, 195)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% elif item.fields.category == 'gifts🎁💌💐' %}
+                        <th style="background: rgb(255, 115, 99)">
+                            {{ item.fields.category }}
+                        </th>
+                        {% else %}
+                        <th style="background: rgb(202, 202, 202)">
+                            others🙄😏
+                        </th>
+                        {% endif %}
+                        <th>{{ item.fields.description }}</th>
+                    </tr>
+                    {% endfor %} {% endif %}
+                </table>
+            </div>
+            <div class="col" style="width: 50%">
+                <form method="post" style="width: 50%">
+                    {{ date_filter }}
+                    <input
+                        type="submit"
+                        value="Submit"
+                        style="
+                            padding: 5px;
+                            background-color: #4caf50;
+                            color: white;
+                            border: none;
+                        "
+                    />
+                </form>
+            </div>
         </div>
-        <div class="col" style="width:50%;" >
-            <form method="post" style="width:50%;">
-            {{ date_filter }}
-            <input type="submit" value="Submit" style="
-            padding: 5px; background-color: #4CAF50; color: white;
-            border: none;
-            ">
-            </form>
-        </div>
-    </div>
     </body>
-    <footer style="text-align: center; margin-top: 20px;">
+    <footer style="text-align: center; margin-top: 20px">
         <!-- <a href="/">Home</a>
         <a href="/phat_finance/dashboard">Dashboard</a> -->
         <p>&copy; Phat's Django</p>
     </footer>
     <script>
-    document.querySelectorAll('.topnav a').forEach(link => {
-        if (link.href === window.location.href) {
-            link.classList.add('active');
-        }
-    });
+        document.querySelectorAll(".topnav a").forEach((link) => {
+            if (link.href === window.location.href) {
+                link.classList.add("active");
+            }
+        });
     </script>
 </html>

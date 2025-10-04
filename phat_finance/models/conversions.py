@@ -6,45 +6,52 @@ from types import NoneType
 import logging
 
 logger = logging.getLogger(__name__)
-redis = apps.get_app_config('phat_finance').redis_client
+redis = apps.get_app_config("phat_finance").redis_client
 if redis is None:
-    apps.get_app_config('phat_finance').ready() #Important, bruh
-    redis = apps.get_app_config('phat_finance').redis_client
+    apps.get_app_config("phat_finance").ready()  # Important, bruh
+    redis = apps.get_app_config("phat_finance").redis_client
 else:
     print("Redis client initialized in phat_finance app config")
 
 CONVERSION_CHOICES = [
-    ('digital📲_cash💵','digital📲_cash💵'),
-    ('cash💵_digital📲','cash💵_digital📲')
+    ("digital📲_cash💵", "digital📲_cash💵"),
+    ("cash💵_digital📲", "cash💵_digital📲"),
 ]
+
 
 class Conversion(models.Model):
     date = models.DateField(auto_now=True)
-    type_conversion = models.CharField(choices=CONVERSION_CHOICES,default='digital_cash')
-    amount = models.PositiveIntegerField(blank=False,default=0)
+    type_conversion = models.CharField(
+        choices=CONVERSION_CHOICES, default="digital_cash"
+    )
+    amount = models.PositiveIntegerField(blank=False, default=0)
 
     @transaction.atomic
-    def convert(sefl,type_conversion:str,amount:int) -> None:
+    def convert(sefl, type_conversion: str, amount: int) -> None:
         """
         Convert digital 📱 -> cash 💵 and vice versa
         """
         if type_conversion == "digital📲_cash💵":
             pipeline = redis.multi()
-            pipeline.incrby('balance_cash', amount)
-            pipeline.decrby('balance_digital', amount)
-            pipeline.mset({
-                "last_changes":str(datetime.now()),
-                "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
-            })
+            pipeline.incrby("balance_cash", amount)
+            pipeline.decrby("balance_digital", amount)
+            pipeline.mset(
+                {
+                    "last_changes": str(datetime.now()),
+                    "last_changes_log": f"{type_conversion} : {'{:,.0f}'.format(float(amount))}",
+                }
+            )
             pipeline.exec()
         else:
             pipeline = redis.multi()
-            pipeline.incrby('balance_digital', amount)
-            pipeline.decrby('balance_cash', amount)
-            pipeline.mset({
-                "last_changes":str(datetime.now()),
-                "last_changes_log":f"{type_conversion} : {'{:,.0f}'.format(float(amount))}"
-            })
+            pipeline.incrby("balance_digital", amount)
+            pipeline.decrby("balance_cash", amount)
+            pipeline.mset(
+                {
+                    "last_changes": str(datetime.now()),
+                    "last_changes_log": f"{type_conversion} : {'{:,.0f}'.format(float(amount))}",
+                }
+            )
             pipeline.exec()
 
     def save(self, *args, **kargs):
