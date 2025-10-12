@@ -1,11 +1,12 @@
 from django.apps import apps
 from django.db import models
+from typing import final
 from datetime import datetime
 import logging
 from upstash_redis import Redis
 
 logger = logging.getLogger(__name__)
-redis = apps.get_app_config("phat_finance").redis_client
+redis: Redis = apps.get_app_config("phat_finance").redis_client
 if redis is None:
     apps.get_app_config("phat_finance").ready()  # Important, bruh
     redis = apps.get_app_config("phat_finance").redis_client
@@ -15,6 +16,7 @@ else:
 DEBT_CHOICES = [("debt", "debt"), ("lend", "lend"), ("pay", "pay")]
 
 
+@final
 class Debts(models.Model):
     start_date = models.DateField(auto_now=True, blank=False)
     due_date = models.DateField(blank=True)
@@ -28,7 +30,7 @@ class Debts(models.Model):
     So you need to route these functions according to the type of debt
     """
 
-    def I_lend_money(self, redis_client: Redis, amount, borrower) -> None:
+    def I_lend_money(self, redis_client: Redis, amount: int, borrower: str) -> None:
         """
         I Lend money to a borrower, decrease balance.digital by amount.
         """
@@ -47,7 +49,7 @@ class Debts(models.Model):
         Borrower pays back debt, increase balance.digital by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.decrby("balance_digital", amount)
+        pipeline.incrby("balance_digital", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
             "last_changes_log",
@@ -61,8 +63,8 @@ class Debts(models.Model):
         I borrow money to a lender, increase balance.digital by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.decrby("balance_digital", amount)
-        pipeline.incrby("debts", amount)
+        pipeline.incrby("balance_digital", amount)
+        pipeline.decrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
             "last_changes_log",
@@ -76,8 +78,8 @@ class Debts(models.Model):
         I pay back debt, decrease balance.digital by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.incrby("balance_digital", amount)
-        pipeline.decrby("debts", amount)
+        pipeline.decrby("balance_digital", amount)
+        pipeline.incrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
             "last_changes_log",
