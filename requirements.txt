@@ -102,7 +102,7 @@ tree-sitter-rust==0.24.0
 tree-sitter-sql==0.3.7
 tree-sitter-toml==0.7.0
 tree-sitter-xml==0.7.0
-tree-sitter-yaml==0.7.0
+tree-sitter-yaml==0.7.2
 Twisted==25.5.0
 txaio==25.6.1
 typing-inspection==0.4.0
