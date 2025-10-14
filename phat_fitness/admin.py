@@ -8,6 +8,7 @@ class TrackGymAdmin(admin.ModelAdmin):
     search_fields = ("date", "user", "routine")
     list_filter = ("date", "user", "routine")
     ordering = ("-date",)
-
+    list_per_page = 20
+    list_max_show_all = 100
 
 admin.site.register(TrackGym, TrackGymAdmin)

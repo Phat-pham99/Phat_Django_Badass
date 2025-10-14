@@ -23,30 +23,44 @@ class ExpenseAdmin(admin.ModelAdmin):
 @admin.register(Debts)
 class DebtAdmin(admin.ModelAdmin):
     list_display = ('start_date','due_date','type','amount','lender', 'borrower')
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(Assets)
 class AssetAdmin(admin.ModelAdmin):
     list_display = ('name','price','amount','transac_type')
     readonly_fields = ['date']
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(EmergencyFund)
 class EmergencyFundAdmin(admin.ModelAdmin):
     list_display = ('date','type','amount')
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(SinkingFund)
 class SinkingFundAdmin(admin.ModelAdmin):
     list_display = ('date','type','amount')
-
+    list_per_page = 20
+    list_max_show_all = 100
 @admin.register(InOutFlow)
 class InOutFlowAdmin(admin.ModelAdmin):
     list_display = ['date','type','amount']
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(Conversion)
 class ConversionAdmin(admin.ModelAdmin):
     list_display = ['date','type_conversion','amount']
+    list_per_page = 20
+    list_max_show_all = 100
 
 @admin.register(CreditCardPayment)
 class CreditCardPaymentAdmin(admin.ModelAdmin):
     list_display = ['term', 'amount', 'card', 'description']
     fields = [("term", "amount", "card"), "description"]
     list_filter = ('term', 'card')
+    ordering = ('-term',)
+    list_per_page = 20
+    list_max_show_all = 100

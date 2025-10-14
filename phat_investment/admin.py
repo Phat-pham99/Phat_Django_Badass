@@ -29,6 +29,7 @@ class TrackInvestmentAdmin(admin.ModelAdmin):
         "total",
     )
     list_filter = ("date",)
+    ordering = ('-date',)
     list_per_page = 20
     list_max_show_all = 100
 
