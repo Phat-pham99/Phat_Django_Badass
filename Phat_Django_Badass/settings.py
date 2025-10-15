@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from django.contrib.messages import constants as messages
 from settings.installed_apps import *
 from settings.middlewares import *
 from settings.general import *
@@ -9,6 +10,7 @@ from settings.sessions import *
 from settings.databases import *
 from settings.humanizers import *
 from settings.security import *
+from settings.messages import *
 from settings.logging import LOGGING
 
 # Load environment variables from .env file

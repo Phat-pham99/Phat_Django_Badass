@@ -66,6 +66,10 @@
         background-color: #04AA6D;
         color: white;
         }
+        .errorlist {
+          color: red;
+          text-shadow: mediumturquoise;
+        }
         </style>
         <title>Phat Finance Dashboard</title>
     </head>
@@ -80,20 +84,29 @@
     <h1>Phat Finance Dashboard</h1>
     <p>Welcome to my personal finance dashboard!</p>
     <div>
+
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+
         <div class="row table-container">
             <table class="dashboard-table" style="width:90%">
                 <tr>
                     <td><h3>expense_cash : </h3>
                         <p class="hidden-text"
-                        data-original="{{ expense_cash|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ expense_cash|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>expense_digital : </h3>
                         <p class="hidden-text"
-                        data-original="{{ expense_digital|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ expense_digital|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>expense_credit : </h3>
                         <p class="hidden-text"
-                        data-original="{{ expense_credit|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ expense_credit|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><button onclick="toggleText('hidden-text')",
                         style="background-color: #04AA6D; color: white;
@@ -105,58 +118,75 @@
                 <tr>
                     <td><h3>balance_cash : </h3>
                         <p class="hidden-text"
-                        data-original="{{ balance_cash|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ balance_cash|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>balance_digital : </h3>
                         <p class="hidden-text"
-                        data-original="{{ balance_digital|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ balance_digital|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>assets: </h3>
                         <p class="hidden-text"
-                        data-original="{{ assets|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ assets|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td></td>
                 </tr>
                 <tr class="base-table">
                     <td><h3>emergency_fund : </h3>
                         <p class="hidden-text"
-                        data-original="{{ emergency_fund|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ emergency_fund|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>sinking_fund : </h3>
                         <p class="hidden-text"
-                        data-original="{{ sinking_fund|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ sinking_fund|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>total_investment : </h3>
                         <p class="hidden-text"
-                        data-original="{{ total_investment|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ total_investment|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td><h3>total_debt : </h3>
                         <p class="hidden-text"
-                        data-original="{{ total_debt|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ total_debt|floatformat:0|intcomma }}">********</p>
                     </td>
                 </tr>
                 <tr class="base-table">
                     <td><h3>Expensable this month:</h3>
                         <p class="hidden-text"
-                        data-original="{{ expensable|floatformat:0|intcomma }}">*********</p>
+                        data-original="{{ expensable|floatformat:0|intcomma }}">********</p>
                     </td>
                     <td>
                         <h3>Salary this month:</h3>
-                        <p class="hidden-text" data-original="{{ budget|floatformat:0|intcomma }}">*********</p>
+                        <p class="hidden-text" data-original="{{ budget|floatformat:0|intcomma }}">********</p>
                     </td>
 
                     <th><h3>last_changes : </h3>
-                        <p class="hidden-text" data-original="{{ last_changes }}">*********</p>
+                        <p class="hidden-text" data-original="{{ last_changes }}">********</p>
                     </th>
                     <th><h3>last_changes_log : </h3>
-                        <p class="hidden-text" data-original="{{ last_changes_log }}">*********</p>
+                        <p class="hidden-text" data-original="{{ last_changes_log }}">********</p>
                     </th>
                 </tr>
             </table>
-        <div class="UIA-cat"style="width:10%">
-            <img style="width:100%" src="https://media.tenor.com/sbfBfp3FeY8AAAAj/oia-uia.gif">
-        </div>
+
+        <div
+          class="form-container"
+          style="
+          border-radius: 0.5%;
+          background-color: royalblue;
+          border-color: black;
+          border-style: solid;
+          ">
+        <form method="post"
+          style="
+          align-items: center;
+          "
+        >
+            {% csrf_token %}
+            {{ redis_form.as_p }}  {# or form.as_table, form.as_ul #}
+            <input type="submit" value="Submit" style="align-items: center;">
+        </form>
+      </div>
     </div>
+
         <div style="width:100%;" class="row">
             <div class="col" style="width:50%;" >
                 <canvas id="DoughnutExpense" style="width:100%"></canvas>
@@ -284,10 +314,10 @@
         const els = document.getElementsByClassName(elementId);
         Object.entries(els).forEach(([ _, value]) => {
             if (!value.dataset.original) return;
-            if (value.textContent === '*********') {
+            if (value.textContent === '********') {
                 value.textContent = value.dataset.original;
             } else {
-                value.textContent = '*********';
+                value.textContent = '********';
             }
         });
         }

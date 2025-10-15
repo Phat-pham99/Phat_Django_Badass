@@ -1,14 +1,23 @@
 from django.apps import apps
 from django.db.models import Sum
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import (
+    HttpResponse,
+    HttpResponseNotFound,
+    # HttpResponseRedirect,
+    HttpResponseServerError,
+)
 from django.template.loader import render_to_string
+from django.contrib import messages
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
-from forms.forms import DateFilterForm
+
+from django.core.handlers.wsgi import WSGIRequest
+from requests.sessions import Request
+from forms.forms import DateFilterForm, RedisDataForm
 from django.core.cache import cache
 
 from .models.expense import Expense
@@ -20,12 +29,23 @@ if redis is None:
     apps.get_app_config("phat_finance").ready()  # Important, bruh
     redis = apps.get_app_config("phat_finance").redis_client
 else:
-    print("Redis client initialized in phat_finance app config")
+    logger.info("Redis client initialized in phat_finance app config")
 
-
-@login_required(login_url="/admin/login")
+# @login_required(login_url="/admin/login")
 @csrf_exempt
-def dashboard(request):
+def dashboard(request: WSGIRequest):
+    # messages.add_message(request, messages.INFO, "Hello Bro")
+    # messages.add_message(request, messages.INFO, "Hello Bro 2")
+    # message_instance = messages.get_messages(request)
+    # print("messages.get_messages()", message_instance)
+    # print("dir(messages.get_messages())", dir(message_instance))
+    # print("message_instance._prepare_messages()", message_instance._prepare_messages())
+    # print("message_instance._queued_messages()", message_instance._queued_messages)
+    # for item in message_instance._queued_messages:
+    #   print(item.message)
+
+    # print("dir(messages)", dir(messages))
+
     get_values = redis.mget(
         "balance_cash",
         "balance_digital",
@@ -58,6 +78,20 @@ def dashboard(request):
     cashflow = budget - (
         necessity + pleasure + rent + vacation + funds + saving_month + investment_month
     )
+
+    redis_form: RedisDataForm = RedisDataForm(request.POST)
+    print("redis_form", redis_form)
+    print("dir(redis_form)", dir(redis_form))
+
+    if request.method == "POST":
+      if redis_form.is_valid():
+        redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
+        # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
+        # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
+        messages.success(request, f"redis_balance_cash -> {redis_balance_cash}")
+        pass
+    message_instance = messages.get_messages(request)
+    print("message_instance._queued_messages()", message_instance._queued_messages)
     try:
         rendered = render_to_string(
             "dashboard.html",
@@ -84,20 +118,25 @@ def dashboard(request):
                 "funds": funds,
                 "budget": budget,
                 "cashflow": cashflow,
+                "redis_form": redis_form,
+                "messages": message_instance._queued_messages,
             },
         )
-        return HttpResponse(rendered)
+        if rendered:
+            return HttpResponse(rendered)
+        else:
+            return HttpResponseServerError
     except loader.TemplateDoesNotExist:
-        logger.warn("Expense template not found.")
+        logger.warning("Expense template not found.")
         return HttpResponseNotFound("Expense template not found.")
 
 
 @login_required(login_url="/admin/login")
 @csrf_exempt
 def expense(request):
-    date_filter = DateFilterForm(request.POST)
-    start_date_form = None
-    end_date_form = None
+    date_filter: DateFilterForm = DateFilterForm(request.POST)
+    start_date_form: str = ""
+    end_date_form: str = ""
     if request.method == "POST":
         if date_filter.is_valid():
             start_date_form = date_filter.cleaned_data["start_date"]
