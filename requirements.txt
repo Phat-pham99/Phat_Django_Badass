@@ -17,7 +17,7 @@ dj-logging==2.0.1
 Django==5.2.7
 django-admin-interface==0.30.1
 django-admin-logs==1.4.0
-django-cf==0.1.1
+django-cf
 django-colorfield==0.14.0
 django-cors-headers==4.8.0
 django-humanize==0.1.2
