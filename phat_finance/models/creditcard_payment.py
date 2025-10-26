@@ -1,10 +1,10 @@
 from django.apps import apps
 from django.db import models
-from django.db.models import Sum
-from datetime import date, datetime
+from datetime import datetime
 from django.db import transaction
 from types import NoneType
 import logging
+from ..enums.finance_enums import CREDITCARD_ENUM
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config("phat_finance").redis_client
@@ -14,17 +14,11 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
-CARD_CHOICES = [
-    ("VISA Platinum", "VISA Platinum"),
-    ("VJB", "VJB"),
-]
-
-
 class CreditCardPayment(models.Model):
     term = models.CharField(max_length=7, blank=False, null=False)
     amount = models.PositiveIntegerField(blank=True, default=0, null=False)
     card = models.CharField(
-        max_length=20, choices=CARD_CHOICES, null=False, default="VISA Platinum"
+        max_length=20, choices=CREDITCARD_ENUM, null=False, default="VISA Platinum"
     )
     description = models.CharField(max_length=200, blank=True, null=True)
 

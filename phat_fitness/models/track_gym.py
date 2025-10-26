@@ -2,27 +2,17 @@ from django.db import models
 from datetime import datetime
 import django.utils.timezone
 from datetime import timedelta
-
-USER_CHOICES = [
-    ('Phat', "Phat")
-]
-
-ROUTINE_CHOICES = [
-    ('Pushday', "Pushday"),
-    ('Pullday', "Pullday"),
-    ('Legday', "Legday"),
-    ('Absday', "Absday"),
-    ('Cardio', "Cardio")
-]
+from ..enums.fitness_enums import GYM_ROUTINE_ENUM
+from Home.commons.enums import USER_ENUM
 
 class TrackGym(models.Model):
-    user = models.CharField(max_length=50,choices=USER_CHOICES,blank=True,
+    user = models.CharField(max_length=50,choices=USER_ENUM,blank=True,
     null=True,default='Phat')
     date = models.DateField()
     start = models.DateTimeField(default=django.utils.timezone.now)
     end = models.DateTimeField(default=django.utils.timezone.now)
     duration = models.CharField(editable=False,default='0')
-    routine = models.CharField(max_length=100, choices=ROUTINE_CHOICES, blank=True, null=True)
+    routine = models.CharField(max_length=100, choices=GYM_ROUTINE_ENUM, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Calculate the duration when saving the instance

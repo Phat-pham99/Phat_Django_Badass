@@ -6,6 +6,8 @@ from datetime import date, datetime
 from django.db import transaction
 from types import NoneType
 import logging
+from ..enums.finance_enums import EXPENSE_CATEGORY_ENUM
+from Home.commons.enums import USER_ENUM
 
 logger = logging.getLogger(__name__)
 
@@ -16,35 +18,15 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
-USER_CHOICES = [("Phat", "Phat")]
-
-CATEGORY_CHOICES = [
-    ("food_drink 🍔🍜☕", "food_drink 🍔🍜☕"),
-    ("gas ⛽⚡🚛", "gas ⛽⚡🚛"),
-    ("dating 😘😻💌", "dating 😘😻💌"),
-    ("grocery 🛒🥦🥩", "grocery 🛒🥦🥩"),
-    ("medical 💊🧑‍⚕️🩺", "medical 💊🧑‍⚕️🩺"),
-    ("subscriptions💳💸🏦", "subscriptions💳💸🏦"),
-    ("utility ⚙️🪒🪠", "utility ⚙️🪒🪠"),
-    ("others🙄😏", "others🙄😏"),
-    ("pleasure🥳🎉🪩", "pleasure🥳🎉🪩"),
-    ("bikecare 🏍️🛣️🧑‍🔧", "bikecare 🏍️🛣️🧑‍🔧"),
-    ("insurance", "insurance"),
-    ("gifts🎁💌💐", "gifts🎁💌💐"),
-    ("donation 🧧💸🫂", "donation 🧧💸🫂"),
-    ("haircut 💇‍♂️💈👱", "haircut 💇‍♂️💈👱"),
-]
-
-
 class Expense(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
     user = models.CharField(
-        max_length=50, choices=USER_CHOICES, blank=True, null=True, default="Phat"
+        max_length=50, choices=USER_ENUM, blank=True, null=True, default="Phat"
     )
     cash = models.PositiveIntegerField(blank=True, default=0)
     digital = models.PositiveIntegerField(blank=True, default=0)
     credit = models.PositiveIntegerField(blank=True, default=0)
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    category = models.CharField(max_length=50, choices=EXPENSE_CATEGORY_ENUM)
     description = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):

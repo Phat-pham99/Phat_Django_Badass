@@ -4,6 +4,7 @@ from datetime import date, datetime
 from django.db import transaction
 from types import NoneType
 import logging
+from ..enums.finance_enums import IN_OUT_ENUM
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config("phat_finance").redis_client
@@ -13,17 +14,10 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
-IN_OUTCHOICES = [
-    ("IN", "IN"),
-    ("OUT", "OUT"),
-    ("SALARY 💵💻", "SALARY 💵💻"),
-]
-
-
 class InOutFlow(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
     type = models.CharField(
-        max_length=10, choices=IN_OUTCHOICES, blank=False, null=False, default="IN"
+        max_length=10, choices=IN_OUT_ENUM, blank=False, null=False, default="IN"
     )
     amount = models.PositiveIntegerField(blank=False, default=0)
 

@@ -4,6 +4,7 @@ from datetime import date, datetime
 from django.db import transaction
 from upstash_redis import Redis
 import logging
+from ..enums.finance_enums import FUND_ENUM
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config("phat_finance").redis_client
@@ -13,12 +14,9 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
-TYPE_FUND = [("deposite", "deposite"), ("withdraw", "withdraw")]
-
-
 class EmergencyFund(models.Model):
     date = models.DateField(default=date.today)
-    type = models.CharField(choices=TYPE_FUND, default="deposite")
+    type = models.CharField(choices=FUND_ENUM, default="deposite")
     amount = models.PositiveIntegerField(blank=False, default=0)
 
     @transaction.atomic

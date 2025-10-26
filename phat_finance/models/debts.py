@@ -4,6 +4,7 @@ from typing import final
 from datetime import datetime
 import logging
 from upstash_redis import Redis
+from ..enums.finance_enums import DEBT_ENUM
 
 logger = logging.getLogger(__name__)
 redis: Redis = apps.get_app_config("phat_finance").redis_client
@@ -13,14 +14,11 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
-DEBT_CHOICES = [("debt", "debt"), ("lend", "lend"), ("pay", "pay")]
-
-
 @final
 class Debts(models.Model):
     start_date = models.DateField(auto_now=True, blank=False)
     due_date = models.DateField(blank=True)
-    type = models.CharField(choices=DEBT_CHOICES, default="lend")
+    type = models.CharField(choices=DEBT_ENUM, default="lend")
     amount = models.PositiveIntegerField(blank=False, default=0)
     lender = models.CharField(max_length=30, blank=True)
     borrower = models.CharField(max_length=30, blank=True)
@@ -67,9 +65,9 @@ class Debts(models.Model):
         pipeline.decrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
-            "last_changes_log",
-            f"I borrowed money from {lender} : \
-                    {'{:,.0f}'.format(float(amount))}",
+        "last_changes_log",
+        f"I borrowed money from {lender} : \
+        {'{:,.0f}'.format(float(amount))}",
         )
         pipeline.exec()
 
@@ -82,14 +80,13 @@ class Debts(models.Model):
         pipeline.incrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
-            "last_changes_log",
-            f"I paid debt to {lender} : \
-                    {'{:,.0f}'.format(float(amount))}",
+        "last_changes_log",
+        f"I paid debt to {lender} : \
+        {'{:,.0f}'.format(float(amount))}",
         )
         pipeline.exec()
 
     def save(self, *args, **kwargs) -> None:
-        # Initialize Redis
         if self.type == "lend" and self.lender == "Me":
             self.I_lend_money(redis, self.amount, self.borrower)
         elif self.type == "debt" and self.borrower == "Me":

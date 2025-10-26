@@ -3,6 +3,7 @@ from django.db import models
 from datetime import date, datetime
 from django.db import transaction
 import logging
+from ..enums.investment_enums import INVESTMENT_ENUM
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config("phat_investment").redis_client
@@ -12,24 +13,9 @@ if redis is None:
 else:
     print("Redis client initialized in phat_investment app config")
 
-INVESTMENT_CHOICE = [
-    ("VESAF", "VESAF"),
-    ("VFF", "VFF"),
-    ("VMEEF", "VMEEF"),
-    ("VEOF", "VEOF"),
-    ("VIBF", "VIBF"),
-    ("VDEF", "VDEF"),
-    ("stock", "stock"),
-    ("DCDE", "DCDE"),
-    ("ETH", "ETH"),
-    ("BTC", "BTC"),
-    ("XAUt", "XAUt"),
-]
-
-
 class Investment(models.Model):
     date = models.DateField(default=date.today)
-    investment_type = models.CharField(max_length=15, choices=INVESTMENT_CHOICE)
+    investment_type = models.CharField(max_length=15, choices=INVESTMENT_ENUM)
     amount = models.PositiveIntegerField(blank=True, default=0)
 
     @transaction.atomic
