@@ -14,7 +14,8 @@ from api.views.Investment import InvestmentViewSet
 from api.views.TrackInvestment import TrackInvestmentViewSet
 from api.views.TrackGym import TrackGymViewSet
 from Home.views import home as Homepage
-from phat_finance.views import dashboard, expense
+from phat_finance.views.expense import expense
+from phat_finance.views.dashboard import dashboard
 
 from phat_investment.views import portfolio_history
 
