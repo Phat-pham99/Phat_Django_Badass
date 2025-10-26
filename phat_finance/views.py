@@ -20,6 +20,8 @@ from requests.sessions import Request
 from forms.forms import DateFilterForm, RedisDataForm
 from django.core.cache import cache
 
+from datetime import datetime, timedelta
+
 from .models.expense import Expense
 import logging
 
@@ -31,9 +33,9 @@ if redis is None:
 else:
     logger.info("Redis client initialized in phat_finance app config")
 
-# @login_required(login_url="/admin/login")
+@login_required(login_url="/admin/login")
 @csrf_exempt
-def dashboard(request: WSGIRequest):
+def dashboard(request: Request):
     # messages.add_message(request, messages.INFO, "Hello Bro")
     # messages.add_message(request, messages.INFO, "Hello Bro 2")
     # message_instance = messages.get_messages(request)
@@ -76,20 +78,19 @@ def dashboard(request: WSGIRequest):
     saving_month = int(get_values[16])
     investment_month = int(get_values[17])
     cashflow = budget - (
-        necessity + pleasure + rent + vacation + funds + saving_month + investment_month
+        necessity + pleasure + rent + vacation
+        + funds + saving_month + investment_month
     )
 
     redis_form: RedisDataForm = RedisDataForm(request.POST)
-    print("redis_form", redis_form)
-    print("dir(redis_form)", dir(redis_form))
 
     if request.method == "POST":
-      if redis_form.is_valid():
-        redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
-        # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
-        # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
-        messages.success(request, f"redis_balance_cash -> {redis_balance_cash}")
-        pass
+        if redis_form.is_valid():
+            redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
+            # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
+            # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
+            messages.success(request, f"redis_balance_cash -> {redis_balance_cash}")
+            pass
     message_instance = messages.get_messages(request)
     print("message_instance._queued_messages()", message_instance._queued_messages)
     try:
@@ -139,34 +140,53 @@ def expense(request):
     end_date_form: str = ""
     if request.method == "POST":
         if date_filter.is_valid():
-            start_date_form = date_filter.cleaned_data["start_date"]
-            end_date_form = date_filter.cleaned_data["end_date"]
+            start_date_form: str = date_filter.cleaned_data["start_date"]
+            end_date_form: str = date_filter.cleaned_data["end_date"]
     date = request.GET.get("date", None)
 
-    start_date = request.GET.get("start_date", None)
-    end_date = request.GET.get("end_date", None)
-    category = request.GET.get("category", None)
+    start_date: str = request.GET.get("start_date", None)
+    end_date: str = request.GET.get("end_date", None)
+    category: str = request.GET.get("category", None)
+    today: datetime = datetime.now()
+    yesterday: datetime = today - timedelta(days=1)
+
     if cache.get("expense_origin"):
         expense_origin = cache.get("expense_origin")
     else:
-        expense_origin = Expense.objects.all().order_by("-date")
+        expense_origin = Expense.objects.filter(
+            date__range=(yesterday, today)
+            )
         cache.set(
             "expense_origin", expense_origin, timeout=60 * 5
         )  # Cached for 5 minutes
     expenses = None
     if date:
-        expenses = expense_origin.filter(date=date)
+        expenses = Expense.objects.filter(
+            date=date
+            )
     elif start_date and end_date:
-        expenses = expense_origin.filter(date__range=(start_date, end_date))
+        expenses = Expense.objects.filter(
+            date__range=(start_date, end_date)
+            )
     elif start_date_form and end_date_form:
-        expenses = expense_origin.filter(date__range=(start_date_form, end_date_form))
+        expenses = Expense.objects.filter(
+            date__range=(start_date_form, end_date_form)
+            )
     elif category:
-        expenses = expense_origin.filter(category=category)
+        expenses = Expense.objects.filter(
+            category=category
+            )
+    elif start_date_form and end_date_form and category:
+        expenses = Expense.objects.filter(
+            category=category,
+            date__range=(start_date_form, end_date_form)
+            )
     else:
         expenses = expense_origin
-    total_cash = expenses.aggregate(total=Sum("cash"))["total"] or 0
-    total_digital = expenses.aggregate(total=Sum("digital"))["total"] or 0
-    total_credit = expenses.aggregate(total=Sum("credit"))["total"] or 0
+    total_cash = sum([expense.cash for expense in expenses])
+    total_digital = sum([expense.digital for expense in expenses])
+    total_credit = sum([expense.credit for expense in expenses])
+
     json_data = json.loads(serializers.serialize("json", expenses))
     try:
         return render(
