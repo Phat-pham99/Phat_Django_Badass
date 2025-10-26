@@ -67,9 +67,9 @@ class Debts(models.Model):
         pipeline.decrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
-            "last_changes_log",
-            f"I borrowed money from {lender} : \
-                    {'{:,.0f}'.format(float(amount))}",
+          "last_changes_log",
+          f"I borrowed money from {lender} : \
+          {'{:,.0f}'.format(float(amount))}",
         )
         pipeline.exec()
 
@@ -82,9 +82,9 @@ class Debts(models.Model):
         pipeline.incrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
-            "last_changes_log",
-            f"I paid debt to {lender} : \
-                    {'{:,.0f}'.format(float(amount))}",
+          "last_changes_log",
+          f"I paid debt to {lender} : \
+          {'{:,.0f}'.format(float(amount))}",
         )
         pipeline.exec()
 
