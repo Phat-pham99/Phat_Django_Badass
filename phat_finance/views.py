@@ -18,7 +18,7 @@ import json
 from django.core.handlers.wsgi import WSGIRequest
 from requests.sessions import Request
 from forms.forms import DateFilterForm, RedisDataForm
-from django.core.cache import cache
+# from django.core.cache import cache
 
 from datetime import datetime, timedelta
 
@@ -150,15 +150,15 @@ def expense(request):
     today: datetime = datetime.now()
     yesterday: datetime = today - timedelta(days=1)
 
-    if cache.get("expense_origin"):
-        expense_origin = cache.get("expense_origin")
-    else:
-        expense_origin = Expense.objects.filter(
-            date__range=(yesterday, today)
-            )
-        cache.set(
-            "expense_origin", expense_origin, timeout=60 * 5
-        )  # Cached for 5 minutes
+    # if cache.get("expense_origin"):
+    #     expense_origin = cache.get("expense_origin")
+    # else:
+    #     expense_origin = Expense.objects.filter(
+    #         date__range=(yesterday, today)
+    #         )
+    #     cache.set(
+    #         "expense_origin", expense_origin, timeout=60 * 5
+    #     )  # Cached for 5 minutes
     expenses = None
     if date:
         expenses = Expense.objects.filter(
