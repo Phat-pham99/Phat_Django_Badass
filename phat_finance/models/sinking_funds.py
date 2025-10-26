@@ -3,7 +3,7 @@ from django.db import models
 from datetime import datetime
 from django.db import transaction
 from upstash_redis import Redis
-
+from ..enums.finance_enums import FUND_ENUM
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,12 +14,9 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
-TYPE_FUND = [("deposite", "deposite"), ("withdraw", "withdraw")]
-
-
 class SinkingFund(models.Model):
     date = models.DateField(auto_now=True)
-    type = models.CharField(choices=TYPE_FUND, default="deposite")
+    type = models.CharField(choices=FUND_ENUM, default="deposite")
     amount = models.PositiveIntegerField(blank=False, default=0)
 
     def save(self, *args, **kwargs):
