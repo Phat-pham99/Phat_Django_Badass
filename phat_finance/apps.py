@@ -10,8 +10,8 @@ import logging
 @final
 class PhatFinanceConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "phat_finance"
-    redis_client = None
+    name: str = "phat_finance"
+    redis_client: Redis = None
 
     @override
     def ready(self) -> None:

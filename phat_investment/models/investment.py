@@ -3,6 +3,8 @@ from django.db import models
 from datetime import date, datetime
 from django.db import transaction
 import logging
+
+from django.db.models.options import override
 from ..enums.investment_enums import INVESTMENT_ENUM
 
 logger = logging.getLogger(__name__)
@@ -19,9 +21,15 @@ class Investment(models.Model):
     amount = models.PositiveIntegerField(blank=True, default=0)
 
     @transaction.atomic
-    def invest(self, investment_type: str, amount: int) -> None:
+    def __invest(
+        self,
+        investment_type: str,
+        amount: int) -> None:
         """
         Invest into assets 🪙💹. Deduct balance.digital accordingly
+        @param investment_type(str) My current investment \
+        (stock, Vincapital, DragonCapital, crypto currency)
+        @param amount(int) Money, VND
         """
         pipeline = redis.multi()
         pipeline.decrby("balance_digital", amount)
@@ -34,6 +42,7 @@ class Investment(models.Model):
         )
         pipeline.exec()
 
-    def save(self, *args, **kwargs):
-        self.invest(self.investment_type, self.amount)
-        super().save(*args, **kwargs)
+    @override
+    def __save(self, *args, **kwargs):
+        self.__invest(self.investment_type, self.amount)
+        super().__save(*args, **kwargs)

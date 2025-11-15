@@ -14,7 +14,9 @@ class InvestmentAdmin(admin.ModelAdmin):
     list_display = ("date", "investment_type", "amount")
     search_fields = ("date",)
     list_filter = ("date", "investment_type")
-
+    ordering = ('-date',)
+    list_per_page = 20
+    list_max_show_all = 20
 
 @admin.register(TrackInvestment)
 class TrackInvestmentAdmin(admin.ModelAdmin):
@@ -31,8 +33,7 @@ class TrackInvestmentAdmin(admin.ModelAdmin):
     list_filter = ("date",)
     ordering = ('-date',)
     list_per_page = 20
-    list_max_show_all = 100
-
+    list_max_show_all = 20
 
 @admin.register(Dividend_new)
 class DividendAdmin(admin.ModelAdmin):

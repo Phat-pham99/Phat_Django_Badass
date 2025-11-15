@@ -1,3 +1,4 @@
+from typing import override
 from django.apps import apps
 from django.db import models
 
@@ -5,18 +6,18 @@ from django.db import models
 from datetime import date, datetime
 from django.db import transaction
 from types import NoneType
-import logging
+from logging import Logger, getLogger
+from upstash_redis import Redis
 from ..enums.finance_enums import EXPENSE_CATEGORY_ENUM
 from Home.commons.enums import USER_ENUM
 
-logger = logging.getLogger(__name__)
-
-redis = apps.get_app_config("phat_finance").redis_client
+logger: Logger = getLogger(__name__)
+redis: Redis = apps.get_app_config("phat_finance").redis_client
 if redis is None:
     apps.get_app_config("phat_finance").ready()  # Important, bruh
     redis = apps.get_app_config("phat_finance").redis_client
 else:
-    print("Redis client initialized in phat_finance app config")
+    logger.info("Redis client initialized in phat_finance app config")
 
 class Expense(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
@@ -29,15 +30,20 @@ class Expense(models.Model):
     category = models.CharField(max_length=50, choices=EXPENSE_CATEGORY_ENUM)
     description = models.CharField(max_length=200, blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.date} - {self.user} - {self.category}"
 
     @transaction.atomic
-    def spend(self, cash_amount: int, digital_amount: int, credit_amount: int) -> None:
+    def __spend(self,
+            redis_client: Redis,
+            cash_amount: int,
+            digital_amount: int,
+            credit_amount: int) -> None:
         """
-        Decrease cash 💶💷 or digital 🏧 balance by {_amount} on Redis when cash is spent.
+        Decrease cash 💶💷 or digital 🏧 balance by
+        {_amount} on Redis when cash is spent.
         """
-        pipeline = redis.multi()
+        pipeline = redis_client.multi()
         if cash_amount > 0:
             pipeline.decrby("balance_cash", cash_amount)
             pipeline.incrby("expense_cash", cash_amount)
@@ -58,7 +64,8 @@ class Expense(models.Model):
         )
         pipeline.exec()
 
-    def save(self, *args, **kwargs):
+    @override
+    def __save(self, *args, **kwargs) -> None:
         if type(self.cash) == NoneType:
             self.cash = 0
         if type(self.digital) == NoneType:
@@ -66,5 +73,8 @@ class Expense(models.Model):
         if type(self.credit) == NoneType:
             self.credit = 0
 
-        self.spend(self.cash, self.digital, self.credit)
-        super().save(*args, **kwargs)  # Man this shit is important !
+        self.__spend(
+            cash_amount=self.cash,
+            digital_amount=self.digital,
+            credit_amount=self.credit)
+        super().__save(*args, **kwargs)  # Man this shit is important !
