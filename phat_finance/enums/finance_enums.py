@@ -16,8 +16,10 @@ EXPENSE_CATEGORY_ENUM: list[tuple] = [
 ]
 
 IN_OUT_ENUM: list[tuple] = [
-    ("IN", "IN"),
-    ("OUT", "OUT"),
+    ("IN_CASH", "IN_CASH"),
+    ("OUT_CASH", "OUT_CASH"),
+    ("IN_DIGITAL", "IN_DIGITAL"),
+    ("OUT_DIGITAL", "OUT_DIGITAL"),
     ("SALARY 💵💻", "SALARY 💵💻"),
 ]
 

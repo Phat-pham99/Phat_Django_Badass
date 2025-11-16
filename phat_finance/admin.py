@@ -44,6 +44,7 @@ class SinkingFundAdmin(admin.ModelAdmin):
     list_display = ('date','type','amount')
     list_per_page = 20
     list_max_show_all = 100
+
 @admin.register(InOutFlow)
 class InOutFlowAdmin(admin.ModelAdmin):
     list_display = ['date','type','amount']

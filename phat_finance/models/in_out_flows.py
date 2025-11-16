@@ -17,7 +17,7 @@ else:
 class InOutFlow(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
     type = models.CharField(
-        max_length=10, choices=IN_OUT_ENUM, blank=False, null=False, default="IN"
+        max_length=12, choices=IN_OUT_ENUM, blank=False, null=False, default="IN_DIGITAL"
     )
     amount = models.PositiveIntegerField(blank=False, default=0)
 
@@ -26,21 +26,35 @@ class InOutFlow(models.Model):
             f"{self.date}-Tiền {self.type}-{'{:,.0f}'.format(float(self.amount))} VND"
         )
 
-    def in_(self, amount: int) -> None:
+    def __in_digital(self, amount: int) -> None:
         """
-        Digital money 🏧💷 enter the system. Increase balance.digital by amount
+        Digital money 🏧💷 enter the system. Increase balance.digital by {amount}
         """
         pipeline = redis.multi()
         pipeline.incrby("balance_digital", amount)
         pipeline.mset(
             {
                 "last_changes": str(datetime.now()),
-                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))}",
+                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))} digital",
             }
         )
         pipeline.exec()
 
-    def out_(self, amount: int) -> None:
+    def __in_cash(self, amount: int) -> None:
+        """
+        Cash money 💰️💷 enter the system. Increase balance.cash by {amount}
+        """
+        pipeline = redis.multi()
+        pipeline.incrby("balance_cash", amount)
+        pipeline.mset(
+            {
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))} cash",
+            }
+        )
+        pipeline.exec()
+
+    def __out_digital(self, amount: int) -> None:
         """
         Digital money 🏧💷 leave the system. Decrease balance.digital by amount
         """
@@ -54,8 +68,22 @@ class InOutFlow(models.Model):
         )
         pipeline.exec()
 
+    def __out_cash(self, amount: int) -> None:
+        """
+        Cash money 💰️💷 leave the system. Decrease balance.cash by amount
+        """
+        pipeline = redis.multi()
+        pipeline.decrby("balance_cash", amount)
+        pipeline.mset(
+            {
+                "last_changes": str(datetime.now()),
+                "last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))} cash",
+            }
+        )
+        pipeline.exec()
+
     @transaction.atomic
-    def salary_paid(self, amount: int) -> None:
+    def __salary_paid(self, amount: int) -> None:
         """
         Digital money 💵💻 enter the system. Increase balance.digital by amount
         """
@@ -73,9 +101,13 @@ class InOutFlow(models.Model):
         if type(self.amount) == NoneType:
             self.amount = 0
         if self.type == "SALARY 💵💻":
-            self.salary_paid(self.amount)
-        elif self.type == "OUT":
-            self.out_(self.amount)
-        else:
-            self.in_(self.amount)
+            self.__salary_paid(self.amount)
+        elif self.type == "IN_DIGITAL":
+            self.__in_digital(self.amount)
+        elif self.type == "OUT_DIGITAL":
+            self.__out_digital(self.amount)
+        elif self.type == "IN_CASH":
+            self.__in_cash(self.amount)
+        elif self.type == "OUT_CASH":
+            self.__out_cash(self.amount)
         super().save(*args, **kwargs)  # Man this shit is important !

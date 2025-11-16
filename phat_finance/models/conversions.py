@@ -22,7 +22,7 @@ class Conversion(models.Model):
     amount = models.PositiveIntegerField(blank=False, default=0)
 
     @transaction.atomic
-    def convert(sefl, type_conversion: str, amount: int) -> None:
+    def __convert(sefl, type_conversion: str, amount: int) -> None:
         """
         Convert digital 📱 -> cash 💵 and vice versa
         """
@@ -52,5 +52,5 @@ class Conversion(models.Model):
     def save(self, *args, **kargs):
         if type(self.amount) == NoneType:
             self.amount = 0
-        self.convert(self.type_conversion, self.amount)
+        self.__convert(self.type_conversion, self.amount)
         super().save(*args, **kargs)
