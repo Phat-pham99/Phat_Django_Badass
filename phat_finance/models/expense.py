@@ -65,7 +65,7 @@ class Expense(models.Model):
         pipeline.exec()
 
     @override
-    def __save(self, *args, **kwargs) -> None:
+    def save(self, *args, **kwargs) -> None:
         if type(self.cash) == NoneType:
             self.cash = 0
         if type(self.digital) == NoneType:
@@ -74,7 +74,8 @@ class Expense(models.Model):
             self.credit = 0
 
         self.__spend(
+            redis_client=redis,
             cash_amount=self.cash,
             digital_amount=self.digital,
             credit_amount=self.credit)
-        super().__save(*args, **kwargs)  # Man this shit is important !
+        super().save(*args, **kwargs)  # Man this shit is important !
