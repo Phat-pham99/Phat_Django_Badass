@@ -2,7 +2,7 @@ annotated-types==0.7.0
 charset-normalizer==3.4.3
 colorlog==6.9.0
 constantly==23.10.4
-cryptography==46.0.0
+cryptography==46.0.3
 DateTime==5.5
 dill==0.4.0
 dj-logging==2.0.1
