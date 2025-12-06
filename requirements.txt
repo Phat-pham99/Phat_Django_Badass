@@ -54,7 +54,7 @@ typing_extensions==4.15.0
 tzdata==2025.2
 uc-micro-py==1.0.3
 upstash-redis==1.4.0
-urllib3==2.5.0
+urllib3==2.6.0
 watchfiles==1.1.0
 whitenoise==6.10.0
 wsproto==1.2.0
