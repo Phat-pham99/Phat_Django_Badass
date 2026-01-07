@@ -9,7 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# --- Stage 2: Running Stage ---
+# --- Stage 2: Deployment Stage ---
 EXPOSE 8000
 
-CMD ["python3", "-m", "hypercorn", "Phat_Django_Badass.asgi:application", "--bind", "0.0.0.0:8000"]
+RUN ["python3",  "manage.py", "collectstatic", "--clear", "--noinput" ]
+CMD ["python3", "-m", "granian", "--interface", "asgi", "Phat_Django_Badass.asgi:application", "---reload", "--port", "8000", "--non-ws", "--static-path-mount", "./staticfiles"]

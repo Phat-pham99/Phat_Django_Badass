@@ -282,6 +282,21 @@ Django = ">=4.2"
 dev = ["Django", "black", "build", "coverage", "pre-commit", "pytest", "pytest-cov", "pytest-django", "ruff", "tox", "twine"]
 
 [[package]]
+name = "django-cached-authentication-middleware"
+version = "0.2.2"
+description = "A drop in replacement for django's built in AuthenticationMiddleware that utilizes caching."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-cached_authentication_middleware-0.2.2.tar.gz", hash = "sha256:bdf664b211256391ba0b57783c78123183d35e62caef18913e892b190103dc51"},
+    {file = "django_cached_authentication_middleware-0.2.2-py2-none-any.whl", hash = "sha256:fc10fb2859d1f3245f22dec4b24a0e41520639783e24bbcb77d19d33ee3079f5"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-cf"
 version = "0.1.1"
 description = "django-cf is a package that integrates Django with Cloudflare products"
@@ -1608,4 +1623,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0.0"
-content-hash = "755abc74000bb85ab35b3e01d10426c0b13545c94aa7040cfbc1885ee405201a"
+content-hash = "afa59ed93d0285572347cb1aa52bd95a17e5d9b709ad113f79d7070fc395ed62"

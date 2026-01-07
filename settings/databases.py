@@ -10,6 +10,7 @@ DATABASES = {
         'CLOUDFLARE_DATABASE_ID': os.getenv('CLOUDFLARE_DATABASE_ID'),
         'CLOUDFLARE_ACCOUNT_ID': os.getenv('CLOUDFLARE_ACCOUNT_ID'),
         'CLOUDFLARE_TOKEN': os.getenv('CLOUDFLARE_TOKEN'),
+        'CONN_MAX_AGE': 60 * 10,
     }
 }
 

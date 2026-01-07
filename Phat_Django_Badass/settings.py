@@ -12,6 +12,7 @@ from settings.humanizers import *
 from settings.security import *
 from settings.messages import *
 from settings.logging import LOGGING
+from settings.system_check import SILENCED_SYSTEM_CHECKS
 
 # Load environment variables from .env file
 load_dotenv()
@@ -62,5 +63,9 @@ SESSION_EXPIRE_AFTER_LAST_ACTIVITY
 SESSION_EXPIRE_AT_BROWSER_CLOSE
 SESSION_TIMEOUT_REDIRECT
 
+SESSION_ENGINE
 # Logging -> settings/logging.py
 LOGGING
+
+# Silence system checks
+SILENCED_SYSTEM_CHECKS
