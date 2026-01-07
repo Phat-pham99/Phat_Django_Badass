@@ -42,7 +42,6 @@ class Investment(models.Model):
         )
         pipeline.exec()
 
-    @override
-    def __save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         self.__invest(self.investment_type, self.amount)
-        super().__save(*args, **kwargs)
+        super().save(*args, **kwargs)
