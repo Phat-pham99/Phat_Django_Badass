@@ -1,9 +1,11 @@
-from django.apps import apps
-from django.db import models
-from typing import final
 from datetime import datetime
 from logging import Logger, getLogger
+from typing import final
+
+from django.apps import apps
+from django.db import models
 from upstash_redis import Redis
+
 from ..enums.finance_enums import DEBT_ENUM
 
 logger: Logger = getLogger(__name__)
@@ -27,7 +29,7 @@ class Debts(models.Model):
     Let's say these functions are "After-effects" of the saving an object
     So you need to route these functions according to the type of debt
     """
-    def __I_lend_money(self, redis_client: Redis, amount: int, borrower: str) -> None:
+    def __I_lend_money(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
         """
         I Lend money to a borrower, decrease balance.digital by amount.
         """
@@ -41,7 +43,7 @@ class Debts(models.Model):
         )
         pipeline.exec()
 
-    def __they_pay_debt(self, redis_client: Redis, amount: int, borrower: str) -> None:
+    def __they_pay_debt(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
         """
         Borrower pays back debt, increase balance.digital by amount.
         """
@@ -55,11 +57,11 @@ class Debts(models.Model):
         )
         pipeline.exec()
 
-    def __I_own_money(self, redis_client: Redis, amount: int, lender: str) -> None:
+    def __I_own_money(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
         """
         I borrow money to a lender, increase balance.digital by amount.
         """
-        pipeline: Pipeline = redis_client.multi()
+        pipeline = redis_client.multi()
         pipeline.incrby("balance_digital", amount)
         pipeline.decrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
@@ -70,13 +72,13 @@ class Debts(models.Model):
         )
         pipeline.exec()
 
-    def __I_pay_debt(self, redis_client: Redis, amount: int, lender: str) -> None:
+    def __I_pay_debt(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
         """
         I pay back debt, decrease balance.digital by amount.
         :param amount money(int)
         :param lender person(str)
         """
-        pipeline: Pipeline = redis_client.multi()
+        pipeline = redis_client.multi()
         pipeline.decrby("balance_digital", amount)
         pipeline.incrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
@@ -92,22 +94,30 @@ class Debts(models.Model):
             self.__I_lend_money(
                 redis_client=redis,
                 amount=self.amount,
-                borrow=self.borrower)
+                lender=self.lender,
+                borrower=self.borrower
+            )
         elif self.type == "debt" and self.borrower == "Me":
             self.__I_own_money(
                 redis_client=redis,
                 amount=self.amount,
-                borrow=self.borrower)
+                lender=self.lender,
+                borrower=self.borrower
+            )
         elif self.type == "pay" and self.borrower == "Me":
             self.__I_pay_debt(
                 redis_client=redis,
                 amount=self.amount,
-                lender=self.lender)
+                lender=self.lender,
+                borrower=self.borrower,
+            )
         elif self.type == "pay" and self.borrower != "Me":
             self.__they_pay_debt(
                 redis_client=redis,
                 amount=self.amount,
-                lender=self.borrower)
+                lender=self.lender,
+                borrower=self.borrower,
+            )
         else:
             logger.warn("No type and lender-borrower matched !")
         super().save(*args, **kwargs)
