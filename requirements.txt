@@ -53,7 +53,7 @@ pathspec==1.0.2
 pillow==12.1.0
 platformdirs==4.3.8
 posting==2.7.0
-pyasn1==0.6.1
+pyasn1==0.6.2
 pyasn1_modules==0.4.2
 pycparser==2.22
 pydantic==2.11.7
