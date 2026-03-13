@@ -10,7 +10,7 @@ click==8.3.1
 click-default-group==1.2.4
 colorlog==6.9.0
 constantly==23.10.4
-cryptography==45.0.6
+cryptography==46.0.5
 DateTime==5.5
 dill==0.4.0
 dj-logging==2.0.1
