@@ -1,17 +1,18 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
 from django.contrib.messages import constants as messages
-from settings.installed_apps import *
-from settings.middlewares import *
-from settings.general import *
-from settings.rest_framework import *
-from settings.sessions import *
+from dotenv import load_dotenv
+
 from settings.databases import *
+from settings.general import *
 from settings.humanizers import *
-from settings.security import *
-from settings.messages import *
+from settings.installed_apps import *
 from settings.logging import LOGGING
+from settings.messages import *
+from settings.middlewares import *
+from settings.security import *
+from settings.sessions import *
 from settings.system_check import SILENCED_SYSTEM_CHECKS
 
 # Load environment variables from .env file
@@ -41,9 +42,6 @@ TEMPLATES
 ALLOWED_HOSTS
 CORS_ALLOW_ALL_ORIGINS
 AUTH_PASSWORD_VALIDATORS
-
-# Django REST Framework -> settings/rest_framework.py
-REST_FRAMEWORK
 
 # Databases -> settings/databases.py
 DATABASES
