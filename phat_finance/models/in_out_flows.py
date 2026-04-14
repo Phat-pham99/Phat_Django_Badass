@@ -1,9 +1,10 @@
-from django.apps import apps
-from django.db import models
-from datetime import date, datetime
-from django.db import transaction
-from types import NoneType
 import logging
+from datetime import date, datetime
+from types import NoneType
+
+from django.apps import apps
+from django.db import models, transaction
+
 from ..enums.finance_enums import IN_OUT_ENUM
 
 logger = logging.getLogger(__name__)
@@ -12,12 +13,21 @@ if redis is None:
     apps.get_app_config("phat_finance").ready()  # Important, bruh
     redis = apps.get_app_config("phat_finance").redis_client
 else:
-    print("Redis client initialized in phat_finance app config")
+    logger.info(
+        level=1,
+        msg="Redis client initialized in phat_finance app config",
+        stack_info=True,
+    )
+
 
 class InOutFlow(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
     type = models.CharField(
-        max_length=12, choices=IN_OUT_ENUM, blank=False, null=False, default="IN_DIGITAL"
+        max_length=12,
+        choices=IN_OUT_ENUM,
+        blank=False,
+        null=False,
+        default="IN_DIGITAL",
     )
     amount = models.PositiveIntegerField(blank=False, default=0)
 
@@ -98,6 +108,7 @@ class InOutFlow(models.Model):
         pipeline.exec()
 
     def save(self, *args, **kwargs):
+        # Use switch-case
         if type(self.amount) == NoneType:
             self.amount = 0
         if self.type == "SALARY 💵💻":

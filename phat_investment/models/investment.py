@@ -13,7 +13,7 @@ if redis is None:
     apps.get_app_config("phat_investment").ready()  # Important, bruh
     redis = apps.get_app_config("phat_investment").redis_client
 else:
-    print("Redis client initialized in phat_investment app config")
+    logger.info(level=1,msg="Redis client initialized in phat_finance app config", stack_info=True)
 
 class Investment(models.Model):
     date = models.DateField(default=date.today)
