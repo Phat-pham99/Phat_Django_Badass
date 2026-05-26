@@ -16,6 +16,8 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /app /app
 
 ENV GRANIAN_HOST=0.0.0.0
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 # Chaining commands: Runs collectstatic, then starts Granian
