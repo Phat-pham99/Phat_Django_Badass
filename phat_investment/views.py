@@ -1,9 +1,5 @@
 from django.shortcuts import render
-# import sys
-
-# Create your views here.
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.template import loader
 from django.contrib.auth.decorators import login_required
@@ -31,6 +27,20 @@ def portfolio_history(request):
             end_date_form = date_filter.cleaned_data["end_date"]
     start_date = request.GET.get("start_date", None)
     end_date = request.GET.get("end_date", None)
+
+    if start_date:
+        try:
+            from datetime import datetime
+            datetime.strptime(start_date, "%Y-%m-%d")
+        except ValueError:
+            return HttpResponseBadRequest("Invalid start_date format. Use YYYY-MM-DD.")
+    if end_date:
+        try:
+            from datetime import datetime
+            datetime.strptime(end_date, "%Y-%m-%d")
+        except ValueError:
+            return HttpResponseBadRequest("Invalid end_date format. Use YYYY-MM-DD.")
+
     portfolio = None
     if start_date_form and end_date_form:
         portfolio = (
