@@ -45,19 +45,19 @@ class Expense(models.Model):
         """
         pipeline = redis_client.multi()
         if cash_amount > 0:
-            pipeline.decrby("balance_cash", cash_amount)
-            pipeline.incrby("expense_cash", cash_amount)
+            pipeline.decrby("phat_finance:balance_cash", cash_amount)
+            pipeline.incrby("phat_finance:expense_cash", cash_amount)
         elif digital_amount > 0:
-            pipeline.decrby("balance_digital", digital_amount)
-            pipeline.incrby("expense_digital", digital_amount)
+            pipeline.decrby("phat_finance:balance_digital", digital_amount)
+            pipeline.incrby("phat_finance:expense_digital", digital_amount)
         elif credit_amount > 0:
-            pipeline.incrby("expense_credit", credit_amount)
+            pipeline.incrby("phat_finance:expense_credit", credit_amount)
         else:
             pass
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))}\
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Money 💵 spent: \n cash: {'{:,.0f}'.format(float(cash_amount))}\
                     digital: {'{:,.0f}'.format(float(digital_amount))}\
                     credit:  {'{:,.0f}'.format(float(credit_amount))} ",
             }

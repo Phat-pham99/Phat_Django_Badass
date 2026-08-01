@@ -34,10 +34,10 @@ class Debts(models.Model):
         I Lend money to a borrower, decrease balance.digital by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.decrby("balance_digital", amount)
-        pipeline.set("last_changes", str(datetime.now()))
+        pipeline.decrby("phat_finance:balance_digital", amount)
+        pipeline.set("phat_finance:last_changes", str(datetime.now()))
         pipeline.set(
-            "last_changes_log",
+            "phat_finance:last_changes_log",
             f"I lent money to {borrower} : \
                     {'{:,.0f}'.format(float(amount))}",
         )
@@ -48,10 +48,10 @@ class Debts(models.Model):
         Borrower pays back debt, increase balance.digital by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.incrby("balance_digital", amount)
-        pipeline.set("last_changes", str(datetime.now()))
+        pipeline.incrby("phat_finance:balance_digital", amount)
+        pipeline.set("phat_finance:last_changes", str(datetime.now()))
         pipeline.set(
-            "last_changes_log",
+            "phat_finance:last_changes_log",
             f"Debt paid by {borrower} : \
                     {'{:,.0f}'.format(float(amount))}",
         )
@@ -62,11 +62,11 @@ class Debts(models.Model):
         I borrow money to a lender, increase balance.digital by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.incrby("balance_digital", amount)
-        pipeline.decrby("debts", amount)
-        pipeline.set("last_changes", str(datetime.now()))
+        pipeline.incrby("phat_finance:balance_digital", amount)
+        pipeline.decrby("phat_finance:debts", amount)
+        pipeline.set("phat_finance:last_changes", str(datetime.now()))
         pipeline.set(
-        "last_changes_log",
+        "phat_finance:last_changes_log",
         f"I borrowed money from {lender} : \
         {'{:,.0f}'.format(float(amount))}",
         )
@@ -79,11 +79,11 @@ class Debts(models.Model):
         :param lender person(str)
         """
         pipeline = redis_client.multi()
-        pipeline.decrby("balance_digital", amount)
-        pipeline.incrby("debts", amount)
-        pipeline.set("last_changes", str(datetime.now()))
+        pipeline.decrby("phat_finance:balance_digital", amount)
+        pipeline.incrby("phat_finance:debts", amount)
+        pipeline.set("phat_finance:last_changes", str(datetime.now()))
         pipeline.set(
-        "last_changes_log",
+        "phat_finance:last_changes_log",
         f"I paid debt to {lender} : \
         {'{:,.0f}'.format(float(amount))}",
         )

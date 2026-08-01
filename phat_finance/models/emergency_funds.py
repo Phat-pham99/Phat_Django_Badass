@@ -25,12 +25,12 @@ class EmergencyFund(models.Model):
         Deposit money to Emergency fund 💰, fund up and balance 💵 down by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.decrby("balance_digital", amount)
-        pipeline.incrby("emergency_fund", amount)
+        pipeline.decrby("phat_finance:balance_digital", amount)
+        pipeline.incrby("phat_finance:emergency_fund", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Emergency fund deposited : \
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Emergency fund deposited : \
                     {'{:,.0f}'.format(float(amount))}",
             }
         )
@@ -42,12 +42,12 @@ class EmergencyFund(models.Model):
         Withdraw money from Emergency fund 💰, fund down and balance 💵 up by amount.
         """
         pipeline = redis_client.multi()
-        pipeline.incrby("balance_digital", amount)
-        pipeline.decrby("emergency_fund", amount)
+        pipeline.incrby("phat_finance:balance_digital", amount)
+        pipeline.decrby("phat_finance:emergency_fund", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Emergency fund withdrawn : \
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Emergency fund withdrawn : \
                     {'{:,.0f}'.format(float(amount))}",
             }
         )

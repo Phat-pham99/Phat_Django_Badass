@@ -31,11 +31,11 @@ class InOutFlow(models.Model):
         Digital money 🏧💷 enter the system. Increase balance.digital by {amount}
         """
         pipeline = redis.multi()
-        pipeline.incrby("balance_digital", amount)
+        pipeline.incrby("phat_finance:balance_digital", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))} digital",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))} digital",
             }
         )
         pipeline.exec()
@@ -45,11 +45,11 @@ class InOutFlow(models.Model):
         Cash money 💰️💷 enter the system. Increase balance.cash by {amount}
         """
         pipeline = redis.multi()
-        pipeline.incrby("balance_cash", amount)
+        pipeline.incrby("phat_finance:balance_cash", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))} cash",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Receive: {'{:,.0f}'.format(float(amount))} cash",
             }
         )
         pipeline.exec()
@@ -59,11 +59,11 @@ class InOutFlow(models.Model):
         Digital money 🏧💷 leave the system. Decrease balance.digital by amount
         """
         pipeline = redis.multi()
-        pipeline.decrby("balance_digital", amount)
+        pipeline.decrby("phat_finance:balance_digital", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))}",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))}",
             }
         )
         pipeline.exec()
@@ -73,11 +73,11 @@ class InOutFlow(models.Model):
         Cash money 💰️💷 leave the system. Decrease balance.cash by amount
         """
         pipeline = redis.multi()
-        pipeline.decrby("balance_cash", amount)
+        pipeline.decrby("phat_finance:balance_cash", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))} cash",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Sent: {'{:,.0f}'.format(float(amount))} cash",
             }
         )
         pipeline.exec()
@@ -88,11 +88,11 @@ class InOutFlow(models.Model):
         Digital money 💵💻 enter the system. Increase balance.digital by amount
         """
         pipeline = redis.multi()
-        pipeline.incrby("balance_digital", amount)
+        pipeline.incrby("phat_finance:balance_digital", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Salary added: {'{:,.0f}'.format(float(amount))}",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Salary added: {'{:,.0f}'.format(float(amount))}",
             }
         )
         pipeline.exec()

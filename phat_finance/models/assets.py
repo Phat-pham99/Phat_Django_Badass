@@ -26,12 +26,12 @@ class Assets(models.Model):
         Buy asset, increase balance.digital by amount * bought_price
         """
         pipeline = redis.multi()
-        pipeline.incrby("assets", amount * bought_price)
-        pipeline.decrby("balance_digital", amount * bought_price)
+        pipeline.incrby("phat_finance:assets", amount * bought_price)
+        pipeline.decrby("phat_finance:balance_digital", amount * bought_price)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Asset bought: {self.name} \
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Asset bought: {self.name} \
                     {'{:,.0f}'.format(float(amount * bought_price))}",
             }
         )
@@ -43,12 +43,12 @@ class Assets(models.Model):
         Buy asset, increase balance.digital by amount * sold_price
         """
         pipeline = redis.multi()
-        pipeline.decrby("assets", amount * sold_price)
-        pipeline.incrby("balance_digital", amount * sold_price)
+        pipeline.decrby("phat_finance:assets", amount * sold_price)
+        pipeline.incrby("phat_finance:balance_digital", amount * sold_price)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Asset sold: {self.name} \
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Asset sold: {self.name} \
                     {'{:,.0f}'.format(float(amount * sold_price))}",
             }
         )

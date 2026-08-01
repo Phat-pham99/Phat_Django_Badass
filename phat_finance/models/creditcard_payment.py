@@ -37,11 +37,11 @@ class CreditCardPayment(models.Model):
         Decrease digital 🏧 balance by {amount} on Redis
         """
         pipeline = redis_client.multi()
-        pipeline.decrby("balance_digital", amount)
+        pipeline.decrby("phat_finance:balance_digital", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Pay credit card 💳 bill: {amount}",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Pay credit card 💳 bill: {amount}",
             }
         )
         pipeline.exec()

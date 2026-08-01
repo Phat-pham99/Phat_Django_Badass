@@ -32,12 +32,12 @@ class Investment(models.Model):
         @param amount(int) Money, VND
         """
         pipeline = redis.multi()
-        pipeline.decrby("balance_digital", amount)
-        pipeline.incrby("total_investment", amount)
+        pipeline.decrby("phat_finance:balance_digital", amount)
+        pipeline.incrby("phat_finance:total_investment", amount)
         pipeline.mset(
             {
-                "last_changes": str(datetime.now()),
-                "last_changes_log": f"Invest to {investment_type}",
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Invest to {investment_type}",
             }
         )
         pipeline.exec()
