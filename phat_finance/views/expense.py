@@ -10,7 +10,6 @@ from django.http import (
 # from django.contrib import messages
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 
@@ -33,7 +32,6 @@ else:
     logger.info("Redis client initialized in phat_finance app config")
 
 @login_required(login_url="/admin/login")
-@csrf_exempt
 def expense(request):
     date_filter: DateFilterForm = DateFilterForm(request.POST)
     start_date_form: str = ""

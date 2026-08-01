@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 # from django.core import serializers
 # import json
 
@@ -34,7 +34,6 @@ else:
     logger.info("Redis client initialized in phat_finance app config")
 
 @login_required(login_url="/admin/login")
-@csrf_exempt
 def dashboard(request: Request):
     # messages.add_message(request, messages.INFO, "Hello Bro")
     # messages.add_message(request, messages.INFO, "Hello Bro 2")

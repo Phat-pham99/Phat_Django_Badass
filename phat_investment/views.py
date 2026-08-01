@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.template.loader import render_to_string
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_protect
 from django.core import serializers
 import json
 
@@ -17,7 +17,7 @@ from forms.forms import DateFilterForm
 
 
 @login_required
-@csrf_exempt
+@csrf_protect
 def portfolio_history(request):
     """
     Render the portfolio page with investment data.
