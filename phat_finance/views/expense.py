@@ -15,7 +15,7 @@ import json
 
 # from django.core.handlers.wsgi import WSGIRequest
 # from requests.sessions import Request
-from forms.forms import DateFilterForm, RedisDataForm
+from forms.forms import DateFilterForm
 # from django.core.cache import cache
 
 from datetime import datetime, timedelta

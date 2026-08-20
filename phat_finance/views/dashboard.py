@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 
 # from django.core.handlers.wsgi import WSGIRequest
 from requests.sessions import Request
-from forms.forms import DateFilterForm, RedisDataForm
+from forms.forms import DateFilterForm
 # from django.core.cache import cache
 
 # from datetime import datetime, timedelta
@@ -35,18 +35,6 @@ else:
 
 @login_required(login_url="/admin/login")
 def dashboard(request: Request):
-    # messages.add_message(request, messages.INFO, "Hello Bro")
-    # messages.add_message(request, messages.INFO, "Hello Bro 2")
-    # message_instance = messages.get_messages(request)
-    # print("messages.get_messages()", message_instance)
-    # print("dir(messages.get_messages())", dir(message_instance))
-    # print("message_instance._prepare_messages()", message_instance._prepare_messages())
-    # print("message_instance._queued_messages()", message_instance._queued_messages)
-    # for item in message_instance._queued_messages:
-    #   print(item.message)
-
-    # print("dir(messages)", dir(messages))
-
     get_values = redis.mget(
         "balance_cash",
         "balance_digital",
@@ -81,19 +69,8 @@ def dashboard(request: Request):
         + funds + saving_month + investment_month
     )
 
-    redis_form: RedisDataForm = RedisDataForm(request.POST)
-
-    if request.method == "POST":
-        if redis_form.is_valid():
-            redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
-            # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
-            # redis_balance_cash:str = redis_form.cleaned_data["balance_cash"]
-            messages.success(request, f"redis_balance_cash -> {redis_balance_cash}")
-            pass
-    message_instance = messages.get_messages(request)
-    print("message_instance._queued_messages()", message_instance._queued_messages)
     try:
-        rendered = render_to_string(
+        rendered : str = render_to_string(
             "dashboard.html",
             {
                 "balance_cash": get_values[0],
@@ -118,8 +95,6 @@ def dashboard(request: Request):
                 "funds": funds,
                 "budget": budget,
                 "cashflow": cashflow,
-                "redis_form": redis_form,
-                "messages": message_instance._queued_messages,
             },
         )
         if rendered:
