@@ -14,5 +14,6 @@ INSTALLED_APPS = [
     "phat_finance",
     "phat_investment",
     "phat_fitness",
+    "redis_ui",
 
 ]

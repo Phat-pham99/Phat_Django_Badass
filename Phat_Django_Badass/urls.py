@@ -8,11 +8,13 @@ from Home.views import home as Homepage
 from phat_finance.views.expense import expense
 from phat_finance.views.dashboard import dashboard
 from phat_investment.views import portfolio_history
+from redis_ui.views import redis_manager
 
 urlpatterns = [
     path("", Homepage, name="home"),
     path("phat_finance/dashboard", dashboard, name="index"),
     path("phat_finance/expense", expense, name="index"),
     path("phat_investment/portfolio", portfolio_history, name="portfolio_history"),
+    path("redis/", redis_manager, name="redis_manager"),
     path("admin/", admin.site.urls),
 ]

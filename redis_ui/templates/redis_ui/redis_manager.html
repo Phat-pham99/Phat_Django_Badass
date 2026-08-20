@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Redis Proxy Interface{% endblock %}
+
+{% block extra_css %}
+<style>
+    .redis-card {
+        border: 1px solid #092e20;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        background: #f6fffa;
+    }
+    .redis-card h2 {
+        margin-top: 0;
+        color: #092e20;
+    }
+    .key-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .key-table th, .key-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+    .key-table th {
+        background: #092e20;
+        color: #fff;
+    }
+    .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        background: #04aa6d;
+        color: white;
+    }
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+    }
+    .tab-btn {
+        padding: 10px 16px;
+        border: none;
+        background: #092e20;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 4px 4px 0 0;
+    }
+    .tab-btn.active {
+        background: #04aa6d;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    code.value-box {
+        display: block;
+        background: #092e20;
+        color: #eafff4;
+        padding: 8px;
+        border-radius: 4px;
+        margin: 8px 0;
+        word-break: break-all;
+        white-space: pre-wrap;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Redis Proxy Interface</h1>
+<p>Admin-only safe operations against Upstash Redis.</p>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="showTab('browse', this)">Browse Keys</button>
+    <button class="tab-btn" onclick="showTab('query', this)">Query</button>
+    <button class="tab-btn" onclick="showTab('set', this)">Set Value</button>
+    <button class="tab-btn" onclick="showTab('delete', this)">Unset</button>
+</div>
+
+<!-- Browse -->
+<div id="browse" class="tab-panel active redis-card">
+    <h2>Browse Keys</h2>
+    <form method="get">
+        <input type="text" name="pattern" value="{{ pattern }}" placeholder="Pattern (e.g. balance_*)">
+        <button type="submit">Search</button>
+    </form>
+    <table class="key-table">
+        <tr><th>Key</th><th>Actions</th></tr>
+        {% for key in keys %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>
+                <button onclick="quickQuery('{{ key|escapejs }}')">Query</button>
+                <button onclick="quickDelete('{{ key|escapejs }}')">Delete</button>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">No keys found.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!-- Query -->
+<div id="query" class="tab-panel redis-card">
+    <h2>Query Key</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="query">
+        {{ query_form.as_p }}
+        <button type="submit">Query</button>
+    </form>
+    {% if key_info %}
+    <div class="redis-card">
+        <p><strong>Key:</strong> {{ key_info.key }}</p>
+        <p><strong>Exists:</strong> {{ key_info.exists }}</p>
+        <p><strong>Type:</strong> <span class="badge">{{ key_info.type }}</span></p>
+        <p><strong>TTL:</strong> {{ key_info.ttl }}s</p>
+        <p><strong>Value:</strong>
+            <code class="value-box" id="value-box">{{ key_info.value }}</code>
+            <button onclick="copyValue()">Copy</button>
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Set -->
+<div id="set" class="tab-panel redis-card">
+    <h2>Set Value</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="set">
+        {{ set_form.as_p }}
+        <button type="submit">Set</button>
+    </form>
+</div>
+
+<!-- Delete -->
+<div id="delete" class="tab-panel redis-card">
+    <h2>Unset (Delete) Key</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete">
+        {{ delete_form.as_p }}
+        <button type="submit" style="background:#c00;color:#fff;">Delete</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (btn) btn.classList.add('active');
+}
+function quickQuery(key) {
+    showTab('query', document.querySelectorAll('.tab-btn')[1]);
+    document.querySelector('#query input[name="key"]').value = key;
+}
+function quickDelete(key) {
+    showTab('delete', document.querySelectorAll('.tab-btn')[3]);
+    document.querySelector('#delete input[name="key"]').value = key;
+}
+function copyValue() {
+    const text = document.getElementById('value-box').textContent;
+    navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+}
+</script>
+{% endblock %}
