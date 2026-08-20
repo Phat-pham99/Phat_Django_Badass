@@ -1,0 +1,73 @@
+{% load humanizelib %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Phat's Django{% endblock %}</title>
+    <style>
+        body {
+            margin-top: 2%;
+            margin-left: 2%;
+            margin-right: 2%;
+            background-color: rgb(255, 255, 255);
+            font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+        h1 { color: navy; margin-left: 20px; size: 50px; }
+        h3 { color: rgb(249, 0, 124); }
+        .topnav {
+            background-color: #092e20;
+            overflow: hidden;
+            margin-left: 2%;
+            margin-right: 2%;
+            position: sticky;
+            top: 0;
+        }
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .topnav a:hover {
+            background-color: #aecfb9;
+            color: black;
+        }
+        .topnav a.active {
+            background-color: #04aa6d;
+            color: white;
+        }
+        .errorlist {
+            color: red;
+            text-shadow: mediumturquoise;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include "partials/nav.html" %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <footer style="text-align: center; margin-top: 20px;">
+        <p>&copy; Phat's Django</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.topnav a').forEach(link => {
+            if (link.href === window.location.href) link.classList.add('active');
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

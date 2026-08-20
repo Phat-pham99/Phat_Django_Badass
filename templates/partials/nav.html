@@ -1,0 +1,10 @@
+<div class="topnav">
+    <a href="/">Home</a>
+    <a href="/phat_finance/dashboard">Dashboard</a>
+    <a href="/phat_finance/expense">Expense History</a>
+    <a href="/phat_investment/portfolio">Investment Portfolio</a>
+    {% if user.is_staff %}
+    <a href="/redis/">Redis Proxy</a>
+    {% endif %}
+    <a href="/admin/" style="float: right;">Admin board</a>
+</div>
