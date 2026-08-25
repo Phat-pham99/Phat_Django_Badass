@@ -21,6 +21,11 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": os.getenv('UPSTASH_REDIS_PASSWORD'),
+            # Upstash does not support CLIENT MAINT_NOTIFICATIONS (RESP3 feature).
+            # redis-py >=7.1 defaults to RESP3 (protocol=3) which tries that command
+            # and logs DEBUG "Failed to enable maintenance notifications".
+            # Force RESP2 to silence it. See https://upstash.com/docs/redis/overall/rediscompatibility
+            "CONNECTION_POOL_KWARGS": {"protocol": 2},
         }
     }
 }
