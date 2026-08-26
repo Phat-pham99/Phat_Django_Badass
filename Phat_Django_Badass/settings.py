@@ -1,8 +1,12 @@
 import os
 from pathlib import Path
 
-from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+from django.contrib.messages import constants as messages
 
 from settings.databases import *
 from settings.general import *
@@ -14,9 +18,6 @@ from settings.middlewares import *
 from settings.security import *
 from settings.sessions import *
 from settings.system_check import SILENCED_SYSTEM_CHECKS
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
