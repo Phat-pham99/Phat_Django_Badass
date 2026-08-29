@@ -1,11 +1,12 @@
-from django.apps import apps
-from django.db import models
-from typing import final
 from datetime import datetime
-from django.db import transaction
-from types import NoneType
 from logging import Logger, getLogger
+from types import NoneType
+from typing import final
+
+from django.apps import apps
+from django.db import models, transaction
 from upstash_redis import Redis
+
 from ..enums.finance_enums import CREDITCARD_ENUM
 
 logger: Logger = getLogger(__name__)
@@ -15,6 +16,7 @@ if redis is None:
     redis = apps.get_app_config("phat_finance").redis_client
 else:
     logger.info("Redis client initialized in phat_finance app config")
+
 
 @final
 class CreditCardPayment(models.Model):
@@ -29,10 +31,7 @@ class CreditCardPayment(models.Model):
         return f"Credit card payment - {self.term}: {self.amount} VND💸"
 
     @transaction.atomic
-    def __pay_creditCard(
-        self,
-        redis_client: Redis,
-        amount: int) -> None:
+    def __pay_creditCard(self, redis_client: Redis, amount: int) -> None:
         """
         Decrease digital 🏧 balance by {amount} on Redis
         """

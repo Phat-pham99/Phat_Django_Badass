@@ -1,7 +1,4 @@
-DIVIDEND_TYPE_ENUM: list[tuple] = [
-    ('cash','cash'),
-    ('stock','stock')
-]
+DIVIDEND_TYPE_ENUM: list[tuple] = [("cash", "cash"), ("stock", "stock")]
 
 INVESTMENT_ENUM: list[tuple] = [
     ("VESAF", "VESAF"),

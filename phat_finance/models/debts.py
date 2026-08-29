@@ -16,6 +16,7 @@ if redis is None:
 else:
     logger.info("Redis client initialized in phat_finance app config")
 
+
 @final
 class Debts(models.Model):
     start_date = models.DateField(auto_now=True, blank=False)
@@ -29,7 +30,10 @@ class Debts(models.Model):
     Let's say these functions are "After-effects" of the saving an object
     So you need to route these functions according to the type of debt
     """
-    def __I_lend_money(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
+
+    def __I_lend_money(
+        self, redis_client: Redis, amount: int, lender: str, borrower: str
+    ) -> None:
         """
         I Lend money to a borrower, decrease balance.digital by amount.
         """
@@ -43,7 +47,9 @@ class Debts(models.Model):
         )
         pipeline.exec()
 
-    def __they_pay_debt(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
+    def __they_pay_debt(
+        self, redis_client: Redis, amount: int, lender: str, borrower: str
+    ) -> None:
         """
         Borrower pays back debt, increase balance.digital by amount.
         """
@@ -57,7 +63,9 @@ class Debts(models.Model):
         )
         pipeline.exec()
 
-    def __I_own_money(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
+    def __I_own_money(
+        self, redis_client: Redis, amount: int, lender: str, borrower: str
+    ) -> None:
         """
         I borrow money to a lender, increase balance.digital by amount.
         """
@@ -66,13 +74,15 @@ class Debts(models.Model):
         pipeline.decrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
-        "last_changes_log",
-        f"I borrowed money from {lender} : \
+            "last_changes_log",
+            f"I borrowed money from {lender} : \
         {'{:,.0f}'.format(float(amount))}",
         )
         pipeline.exec()
 
-    def __I_pay_debt(self, redis_client: Redis, amount: int, lender: str, borrower: str) -> None:
+    def __I_pay_debt(
+        self, redis_client: Redis, amount: int, lender: str, borrower: str
+    ) -> None:
         """
         I pay back debt, decrease balance.digital by amount.
         :param amount money(int)
@@ -83,8 +93,8 @@ class Debts(models.Model):
         pipeline.incrby("debts", amount)
         pipeline.set("last_changes", str(datetime.now()))
         pipeline.set(
-        "last_changes_log",
-        f"I paid debt to {lender} : \
+            "last_changes_log",
+            f"I paid debt to {lender} : \
         {'{:,.0f}'.format(float(amount))}",
         )
         pipeline.exec()
@@ -95,14 +105,14 @@ class Debts(models.Model):
                 redis_client=redis,
                 amount=self.amount,
                 lender=self.lender,
-                borrower=self.borrower
+                borrower=self.borrower,
             )
         elif self.type == "debt" and self.borrower == "Me":
             self.__I_own_money(
                 redis_client=redis,
                 amount=self.amount,
                 lender=self.lender,
-                borrower=self.borrower
+                borrower=self.borrower,
             )
         elif self.type == "pay" and self.borrower == "Me":
             self.__I_pay_debt(

@@ -4,9 +4,9 @@ sys.path.append("..")
 
 from django.contrib import admin
 
+from .models.dividend import Dividend_new
 from .models.investment import Investment
 from .models.track_investment import TrackInvestment
-from .models.dividend import Dividend_new
 
 
 @admin.register(Investment)
@@ -14,9 +14,10 @@ class InvestmentAdmin(admin.ModelAdmin):
     list_display = ("date", "investment_type", "amount")
     search_fields = ("date",)
     list_filter = ("date", "investment_type")
-    ordering = ('-date',)
+    ordering = ("-date",)
     list_per_page = 20
     list_max_show_all = 20
+
 
 @admin.register(TrackInvestment)
 class TrackInvestmentAdmin(admin.ModelAdmin):
@@ -31,9 +32,10 @@ class TrackInvestmentAdmin(admin.ModelAdmin):
         "total",
     )
     list_filter = ("date",)
-    ordering = ('-date',)
+    ordering = ("-date",)
     list_per_page = 20
     list_max_show_all = 20
+
 
 @admin.register(Dividend_new)
 class DividendAdmin(admin.ModelAdmin):

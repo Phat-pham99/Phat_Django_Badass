@@ -1,9 +1,10 @@
-from django.apps import apps
-from django.db import models
-from datetime import datetime
-from django.db import transaction
-from types import NoneType
 import logging
+from datetime import datetime
+from types import NoneType
+
+from django.apps import apps
+from django.db import models, transaction
+
 from ..enums.finance_enums import CONVERSION_ENUM
 
 logger = logging.getLogger(__name__)
@@ -14,11 +15,10 @@ if redis is None:
 else:
     print("Redis client initialized in phat_finance app config")
 
+
 class Conversion(models.Model):
     date = models.DateField(auto_now=True)
-    type_conversion = models.CharField(
-        choices=CONVERSION_ENUM, default="digital_cash"
-    )
+    type_conversion = models.CharField(choices=CONVERSION_ENUM, default="digital_cash")
     amount = models.PositiveIntegerField(blank=False, default=0)
 
     @transaction.atomic
