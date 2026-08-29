@@ -1,10 +1,10 @@
-from django.apps import apps
-from django.db import models
-from datetime import date, datetime
-from django.db import transaction
 import logging
+from datetime import date, datetime
 
+from django.apps import apps
+from django.db import models, transaction
 from django.db.models.options import override
+
 from ..enums.investment_enums import INVESTMENT_ENUM
 
 logger = logging.getLogger(__name__)
@@ -15,16 +15,14 @@ if redis is None:
 else:
     print("Redis client initialized in phat_investment app config")
 
+
 class Investment(models.Model):
     date = models.DateField(default=date.today)
     investment_type = models.CharField(max_length=15, choices=INVESTMENT_ENUM)
     amount = models.PositiveIntegerField(blank=True, default=0)
 
     @transaction.atomic
-    def __invest(
-        self,
-        investment_type: str,
-        amount: int) -> None:
+    def __invest(self, investment_type: str, amount: int) -> None:
         """
         Invest into assets 🪙💹. Deduct balance.digital accordingly
         @param investment_type(str) My current investment \

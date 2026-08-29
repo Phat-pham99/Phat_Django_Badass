@@ -1,19 +1,20 @@
-from django.shortcuts import render
-# import sys
-
-# Create your views here.
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
-from django.template.loader import render_to_string
-from django.template import loader
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect
-from django.core import serializers
 import json
 
-from .models.track_investment import TrackInvestment
-from .models.investment import Investment
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.http import HttpResponse, HttpResponseNotFound
+
+# import sys
+# Create your views here.
+from django.shortcuts import render
+from django.template import loader
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_protect
+
 from forms.forms import DateFilterForm
+
+from .models.investment import Investment
+from .models.track_investment import TrackInvestment
 
 
 @login_required
