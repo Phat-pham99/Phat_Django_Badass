@@ -17,8 +17,7 @@ from .models.investment import Investment
 from .models.track_investment import TrackInvestment
 
 
-@login_required
-@csrf_protect
+@login_required(login_url="/admin/login")
 def portfolio_history(request):
     """
     Render the portfolio page with investment data.

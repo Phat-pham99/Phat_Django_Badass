@@ -1,202 +1,81 @@
-{% load humanizelib %}
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <style>
-            body {
-                background-color: rgb(255, 255, 255);
-                font-family:
-                    Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            }
-            h1 {
-                color: navy;
-                margin-left: 20px;
-            }
-            table,
-            tr,
-            th,
-            td {
-                width: 30%;
-                height: 30%;
-                padding: 10px;
-                text-align: center;
-                border-collapse: collapse;
-                background-color: rgb(255, 255, 255);
-                border: 2px solid black;
-            }
-            .row {
-                display: flex;
-            }
-            form {
-                position: sticky;
-                top: 10px;
-                bottom: 20px; /* Adjust as needed - distance from the bottom */
-                left: 20px; /* Or right: 20px; for the other side */
-                margin: 20px;
-                padding: 10px;
-                border: 1px solid #000000;
-                line-height: 170%;
-                text-size-adjust: 12px;
-                background-color: #d1ffd9;
-                border: none;
-                cursor: pointer;
-                border-radius: 5px;
-            }
-            .topnav {
-                background-color: #092e20;
-                overflow: hidden;
-                margin-left: 2%;
-                margin-right: 2%;
-                margin-top: None;
-                position: sticky;
-                top: 0;
-            }
-            .topnav a {
-                float: left;
-                color: #f2f2f2;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: 17px;
-            }
-            .topnav a:hover {
-                background-color: #aecfb9;
-                color: black;
-            }
-            .topnav a.active {
-                background-color: #04aa6d;
-                color: white;
-            }
-        </style>
-        <title>Phat Expenses Dashboard</title>
-    </head>
-    <body>
-        <div class="topnav">
-            <a href="/">Home</a>
-            <a href="/phat_finance/dashboard">Dashboard</a>
-            <a href="/phat_finance/expense">Expense History</a>
-            <a href="/phat_investment/portfolio">Investment Portfolio</a>
-            <a href="/admin/" style="float: right">Admin board</a>
-        </div>
-        <h1>Phat Expenses Dashboard</h1>
-        <p>Welcome to your expenses dashboard!</p>
+{% extends "base.html" %}
 
+{% load humanizelib %}
+
+{% block title %}Phat Expenses Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Phat Expenses Dashboard</h1>
+    <p>
         {% if start_date and end_date %}
-        <p>Expenses from {{ start_date }} to {{ end_date }}</p>
+            Expenses from {{ start_date }} to {{ end_date }}
         {% elif date %}
-        <p>Expenses for {{ date }}</p>
+            Expenses for {{ date }}
         {% else %}
-        <p>All expenses</p>
-        {% endif %} {% if json_data %}
-        <div style="width: 100%" class="row">
-            <div class="col" style="width: 50%">
-                <table style="align-self: center">
+            All expenses
+        {% endif %}
+    </p>
+
+    <form method="post" class="filter-form">
+        {% csrf_token %}
+        {{ date_filter }}
+        <button type="submit" class="btn">Submit</button>
+    </form>
+
+    {% if json_data %}
+        <div class="card" style="padding: 0; overflow-x: auto;">
+            <table>
+                <thead>
                     <tr>
                         <th>date</th>
-                        <th>cash ({{total_cash}})</th>
-                        <th>digital ({{total_digital}})</th>
-                        <th>credit ({{total_credit}})</th>
+                        <th>cash ({{ total_cash }})</th>
+                        <th>digital ({{ total_digital }})</th>
+                        <th>credit ({{ total_credit }})</th>
                         <th>category</th>
                         <th>description</th>
                     </tr>
+                </thead>
+                <tbody>
                     {% for item in json_data %}
-                    <tr>
-                        <th>{{ item.fields.date }}</th>
-                        <th style="background: #ffc4c4">
-                            {{ item.fields.cash }}
-                        </th>
-                        <th style="background: #c7ffd8">
-                            {{ item.fields.digital }}
-                        </th>
-                        <th style="background: #d1e3ff">
-                            {{ item.fields.credit }}
-                        </th>
-                        {% if item.fields.category == 'dating 😘😻💌' %}
-                        <th style="background: rgb(255, 104, 155)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'food_drink 🍔🍜☕' %}
-                        <th style="background: rgb(255, 98, 41)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'grocery 🛒🥦🥩' %}
-                        <th style="background: rgb(0, 119, 0)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'medical 💊🧑‍⚕️🩺' %}
-                        <th style="background: lightskyblue">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'bikecare 🏍️🛣️🧑‍🔧' %}
-                        <th style="background: rgb(36, 95, 115)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'haircut 💇‍♂️💈👱' %}
-                        <th style="background: rgb(146, 198, 185)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'gas ⛽⚡🚛' %}
-                        <th style="background: rgb(134, 74, 255)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'subscriptions💳💸🏦' %}
-                        <th style="background: purple">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'utility' %}
-                        <th style="background: rgb(255, 255, 192)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'insurance' %}
-                        <th style="background: rgb(109, 53, 83)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'donation 🧧💸🫂' %}
-                        <th style="background: rgb(255, 223, 195)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% elif item.fields.category == 'gifts🎁💌💐' %}
-                        <th style="background: rgb(255, 115, 99)">
-                            {{ item.fields.category }}
-                        </th>
-                        {% else %}
-                        <th style="background: rgb(202, 202, 202)">
-                            others🙄😏
-                        </th>
-                        {% endif %}
-                        <th>{{ item.fields.description }}</th>
-                    </tr>
-                    {% endfor %} {% endif %}
-                </table>
-            </div>
-            <div class="col" style="width: 50%">
-                <form method="post" style="width: 50%">
-                    {{ date_filter }}
-                    <input
-                        type="submit"
-                        value="Submit"
-                        style="
-                            padding: 5px;
-                            background-color: #4caf50;
-                            color: white;
-                            border: none;
-                        "
-                    />
-                </form>
-            </div>
+                        <tr>
+                            <td>{{ item.fields.date }}</td>
+                            <td style="background: #ffc4c4">{{ item.fields.cash }}</td>
+                            <td style="background: #c7ffd8">{{ item.fields.digital }}</td>
+                            <td style="background: #d1e3ff">{{ item.fields.credit }}</td>
+                            {% if item.fields.category == 'dating 😘😻💌' %}
+                                <td style="background: rgb(255, 104, 155)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'food_drink 🍔🍜☕' %}
+                                <td style="background: rgb(255, 98, 41)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'grocery 🛒🥦🥩' %}
+                                <td style="background: rgb(0, 119, 0)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'medical 💊🧑‍⚕️🩺' %}
+                                <td style="background: lightskyblue">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'bikecare 🏍️🛣️🧑‍🔧' %}
+                                <td style="background: rgb(36, 95, 115)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'haircut 💇‍♂️💈👱' %}
+                                <td style="background: rgb(146, 198, 185)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'gas ⛽⚡🚛' %}
+                                <td style="background: rgb(134, 74, 255)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'subscriptions💳💸🏦' %}
+                                <td style="background: purple">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'utility' %}
+                                <td style="background: rgb(255, 255, 192)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'insurance' %}
+                                <td style="background: rgb(109, 53, 83)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'donation 🧧💸🫂' %}
+                                <td style="background: rgb(255, 223, 195)">{{ item.fields.category }}</td>
+                            {% elif item.fields.category == 'gifts🎁💌💐' %}
+                                <td style="background: rgb(255, 115, 99)">{{ item.fields.category }}</td>
+                            {% else %}
+                                <td style="background: rgb(202, 202, 202)">others🙄😏</td>
+                            {% endif %}
+                            <td>{{ item.fields.description }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </body>
-    <footer style="text-align: center; margin-top: 20px">
-        <!-- <a href="/">Home</a>
-        <a href="/phat_finance/dashboard">Dashboard</a> -->
-        <p>&copy; Phat's Django</p>
-    </footer>
-    <script>
-        document.querySelectorAll(".topnav a").forEach((link) => {
-            if (link.href === window.location.href) {
-                link.classList.add("active");
-            }
-        });
-    </script>
-</html>
+    {% else %}
+        <p>No expenses found.</p>
+    {% endif %}
+{% endblock %}
