@@ -28,25 +28,25 @@ class Conversion(models.Model):
         """
         if type_conversion == "digital📲_cash💵":
             pipeline = redis.multi()
-            pipeline.incrby("balance_cash", amount)
-            pipeline.decrby("balance_digital", amount)
-            pipeline.mset(
-                {
-                    "last_changes": str(datetime.now()),
-                    "last_changes_log": f"{type_conversion} : {'{:,.0f}'.format(float(amount))}",
-                }
-            )
+pipeline.incrby("phat_finance:balance_cash", amount)
+        pipeline.decrby("phat_finance:balance_digital", amount)
+        pipeline.mset(
+            {
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"{type_conversion} : {'{:,.0f}'.format(float(amount))}",
+            }
+        )
             pipeline.exec()
         else:
             pipeline = redis.multi()
-            pipeline.incrby("balance_digital", amount)
-            pipeline.decrby("balance_cash", amount)
-            pipeline.mset(
-                {
-                    "last_changes": str(datetime.now()),
-                    "last_changes_log": f"{type_conversion} : {'{:,.0f}'.format(float(amount))}",
-                }
-            )
+pipeline.incrby("phat_finance:balance_digital", amount)
+        pipeline.decrby("phat_finance:balance_cash", amount)
+        pipeline.mset(
+            {
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"{type_conversion} : {'{:,.0f}'.format(float(amount))}",
+            }
+        )
             pipeline.exec()
 
     def save(self, *args, **kargs):

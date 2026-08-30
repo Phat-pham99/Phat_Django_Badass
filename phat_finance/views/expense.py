@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.http import (
     HttpResponse,
     HttpResponseNotFound,
-    # HttpResponseRedirect,
     HttpResponseServerError,
+    HttpResponseBadRequest,
 )
 # from django.template.loader import render_to_string
 # from django.contrib import messages
@@ -45,6 +45,23 @@ def expense(request):
     start_date: str = request.GET.get("start_date", None)
     end_date: str = request.GET.get("end_date", None)
     category: str = request.GET.get("category", None)
+
+    if date:
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            return HttpResponseBadRequest("Invalid date format. Use YYYY-MM-DD.")
+    if start_date:
+        try:
+            datetime.strptime(start_date, "%Y-%m-%d")
+        except ValueError:
+            return HttpResponseBadRequest("Invalid start_date format. Use YYYY-MM-DD.")
+    if end_date:
+        try:
+            datetime.strptime(end_date, "%Y-%m-%d")
+        except ValueError:
+            return HttpResponseBadRequest("Invalid end_date format. Use YYYY-MM-DD.")
+
     today: datetime = datetime.now()
     yesterday: datetime = today - timedelta(days=1)
 

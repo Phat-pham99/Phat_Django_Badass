@@ -75,8 +75,9 @@
             border: none;
             ">
             </form>
-        </div>
-    <footer style="text-align: center; margin-top: 20px;">
+         </div>
+     {{ portfolio_data|json_script:"portfolio-data" }}
+     <footer style="text-align: center; margin-top: 20px;">
         <p>&copy; Phat's Django</p>
     </footer>
     <script>
@@ -85,9 +86,8 @@
             link.classList.add('active');
         }
     });
-    let portfolio_data1 = "{{ portfolio_data|safe }}";
-    portfolio_data1 = portfolio_data1.replace(/'/g, '"');
-    let portfolio_data = JSON.parse(portfolio_data1);
+    let portfolio_data1 = JSON.parse(document.getElementById('portfolio-data').textContent);
+    let portfolio_data = portfolio_data1;
     console.log(portfolio_data);
     console.log(typeof portfolio_data);
     console.log(portfolio_data['date']);

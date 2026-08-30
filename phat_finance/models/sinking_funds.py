@@ -26,15 +26,15 @@ class SinkingFund(models.Model):
             Deposit money to Sinking fund 💰, fund up and balance 💵 down by amount.
             """
             pipeline = redis.multi()
-            pipeline.decrby("balance_digital", amount)
-            pipeline.incrby("sinking_fund", amount)
-            pipeline.mset(
-                {
-                    "last_changes": str(datetime.now()),
-                    "last_changes_log": f"Sinking fund deposited : \
-                        {'{:,.0f}'.format(float(amount))}",
-                }
-            )
+pipeline.decrby("phat_finance:balance_digital", amount)
+        pipeline.incrby("phat_finance:sinking_fund", amount)
+        pipeline.mset(
+            {
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Sinking fund deposited : \
+                    {'{:,.0f}'.format(float(amount))}",
+            }
+        )
             pipeline.exec()
 
         @transaction.atomic
@@ -43,15 +43,15 @@ class SinkingFund(models.Model):
             Withdraw money from Sinking fund 💰, fund down and balance 💵 up by amount.
             """
             pipeline = redis.multi()
-            pipeline.incrby("balance_digital", amount)
-            pipeline.decrby("sinking_fund", amount)
-            pipeline.mset(
-                {
-                    "last_changes": str(datetime.now()),
-                    "last_changes_log": f"Emergency fund withdrawn : \
-                        {'{:,.0f}'.format(float(amount))}",
-                }
-            )
+pipeline.incrby("phat_finance:balance_digital", amount)
+        pipeline.decrby("phat_finance:sinking_fund", amount)
+        pipeline.mset(
+            {
+                "phat_finance:last_changes": str(datetime.now()),
+                "phat_finance:last_changes_log": f"Sinking fund withdrawn : \
+                    {'{:,.0f}'.format(float(amount))}",
+            }
+        )
             pipeline.exec()
 
         if self.type == "deposite":
