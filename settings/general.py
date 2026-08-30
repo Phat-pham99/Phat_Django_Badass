@@ -20,6 +20,7 @@ DJANGO_ADMIN_LOGS_ENABLED = False # Always FALSE, please
 X_FRAME_OPTIONS = "SAMEORIGIN"
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 STORAGES = {
     "staticfiles": {

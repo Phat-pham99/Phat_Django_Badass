@@ -1,174 +1,59 @@
+{% extends "base.html" %}
+
 {% load humanizelib %}
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    />
+
+{% block title %}Phat Portfolio Dashboard{% endblock %}
+
+{% block extra_head %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <style>
-        body {
-            margin-top:2%;
-            margin-left: 2%;
-            margin-right: 2%;
-            background-color: rgb(255, 255, 255);
-            font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-        }
-        form {
-            position: sticky; /* Needed for sticcky position*/
-            bottom: 20px; /* Needed for sticcky position*/
-            left: 20px;
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #000000;
-            line-height: 170%;
-            text-size-adjust: 12px;
-            background-color: #ff8a53;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px
-        }
-        .topnav {
-        background-color: #092e20;
-        overflow: hidden;
-        margin-left: 2%;
-        margin-right: 2%;
-        margin-top: None;
-        position: sticky;
-        }
-        .topnav a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-        }
-        .topnav a:hover {
-        background-color: #aecfb9;
-        color: black;
-        }
-        .topnav a.active {
-        background-color: #04AA6D;
-        color: white;
-        }
-    </style>
-</head>
-<body>
-    <div class="topnav">
-        <a href="/">Home</a>
-        <a href="/phat_finance/dashboard">Dashboard</a>
-        <a href="/phat_finance/expense">Expense History</a>
-        <a href="/phat_investment/portfolio">Investment Portfolio</a>
-        <a href="/admin/" style="float: right;">Admin board</a>
-    </div>
+{% endblock %}
+
+{% block content %}
     <h1>Phat Portfolio track Dashboard</h1>
-        <div>
-            <canvas id="portfolioChart" style="width: 100%; height: 800px;"></canvas>
-        </div>
-        <div>
-            <form method="post" style="width:20%; height: 15%">
-            {{ date_filter }}
-            <input type="submit" value="Submit" style="
-            padding: 5px; background-color: #4CAF50; color: white;
-            border: none;
-            ">
-            </form>
-        </div>
-    <footer style="text-align: center; margin-top: 20px;">
-        <p>&copy; Phat's Django</p>
-    </footer>
+
+    <div class="card">
+        <canvas id="portfolioChart" style="width: 100%; height: 500px;"></canvas>
+    </div>
+
+    <form method="post" class="filter-form">
+        {% csrf_token %}
+        {{ date_filter }}
+        <button type="submit" class="btn">Submit</button>
+    </form>
+{% endblock %}
+
+{% block extra_scripts %}
     <script>
-    document.querySelectorAll('.topnav a').forEach(link => {
-        if (link.href === window.location.href) {
-            link.classList.add('active');
-        }
-    });
-    let portfolio_data1 = "{{ portfolio_data|safe }}";
-    portfolio_data1 = portfolio_data1.replace(/'/g, '"');
-    let portfolio_data = JSON.parse(portfolio_data1);
-    console.log(portfolio_data);
-    console.log(typeof portfolio_data);
-    console.log(portfolio_data['date']);
-    const data = {
-    labels: portfolio_data['date'],
-    datasets: [
-        {
-        label: 'acbs',
-        data: portfolio_data['acbs'],
-        borderColor: "#86ff36",
-        pointStyle: 'circle',
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false,
-        },
-        {
-        label: 'mio',
-        data: portfolio_data['mio'],
-        borderColor: "#969696",
-        pointStyle: 'circle',
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false,
-        },
-        {
-        label: 'dragon',
-        data: portfolio_data['dragon'],
-        borderColor: "#005709",
-        pointStyle: 'circle',
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false,
-        },
-        {
-        label: 'ssi',
-        data: portfolio_data['ssi'],
-        borderColor: "#ff0000",
-        pointStyle: 'circle',
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false,
-        },
-        {
-        label: 'idle_cash',
-        data: portfolio_data['idle_cash'],
-        borderColor: "#b08e07",
-        pointStyle: 'circle',
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false,
-        },
-        {
-        label: 'crypto',
-        data: portfolio_data['crypto'],
-        borderColor: "#49047a",
-        pointStyle: 'circle',
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        fill: false,
-        },
-    ]
-    };
-    const config = {
-    type: 'line',
-    data: data,
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                stacked: false
+        let portfolio_data1 = "{{ portfolio_data|safe }}";
+        portfolio_data1 = portfolio_data1.replace(/'/g, '"');
+        let portfolio_data = JSON.parse(portfolio_data1);
+        const data = {
+            labels: portfolio_data['date'],
+            datasets: [
+                { label: 'acbs', data: portfolio_data['acbs'], borderColor: "#86ff36", pointStyle: 'circle', pointRadius: 1, pointHoverRadius: 5, fill: false },
+                { label: 'mio', data: portfolio_data['mio'], borderColor: "#969696", pointStyle: 'circle', pointRadius: 1, pointHoverRadius: 5, fill: false },
+                { label: 'dragon', data: portfolio_data['dragon'], borderColor: "#005709", pointStyle: 'circle', pointRadius: 1, pointHoverRadius: 5, fill: false },
+                { label: 'ssi', data: portfolio_data['ssi'], borderColor: "#ff0000", pointStyle: 'circle', pointRadius: 1, pointHoverRadius: 5, fill: false },
+                { label: 'idle_cash', data: portfolio_data['idle_cash'], borderColor: "#b08e07", pointStyle: 'circle', pointRadius: 1, pointHoverRadius: 5, fill: false },
+                { label: 'crypto', data: portfolio_data['crypto'], borderColor: "#49047a", pointStyle: 'circle', pointRadius: 1, pointHoverRadius: 5, fill: false },
+            ]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: { y: { stacked: false } },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Portfolio Value Over Time',
+                        fontSize: 22,
+                        fontColor: "#1f2d27"
+                    }
+                }
             }
-        },
-        plugins: {
-        title: {
-            display: true,
-            text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
-        }
-        }
-    }
-    };
-    new Chart("portfolioChart", config);
+        };
+        new Chart("portfolioChart", config);
     </script>
-</body>
-</html>
+{% endblock %}
