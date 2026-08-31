@@ -9,6 +9,27 @@
     --border: #e3e8e5;
     --shadow: 0 1px 3px rgba(9, 46, 32, 0.08),
         0 4px 12px rgba(9, 46, 32, 0.06);
+    --table-header: #f0f4f2;
+    --table-even: #fafbfa;
+    --table-hover: #eef6f1;
+    --input-bg: #ffffff;
+}
+
+:root.dark-mode {
+    --bg: #1a1a1a;
+    --nav-bg: #0d1f16;
+    --nav-hover: #2d5a41;
+    --accent: #04aa6d;
+    --ink: #e8e8e8;
+    --muted: #a0a0a0;
+    --card: #2a2a2a;
+    --border: #404040;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+    --table-header: #2d2d2d;
+    --table-even: #252525;
+    --table-hover: #303030;
+    --input-bg: #333333;
 }
 
 * {
@@ -105,7 +126,7 @@ table {
     font-size: 14px;
 }
 thead th {
-    background-color: #f0f4f2;
+    background-color: var(--table-header);
     color: var(--ink);
     text-align: left;
     padding: 10px 12px;
@@ -120,10 +141,10 @@ tbody th {
     vertical-align: middle;
 }
 tbody tr:nth-child(even) {
-    background-color: #fafbfa;
+    background-color: var(--table-even);
 }
 tbody tr:hover {
-    background-color: #eef6f1;
+    background-color: var(--table-hover);
 }
 
 /* ---------- Forms / buttons ---------- */
@@ -152,6 +173,8 @@ form.filter-form select {
     border-radius: 8px;
     font-size: 14px;
     font-family: inherit;
+    background-color: var(--input-bg);
+    color: var(--ink);
 }
 .btn {
     padding: 9px 18px;
@@ -187,6 +210,23 @@ footer {
     padding: 16px;
     color: var(--muted);
     font-size: 13px;
+}
+
+/* ---------- Dark mode toggle ---------- */
+.dark-mode-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink);
+    background-color: var(--card);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    margin-left: 10px;
+}
+.dark-mode-toggle:hover {
+    background-color: var(--border);
 }
 
 .messages {

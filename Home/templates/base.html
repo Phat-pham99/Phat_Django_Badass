@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}Phat's Django{% endblock %}</title>
-        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}?v={{ now|date:"U" }}">
         {% block extra_head %}{% endblock %}
     </head>
     <body>
@@ -14,13 +14,14 @@
             <a href="/phat_finance/expense">Expense History</a>
             <a href="/phat_investment/portfolio">Investment Portfolio</a>
             <a href="/admin/" class="right">Admin board</a>
+            <button id="darkModeToggle" class="dark-mode-toggle right">🌙 Dark Mode</button>
         </nav>
 
         <div class="container">{% block content %}{% endblock %}</div>
 
         <footer>&copy; Phat's Django</footer>
 
-        <script src="{% static 'js/base.js' %}"></script>
+        <script src="{% static 'js/base.js' %}?v={{ now|date:"U" }}"></script>
         {% block extra_scripts %}{% endblock %}
     </body>
 </html>
