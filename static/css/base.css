@@ -147,6 +147,32 @@ tbody tr:hover {
     background-color: var(--table-hover);
 }
 
+/* ---------- Dashboard table – fixed columns ---------- */
+.dashboard-table {
+    table-layout: fixed;
+    width: 100%;
+}
+.dashboard-table td {
+    width: 25%;
+    vertical-align: top;
+    overflow: hidden;
+}
+.dashboard-table td h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+.dashboard-table .hidden-text {
+    margin: 4px 0 0;
+    min-height: 1.4em;
+    font-variant-numeric: tabular-nums;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    /* reserve space so toggling ******** <-> long log doesn't reflow columns */
+    display: block;
+}
+
 /* ---------- Forms / buttons ---------- */
 form.filter-form {
     background-color: var(--card);

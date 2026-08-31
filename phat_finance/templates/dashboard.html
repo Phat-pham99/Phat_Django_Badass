@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load static %}
 {% load humanizelib %}
 
 {% block title %}Phat Finance Dashboard{% endblock %}
@@ -11,14 +12,6 @@
 {% block content %}
     <h1>Phat Finance Dashboard</h1>
     <p>Welcome to my personal finance dashboard!</p>
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
     <div class="row" style="margin-bottom: 24px;">
         <div class="col">
@@ -61,28 +54,21 @@
 
     <div class="row">
         <div class="col card">
+            <div><h1>Expense This month Overview</h1></div>
             <canvas id="DoughnutExpense"></canvas>
         </div>
+
         <div class="col card">
+            <div><h1>Budget Allocation Overview</h1></div>
             <canvas id="DoughnutBudget"></canvas>
         </div>
     </div>
 {% endblock %}
 
 {% block extra_scripts %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
     <script>
-        const remaining = parseInt("{{ expensable | safe }}") -
-            (parseInt("{{ expense_cash | safe }}") + parseInt("{{ expense_digital | safe }}") + parseInt("{{ expense_credit | safe }}"));
-        if (remaining < 0) {
-            window.alert("Expensable exceeded");
-        }
-        const xDoughnutExpense = ["expense_cash", "expense_digital", "expense_credit", "remaining"];
-        const yDoughnutExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}",
-                            "{{ expense_credit | safe }}", remaining];
-        const DoughnutExpenseColors = ["#ff96a4", "#ccffcc","#96bfff"];
-        const xDoughnutBudget = ["necessity", "pleasure","saving_month", "investment_month",
-                            "rent", "vacation", "funds", "cashflow"]
-        const yDoughnutBudget = [
+        main(
             "{{ necessity | safe }}",
             "{{ pleasure | safe }}",
             "{{ saving_month | safe }}",
@@ -90,97 +76,12 @@
             "{{ rent | safe }}",
             "{{ vacation | safe }}",
             "{{ funds | safe }}",
-            "{{ cashflow | safe }}"
-            ]
-        const DoughnutBudgetColors = ["#ff2929", "#0047c9","#69ff7a", "pink",
-            "#ff8e4d", "#73e3ff", "#9e3dff", "#fff878"];
-
-        new Chart("DoughnutExpense", {
-        type: "doughnut",
-        data: {
-            labels: xDoughnutExpense,
-            datasets: [{
-            backgroundColor: DoughnutExpenseColors,
-            data: yDoughnutExpense
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: "Expense This month Overview",
-                fontSize: 30,
-                fontColor: "black",
-                fontFamily: "Consolas, monospace"
-            },
-            legend: {
-                display: true,
-                position: "right"
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.labels[tooltipItem.index] || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        " (" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + " %)";
-                        return label;
-                    }
-                }
-            }
-        }
-        });
-
-        new Chart("DoughnutBudget", {
-        type: "doughnut",
-        data: {
-            labels: xDoughnutBudget,
-            datasets: [{
-            backgroundColor: DoughnutBudgetColors,
-            data: yDoughnutBudget
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: "Budget Allocation Overview",
-                fontSize: 30,
-                fontColor: "black",
-                fontFamily: "Consolas, monospace"
-            },
-            legend: {
-                display: true,
-                position: "right"
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.labels[tooltipItem.index] || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        " (" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + " %)";
-                        return label;
-                    }
-                }
-            }
-        }
-        });
-
-        function toggleText(elementId) {
-            const els = document.getElementsByClassName(elementId);
-            Object.entries(els).forEach(([ _, value]) => {
-                if (!value.dataset.original) return;
-                if (value.textContent === '********') {
-                    value.textContent = value.dataset.original;
-                } else {
-                    value.textContent = '********';
-                }
-            });
-        }
+            "{{ cashflow | safe }}",
+            "{{ expensable | safe }}",
+            "{{ expense_cash | safe }}",
+            "{{ expense_digital | safe }}",
+            "{{ expense_credit | safe }}",
+            "{{ budget | safe }}"
+        )
     </script>
 {% endblock %}
