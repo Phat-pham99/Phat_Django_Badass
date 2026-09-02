@@ -1,227 +1,74 @@
+{% extends "base.html" %}
+
+{% load static %}
 {% load humanizelib %}
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-        />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-        <style>
-        body {
-            margin-top:2%;
-            margin-left: 2%;
-            margin-right: 2%;
-            background-color: rgb(255, 255, 255);
-            font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-        }
-        h1 {
-            color: navy;
-            margin-left: 20px;
-            size: 50px;
-        }
-        h3 {
-            color: rgb(249, 0, 124);
-        }
-        p {
-            text-size-adjust: 10px;
-        }
-        table, th, td  {
-            width: 8%;
-            height: 10%;
-            padding: 5px;
-            text-align: center;
-            border-collapse: collapse;
-            background-color: rgb(250, 255, 253);
-            border:1px solid black;
-        }
-        canvas{
-            border: none;
-            width: 100%;
-        }
-        .row{
-            display: flex
-        }
-        .topnav {
-        background-color: #092e20;
-        overflow: hidden;
-        margin-left: 2%;
-        margin-right: 2%;
-        margin-top: None;
-        position: sticky;
-        }
-        .topnav a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-        }
-        .topnav a:hover {
-        background-color: #aecfb9;
-        color: black;
-        }
-        .topnav a.active {
-        background-color: #04AA6D;
-        color: white;
-        }
-        .errorlist {
-          color: red;
-          text-shadow: mediumturquoise;
-        }
-        </style>
-        <title>Phat Finance Dashboard</title>
-    </head>
-<body>
-    <div class="topnav">
-        <a href="/">Home</a>
-        <a href="/phat_finance/dashboard">Dashboard</a>
-        <a href="/phat_finance/expense">Expense History</a>
-        <a href="/phat_investment/portfolio">Investment Portfolio</a>
-        <a href="/admin/" style="float: right;">Admin board</a>
-    </div>
+
+{% block title %}Phat Finance Dashboard{% endblock %}
+
+{% block extra_head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+{% endblock %}
+
+{% block content %}
     <h1>Phat Finance Dashboard</h1>
     <p>Welcome to my personal finance dashboard!</p>
-    <div>
 
-      {% if messages %}
-      <ul class="messages">
-          {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-      </ul>
-      {% endif %}
-
-        <div class="row table-container">
-            <table class="dashboard-table" style="width:90%">
-                <tr>
-                    <td><h3>expense_cash : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ expense_cash|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>expense_digital : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ expense_digital|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>expense_credit : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ expense_credit|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><button onclick="toggleText('hidden-text')",
-                        style="background-color: #04AA6D; color: white;
-                        border: none; cursor: pointer; padding: 10px;">
-                        <i class="fa fa-eye"></i>
-                        <span>Toggle hide</span>
-                    </button></td>
-                </tr>
-                <tr>
-                    <td><h3>balance_cash : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ balance_cash|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>balance_digital : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ balance_digital|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>assets: </h3>
-                        <p class="hidden-text"
-                        data-original="{{ assets|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td></td>
-                </tr>
-                <tr class="base-table">
-                    <td><h3>emergency_fund : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ emergency_fund|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>sinking_fund : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ sinking_fund|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>total_investment : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ total_investment|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td><h3>total_debt : </h3>
-                        <p class="hidden-text"
-                        data-original="{{ total_debt|floatformat:0|intcomma }}">********</p>
-                    </td>
-                </tr>
-                <tr class="base-table">
-                    <td><h3>Expensable this month:</h3>
-                        <p class="hidden-text"
-                        data-original="{{ expensable|floatformat:0|intcomma }}">********</p>
-                    </td>
-                    <td>
-                        <h3>Salary this month:</h3>
-                        <p class="hidden-text" data-original="{{ budget|floatformat:0|intcomma }}">********</p>
-                    </td>
-
-                    <th><h3>last_changes : </h3>
-                        <p class="hidden-text" data-original="{{ last_changes }}">********</p>
-                    </th>
-                    <th><h3>last_changes_log : </h3>
-                        <p class="hidden-text" data-original="{{ last_changes_log }}">********</p>
-                    </th>
-                </tr>
-            </table>
-
-        <div
-          class="form-container"
-          style="
-          border-radius: 0.5%;
-          background-color: royalblue;
-          border-color: black;
-          border-style: solid;
-          ">
-        <form method="post"
-          style="
-          align-items: center;
-          "
-        >
-            {% csrf_token %}
-            {{ redis_form.as_p }}  {# or form.as_table, form.as_ul #}
-            <input type="submit" value="Submit" style="align-items: center;">
-        </form>
-      </div>
-    </div>
-
-        <div style="width:100%;" class="row">
-            <div class="col" style="width:50%;" >
-                <canvas id="DoughnutExpense" style="width:100%"></canvas>
-            </div>
-            <div class="col" style="width:50%;" >
-                <canvas id="DoughnutBudget" style="width:100%"></canvas>
+    <div class="row" style="margin-bottom: 24px;">
+        <div class="col">
+            <div class="card">
+                <table class="dashboard-table">
+                    <tbody>
+                        <tr>
+                            <td><h3>expense_cash</h3><p class="hidden-text" data-original="{{ expense_cash|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>expense_digital</h3><p class="hidden-text" data-original="{{ expense_digital|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>expense_credit</h3><p class="hidden-text" data-original="{{ expense_credit|floatformat:0|intcomma }}">********</p></td>
+                            <td style="vertical-align: middle;">
+                                <button onclick="toggleText('hidden-text')" class="btn" style="background-color: var(--accent);">
+                                    <span>Toggle hide</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><h3>balance_cash</h3><p class="hidden-text" data-original="{{ balance_cash|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>balance_digital</h3><p class="hidden-text" data-original="{{ balance_digital|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>assets</h3><p class="hidden-text" data-original="{{ assets|floatformat:0|intcomma }}">********</p></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><h3>emergency_fund</h3><p class="hidden-text" data-original="{{ emergency_fund|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>sinking_fund</h3><p class="hidden-text" data-original="{{ sinking_fund|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>total_investment</h3><p class="hidden-text" data-original="{{ total_investment|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>total_debt</h3><p class="hidden-text" data-original="{{ total_debt|floatformat:0|intcomma }}">********</p></td>
+                        </tr>
+                        <tr>
+                            <td><h3>Expensable this month</h3><p class="hidden-text" data-original="{{ expensable|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>Salary this month</h3><p class="hidden-text" data-original="{{ budget|floatformat:0|intcomma }}">********</p></td>
+                            <td><h3>last_changes</h3><p class="hidden-text" data-original="{{ last_changes }}">********</p></td>
+                            <td><h3>last_changes_log</h3><p class="hidden-text" data-original="{{ last_changes_log }}">********</p></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    <footer style="text-align: center; margin-top: 20px;">
-        <p>&copy; Phat's Django</p>
-    </footer>
+    </div>
+
+    <div class="row">
+        <div class="col card">
+            <div><h1>Expense This month Overview</h1></div>
+            <canvas id="DoughnutExpense"></canvas>
+        </div>
+
+        <div class="col card">
+            <div><h1>Budget Allocation Overview</h1></div>
+            <canvas id="DoughnutBudget"></canvas>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
     <script>
-
-        document.querySelectorAll('.topnav a').forEach(link => {
-            if (link.href === window.location.href) {
-                link.classList.add('active');
-            }
-        });    document.querySelectorAll('.topnav a').forEach(link => {
-            if (link.href === window.location.href) {
-                link.classList.add('active');
-            }
-        });
-
-        const remaining = parseInt("{{ expensable | safe }}") -
-        (parseInt("{{ expense_cash | safe }}") + parseInt("{{ expense_digital | safe }}") + parseInt("{{ expense_credit | safe }}"));
-        if (remaining < 0) {
-            window.alert("Expensable exceeded");
-        }
-        const xDoughnutExpense = ["expense_cash", "expense_digital", "expense_credit", "remaining"];
-        const yDoughnutExpense = ["{{ expense_cash | safe }}","{{ expense_digital | safe }}",
-                            "{{ expense_credit | safe }}", remaining];
-        const DoughnutExpenseColors = ["#ff96a4", "#ccffcc","#96bfff"];
-        const xDoughnutBudget = ["necessity", "pleasure","saving_month", "investment_month",
-                            "rent", "vacation", "funds", "cashflow"]
-        const yDoughnutBudget = [
+        main(
             "{{ necessity | safe }}",
             "{{ pleasure | safe }}",
             "{{ saving_month | safe }}",
@@ -229,99 +76,12 @@
             "{{ rent | safe }}",
             "{{ vacation | safe }}",
             "{{ funds | safe }}",
-            "{{ cashflow | safe }}"
-            ]
-        const DoughnutBudgetColors = ["#ff2929", "#0047c9","#69ff7a", "pink",
-            "#ff8e4d", "#73e3ff", "#9e3dff", "#fff878"];
-
-        new Chart("DoughnutExpense", {
-        type: "doughnut",
-        data: {
-            labels: xDoughnutExpense,
-            datasets: [{
-            backgroundColor: DoughnutExpenseColors,
-            data: yDoughnutExpense
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: "Expense This month Overview",
-                fontSize: 30,
-                fontColor: "black",
-                fontFamily: "Consolas, monospace"
-            },
-            legend: {
-                display: true,
-                position: "right"
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.labels[tooltipItem.index] || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        " (" + (value / parseInt("{{ expensable | safe }}") * 100).toFixed(2) + " %)";
-                        return label;
-                    }
-                }
-            }
-        }
-        });
-
-        new Chart("DoughnutBudget", {
-        type: "doughnut",
-        data: {
-            labels: xDoughnutBudget,
-            datasets: [{
-            backgroundColor: DoughnutBudgetColors,
-            data: yDoughnutBudget
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: "Budget Allocation Overview",
-                fontSize: 30,
-                fontColor: "black",
-                fontFamily: "Consolas, monospace"
-            },
-            legend: {
-                display: true,
-                position: "right"
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.labels[tooltipItem.index] || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        label += value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                        " (" + (value / parseInt("{{ budget | safe }}") * 100).toFixed(2) + " %)";
-                        return label;
-                    }
-                }
-            }
-        }
-        });
-
-        function toggleText(elementId) {
-        const els = document.getElementsByClassName(elementId);
-        Object.entries(els).forEach(([ _, value]) => {
-            if (!value.dataset.original) return;
-            if (value.textContent === '********') {
-                value.textContent = value.dataset.original;
-            } else {
-                value.textContent = '********';
-            }
-        });
-        }
-
+            "{{ cashflow | safe }}",
+            "{{ expensable | safe }}",
+            "{{ expense_cash | safe }}",
+            "{{ expense_digital | safe }}",
+            "{{ expense_credit | safe }}",
+            "{{ budget | safe }}"
+        )
     </script>
-</body>
-</html>
+{% endblock %}

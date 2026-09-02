@@ -1,0 +1,275 @@
+:root {
+    --bg: #f4f6f8;
+    --nav-bg: #092e20;
+    --nav-hover: #aecfb9;
+    --accent: #04aa6d;
+    --ink: #1f2d27;
+    --muted: #5b6b63;
+    --card: #ffffff;
+    --border: #e3e8e5;
+    --shadow: 0 1px 3px rgba(9, 46, 32, 0.08),
+        0 4px 12px rgba(9, 46, 32, 0.06);
+    --table-header: #f0f4f2;
+    --table-even: #fafbfa;
+    --table-hover: #eef6f1;
+    --input-bg: #ffffff;
+}
+
+:root.dark-mode {
+    --bg: #1a1a1a;
+    --nav-bg: #0d1f16;
+    --nav-hover: #2d5a41;
+    --accent: #04aa6d;
+    --ink: #e8e8e8;
+    --muted: #a0a0a0;
+    --card: #2a2a2a;
+    --border: #404040;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+    --table-header: #2d2d2d;
+    --table-even: #252525;
+    --table-hover: #303030;
+    --input-bg: #333333;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+}
+
+/* ---------- Top navigation ---------- */
+.topnav {
+    background-color: var(--nav-bg);
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+.topnav a {
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 18px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+}
+.topnav a:hover {
+    background-color: var(--nav-hover);
+    color: #092e20;
+}
+.topnav a.active {
+    background-color: var(--accent);
+    color: #ffffff;
+}
+.topnav a.right {
+    margin-left: auto;
+    opacity: 0.85;
+}
+.topnav a.right:hover {
+    opacity: 1;
+}
+
+/* ---------- Layout helpers ---------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+}
+
+h1 {
+    color: var(--ink);
+    font-size: 28px;
+    margin: 8px 0 4px;
+}
+h3 {
+    color: var(--ink);
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+}
+p {
+    color: var(--muted);
+    margin: 4px 0 16px;
+}
+
+.card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+/* ---------- Tables ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card);
+    font-size: 14px;
+}
+thead th {
+    background-color: var(--table-header);
+    color: var(--ink);
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border);
+    font-weight: 600;
+}
+tbody td,
+tbody th {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+}
+tbody tr:nth-child(even) {
+    background-color: var(--table-even);
+}
+tbody tr:hover {
+    background-color: var(--table-hover);
+}
+
+/* ---------- Dashboard table – fixed columns ---------- */
+.dashboard-table {
+    table-layout: fixed;
+    width: 100%;
+}
+.dashboard-table td {
+    width: 25%;
+    vertical-align: top;
+    overflow: hidden;
+}
+.dashboard-table td h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+.dashboard-table .hidden-text {
+    margin: 4px 0 0;
+    min-height: 1.4em;
+    font-variant-numeric: tabular-nums;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    /* reserve space so toggling ******** <-> long log doesn't reflow columns */
+    display: block;
+}
+
+/* ---------- Forms / buttons ---------- */
+form.filter-form {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 0 0 20px;
+}
+form.filter-form label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+form.filter-form input,
+form.filter-form select {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background-color: var(--input-bg);
+    color: var(--ink);
+}
+.btn {
+    padding: 9px 18px;
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.05s ease;
+}
+.btn:hover {
+    background-color: #038f5b;
+}
+.btn:active {
+    transform: translateY(1px);
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.col {
+    flex: 1 1 0;
+    min-width: 280px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 32px;
+    padding: 16px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ---------- Dark mode toggle ---------- */
+.dark-mode-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink);
+    background-color: var(--card);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    margin-left: 10px;
+}
+.dark-mode-toggle:hover {
+    background-color: var(--border);
+}
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+.messages li {
+    background-color: #e7f6ee;
+    border: 1px solid #b6e3cb;
+    color: #0b6b43;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+.messages li.error {
+    background-color: #fdeaea;
+    border-color: #f3b7b7;
+    color: #b3261e;
+}

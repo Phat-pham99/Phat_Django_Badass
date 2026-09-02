@@ -1,10 +1,11 @@
-from django.apps import apps
-from django.db import models
-from datetime import datetime
-from django.db import transaction
-from upstash_redis import Redis
-from ..enums.finance_enums import FUND_ENUM
 import logging
+from datetime import datetime
+
+from django.apps import apps
+from django.db import models, transaction
+from upstash_redis import Redis
+
+from ..enums.finance_enums import FUND_ENUM
 
 logger = logging.getLogger(__name__)
 redis = apps.get_app_config("phat_finance").redis_client
@@ -13,6 +14,7 @@ if redis is None:
     redis = apps.get_app_config("phat_finance").redis_client
 else:
     print("Redis client initialized in phat_finance app config")
+
 
 class SinkingFund(models.Model):
     date = models.DateField(auto_now=True)

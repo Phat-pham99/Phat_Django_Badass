@@ -1,15 +1,16 @@
-from typing import override
-from django.apps import apps
-from django.db import models
-
 # from django.db.models import Sum
 from datetime import date, datetime
-from django.db import transaction
-from types import NoneType
 from logging import Logger, getLogger
+from types import NoneType
+from typing import override
+
+from django.apps import apps
+from django.db import models, transaction
 from upstash_redis import Redis
-from ..enums.finance_enums import EXPENSE_CATEGORY_ENUM
+
 from Home.commons.enums import USER_ENUM
+
+from ..enums.finance_enums import EXPENSE_CATEGORY_ENUM
 
 logger: Logger = getLogger(__name__)
 redis: Redis = apps.get_app_config("phat_finance").redis_client
@@ -18,6 +19,7 @@ if redis is None:
     redis = apps.get_app_config("phat_finance").redis_client
 else:
     logger.info("Redis client initialized in phat_finance app config")
+
 
 class Expense(models.Model):
     date = models.DateField(default=date.today)  # Use date.today() as the default
@@ -34,11 +36,13 @@ class Expense(models.Model):
         return f"{self.date} - {self.user} - {self.category}"
 
     @transaction.atomic
-    def __spend(self,
-            redis_client: Redis,
-            cash_amount: int,
-            digital_amount: int,
-            credit_amount: int) -> None:
+    def __spend(
+        self,
+        redis_client: Redis,
+        cash_amount: int,
+        digital_amount: int,
+        credit_amount: int,
+    ) -> None:
         """
         Decrease cash 💶💷 or digital 🏧 balance by
         {_amount} on Redis when cash is spent.
@@ -77,5 +81,6 @@ class Expense(models.Model):
             redis_client=redis,
             cash_amount=self.cash,
             digital_amount=self.digital,
-            credit_amount=self.credit)
+            credit_amount=self.credit,
+        )
         super().save(*args, **kwargs)  # Man this shit is important !
