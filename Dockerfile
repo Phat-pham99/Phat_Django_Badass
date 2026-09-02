@@ -22,4 +22,4 @@ EXPOSE 8000
 
 # Chaining commands: Runs collectstatic, then starts Granian
 CMD python3 manage.py collectstatic --clear --noinput && \
-    granian --interface asgi Phat_Django_Badass.asgi:application --port 8000 --static-path-mount ./staticfiles
+    granian --interface asgi Phat_Django_Badass.asgi:application --port 8000

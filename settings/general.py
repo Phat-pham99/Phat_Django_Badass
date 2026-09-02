@@ -21,14 +21,6 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-# Time in seconds for non-hashed files (e.g., 1 hour)
-WHITENOISE_MAX_AGE = 3600 * 1
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
