@@ -3,14 +3,25 @@ services:
     build: .
     container_name: phat_django_web
     restart: unless-stopped
-    command: granian --interface asgi Phat_Django_Badass.asgi:application --host 0.0.0.0 --port 8000
+    command: sh -c "python3 manage.py collectstatic --noinput && granian --interface asgi Phat_Django_Badass.asgi:application --host 0.0.0.0 --port 8000"
     volumes:
-      - .:/app  # Optional: mounts your code for live reloads in dev, remove for pure prod
-      - static_volume:/app/statics  # Shares static files with Nginx
+      - static_volume:/app/staticfiles
     env_file:
       - .env
     networks:
       - django_network
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app
+          ignore:
+            - "**/.git/***"
+            - "**/venv/***"
+            - "**/__pycache__/***"
+            - "**/*.pyc"
+            - "**/.dockerignore"
+            - "**/.gitignore"
 
   nginx:
     image: nginx:alpine
@@ -20,7 +31,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - static_volume:/app/statics:ro  # Read-only access to static files
+      - static_volume:/app/staticfiles:ro  # Read-only access to static files
     depends_on:
       - web
     networks:
