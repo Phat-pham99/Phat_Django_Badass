@@ -21,6 +21,7 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PASSWORD": os.getenv('UPSTASH_REDIS_PASSWORD'),
+            "CONNECTION_POOL_KWARGS": {"protocol": 2},
         }
     }
 }

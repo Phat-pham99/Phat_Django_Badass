@@ -1,9 +1,9 @@
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-]
+import os
+
+_hosts_raw: str = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost')
+_hosts_raw: str = _hosts_raw.strip().strip("[]")
+ALLOWED_HOSTS: list[str] = [h.strip().strip("'\"") for h in _hosts_raw.split(',') if h.strip()] or ['127.0.0.1', 'localhost']
+CORS_ALLOW_ALL_ORIGINS: bool = True
 
 AUTH_PASSWORD_VALIDATORS = [
     {

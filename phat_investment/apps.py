@@ -1,9 +1,10 @@
-from typing import final
-from typing_extensions import override
-from django.apps import AppConfig
-from upstash_redis import Redis
-import os
 import logging
+import os
+from typing import final
+
+from django.apps import AppConfig
+from typing_extensions import override
+from upstash_redis import Redis
 
 
 @final
