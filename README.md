@@ -1,40 +1,71 @@
-# Phat_Django_Badass
-> This is the Django backend to handle all the stuff in my life.
-I meant from personal finance, investment, dividend income or my gym routine to other stuffs that requires data management.
-I intended to build this not for my own usage only but for my family as well. User authentication and permission will be not a big deal tho
------
+<p align="center">
+  <h1 align="center">Phat_Django_Badass</h1>
+  <p align="center">
+    <b>Your personal command center for finance, investments, and life admin.</b><br>
+    Built with Django. Designed for family-scale use.
+  </p>
+</p>
 
-<h2>Financial Dashboard</h2>
-<p>My personal financial dashboard to keep things up-to-date</p>
+---
 
-<img title="" alt="" src="statics/Phat_Django_Dashboard.png"
-style="width:100%"/>
+## About
 
------
+This Django backend powers everything from personal finance, investments, and dividend income to gym routines and any other data-driven corners of life.
 
-<h2>Investment</h2>
-<p>Track my investment progress overtime, data input via Django admin model input form</p>
+Originally built for myself and extended for my family, it comes with robust user authentication and permission management baked in from day one.
 
-<img title="" alt="" src="statics/phat_investment_portfolio.png"
-style="width:100%"/>
+---
 
-## Tech used
-I want to keep cost down so I try some free-tier services, which also get the job done (the user pool is small, to be hosnest 👀😏)
+## Features
 
-- Clouflare D1 databasse <-> SQLite 🛢️\
-The main database is hosted using Clouflare D1, this is the most suitable SQL cloudbase I can find to be cost-effective and lightweight. Of course, the database needs to be ACID compliant, or else the whole transaction thingy will be pointless.
+### Financial Dashboard
+A clean, real-time dashboard to keep your personal finances up to date.
 
-- Upstash Redis <-> Redis 🟥 \
-Redis is a exellent key-value based database, suitable for rapidly update value like balances, expenses and my real-time financial dashboard
+<p align="center">
+  <img alt="Dashboard - Light Mode" src="statics/Phat_Django_Dashboard_light.png" width="100%">
+  <img alt="Dashboard - Dark Mode" src="statics/Phat_Django_Dashboard_dark.png" width="100%">
+</p>
+
+### Expense Tracker
+Visualize spending habits and expenses at a glance.
+
+<p align="center">
+  <img alt="Expense Tracker" src="statics/Phat_Expense.png" width="100%">
+</p>
+
+### Investment Tracker
+Track investment progress over time. Data is entered via Django's built-in admin interface.
+
+<p align="center">
+  <img alt="Investment Portfolio" src="statics/phat_investment_portfolio.png" width="100%">
+</p>
+
+---
+
+## Tech Stack
+
+Kept lean and cost-effective — running on generous free-tier services that easily handle a small user pool (just family & friends 👀).
+
+| Service | Role | Why It Fits |
+|---------|------|-------------|
+| **Django** | Backend & Admin | Python web framework for rapid, secure development |
+| **Cloudflare D1** 🛢️ | Primary Database | Serverless SQLite — ACID compliant, lightweight, and cost-effective |
+| **Upstash Redis** 🟥 | Caching & Real-time | Lightning-fast key-value store for balances, expenses, and live dashboard metrics |
+| **Docker** 🐳 | Deployment | Consistent, portable environments across the board |
+
+---
 
 ## Docker
-`sudo docker build . --tag Phat_Django_Badass:<version>`
 
-## Static files
-Templates reference assets via `{% static %}` (served from `STATIC_URL = "static/"`).
+Build the image:
 
-- **Development (`DEBUG=True`):** `runserver` serves static files automatically.
-- **Production (`DEBUG=False`):** the app serves static files through a dedicated route in `Phat_Django_Badass/urls.py` (only registered when `DEBUG` is off). When deploying behind a reverse proxy (e.g. Caddy/nginx), prefer serving `staticfiles/` from the proxy after `python manage.py collectstatic` instead of relying on the in-app route.
+```bash
+sudo docker build . --tag Phat_Django_Badass:<version>
+```
 
-## Release history
-- **1.3.2** – Serve static files when `DEBUG` is `False` (fixes 404 CSS/JS on the dashboard and other pages).
+---
+
+## License
+
+This project is licensed under the **MIT License** — feel free to use, modify, and distribute it as you see fit.
+See [LICENSE](LICENSE) for full details.
