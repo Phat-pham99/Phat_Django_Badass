@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.contrib.staticfiles.views import serve
+from django.urls import path, re_path
 from django.views import debug
-from django.urls import include, path
 from django.views.generic.base import TemplateView
 
 from Home.views import home as Homepage
@@ -16,3 +17,8 @@ urlpatterns = [
     path("phat_investment/portfolio", portfolio_history, name="portfolio_history"),
     path("admin/", admin.site.urls),
 ]
+
+if not settings.DEBUG:
+    urlpatterns += [
+        re_path(r"^static/(?P<path>.*)$", serve, kwargs={"insecure": True}),
+    ]
