@@ -55,12 +55,66 @@ Kept lean and cost-effective — running on generous free-tier services that eas
 
 ---
 
-## Docker
+## Deployment
 
-Build the image:
+### Docker
+
+Build the image manually:
 
 ```bash
 sudo docker build . --tag Phat_Django_Badass:<version>
+```
+
+### Docker Compose (Recommended)
+
+A `docker-compose.yml` is included to spin up the application together with an **Nginx** reverse proxy.
+
+**1. Configure environment variables**
+
+Create a `.env` file in the project root with the following variables:
+
+```env
+# Django
+SECRET_KEY=your_secret_key_here
+DEBUG=False
+
+# Cloudflare D1 (SQLite)
+ENGINE=your_db_engine
+CLOUDFLARE_DATABASE_ID=your_database_id
+CLOUDFLARE_ACCOUNT_ID=your_account_id
+CLOUDFLARE_TOKEN=your_api_token
+
+# Upstash Redis
+UPSTASH_REDIS_USERNAME=your_redis_username
+UPSTASH_REDIS_ENDPOINT=your_redis_endpoint
+UPSTASH_REDIS_PORT=your_redis_port
+UPSTASH_REDIS_PASSWORD=your_redis_password
+UPSTASH_REDIS_REST_URL=your_redis_rest_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_rest_token
+```
+
+**2. Build and run**
+
+```bash
+docker compose up -d --build
+```
+
+- The app will be available at `http://localhost` (via Nginx on port `80`).
+- Static files are automatically collected on startup.
+
+**3. First-time setup (optional)**
+
+If this is a fresh database, run migrations and create an admin account:
+
+```bash
+docker compose exec web python3 manage.py migrate
+docker compose exec web python3 manage.py createsuperuser
+```
+
+**4. Stop the services**
+
+```bash
+docker compose down
 ```
 
 ---
