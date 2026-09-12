@@ -29,3 +29,12 @@ Redis is a exellent key-value based database, suitable for rapidly update value 
 
 ## Docker
 `sudo docker build . --tag Phat_Django_Badass:<version>`
+
+## Static files
+Templates reference assets via `{% static %}` (served from `STATIC_URL = "static/"`).
+
+- **Development (`DEBUG=True`):** `runserver` serves static files automatically.
+- **Production (`DEBUG=False`):** the app serves static files through a dedicated route in `Phat_Django_Badass/urls.py` (only registered when `DEBUG` is off). When deploying behind a reverse proxy (e.g. Caddy/nginx), prefer serving `staticfiles/` from the proxy after `python manage.py collectstatic` instead of relying on the in-app route.
+
+## Release history
+- **1.3.2** – Serve static files when `DEBUG` is `False` (fixes 404 CSS/JS on the dashboard and other pages).
