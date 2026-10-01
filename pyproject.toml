@@ -1,6 +1,6 @@
 [project]
 name = "phat-django-badass"
-version = "1.0.1"
+version = "1.3.3"
 description = "This is the Django backend to handle all the stuffs in my life"
 authors = [
     {name = "Phat H. Pham",email = "57822898+Phat-pham99@users.noreply.github.com"}
